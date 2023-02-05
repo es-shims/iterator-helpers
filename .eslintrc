@@ -1,0 +1,62 @@
+{
+	"root": true,
+
+	"extends": "@ljharb",
+
+	"globals": {
+		"Iterator": false,
+	},
+
+	"rules": {
+		"array-bracket-newline": 0,
+		"func-name-matching": 0,
+		"id-length": 0,
+		"max-lines-per-function": 0,
+		"multiline-comment-style": 0,
+		"new-cap": [2, {
+			"capIsNewExceptions": [
+				"Call",
+				"CreateIteratorFromClosure",
+				"CreateIterResultObject",
+				"GeneratorResume",
+				"GeneratorResumeAbrupt",
+				"GeneratorStart",
+				"GeneratorValidate",
+				"Get",
+				"GetIntrinsic",
+				"GetIterator",
+				"GetIteratorDirect",
+				"GetIteratorFlattenable",
+				"GetMethod",
+				"IsCallable",
+				"IteratorClose",
+				"IteratorComplete",
+				"IteratorNext",
+				"IteratorStep",
+				"IteratorValue",
+				"NormalCompletion",
+				"OrdinaryHasInstance",
+				"OrdinaryObjectCreate",
+				"PromiseResolve",
+				"ThrowCompletion",
+				"ToBoolean",
+				"ToIntegerOrInfinity",
+				"ToNumber",
+				"ToObject",
+				"Type",
+			],
+		}],
+		"no-negated-condition": 1,
+		"object-curly-newline": 0,
+		"sort-keys": 0,
+	},
+
+	"overrides": [
+		{
+			"files": "test/**",
+			"rules": {
+				"max-params": 0,
+			},
+		},
+	],
+}
