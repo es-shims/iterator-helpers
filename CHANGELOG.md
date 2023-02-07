@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.1](https://github.com/es-shims/iterator-helpers/compare/v1.0.0...v1.0.1) - 2023-02-07
+
+### Commits
+
+- [Fix] `Iterator`: throw when Iterator() is called without new [`a6fc7e7`](https://github.com/es-shims/iterator-helpers/commit/a6fc7e768cbf4d43117365ec2f1bd300247d8dfd)
+
 ## v1.0.0 - 2023-02-05
 
 ### Commits
