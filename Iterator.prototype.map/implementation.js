@@ -25,8 +25,8 @@ module.exports = function map(mapper) {
 	}
 
 	var sentinel = {};
+	var counter = 0; // step 3.a
 	var closure = function () {
-		var counter = 0; // step 3.a
 		// while (true) { // step 3.b
 		var next = IteratorStep(iterated['[[Iterator]]']); // step 3.b.i
 		if (!next) {

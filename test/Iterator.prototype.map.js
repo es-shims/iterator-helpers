@@ -50,11 +50,11 @@ module.exports = {
 			next: function () {
 				try {
 					return {
-						done: done,
+						done: !!done,
 						value: sentinel
 					};
 				} finally {
-					done = true;
+					done = done === false ? null : true;
 				}
 			}
 		};
@@ -67,13 +67,13 @@ module.exports = {
 				result.args = arguments.length;
 				return fakeIterator;
 			}),
-			[fakeIterator],
+			[fakeIterator, fakeIterator],
 			t,
 			'fake iterator, mapped, runs as expected'
 		);
 		t.deepEqual(
 			result,
-			{ value: sentinel, counter: 0, receiver: undefined, args: 2 },
+			{ value: sentinel, counter: 1, receiver: undefined, args: 2 },
 			'callback is called with the correct arguments'
 		);
 
