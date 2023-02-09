@@ -33,6 +33,10 @@ module.exports = function GeneratorResumeAbrupt(generator, abruptCompletion, gen
 	if (state !== 'suspendedYield') {
 		throw new $TypeError('Assertion failed: generator state is unexpected: ' + state); // step 4
 	}
+	if (abruptCompletion.type() === 'return') {
+		// due to representing `GeneratorContext` as a function, we can't safely re-invoke it, so we can't support sending it a return completion
+		return CreateIterResultObject(value, true);
+	}
 
 	var genContext = SLOT.get(generator, '[[GeneratorContext]]'); // step 5
 
