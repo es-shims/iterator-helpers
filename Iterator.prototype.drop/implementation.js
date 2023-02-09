@@ -4,8 +4,8 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $RangeError = GetIntrinsic('%RangeError%');
 
-var IteratorClose = require('es-abstract/2022/IteratorClose');
-var IteratorStep = require('es-abstract/2022/IteratorStep');
+var IteratorClose = require('../aos/IteratorClose');
+var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
@@ -41,14 +41,14 @@ module.exports = function drop(limit) {
 				remaining -= 1; // step 6.b.i.1
 			}
 
-			next = IteratorStep(iterated['[[Iterator]]']); // step 6.b.ii
+			next = IteratorStep(iterated); // step 6.b.ii
 			if (!next) {
 				// return void undefined; // step 6.b.iii
 				return sentinel;
 			}
 		}
 		// while (true) { // step 6.c
-		next = IteratorStep(iterated['[[Iterator]]']); // step 6.c.i
+		next = IteratorStep(iterated); // step 6.c.i
 		if (!next) {
 			// return void undefined; // step 6.c.ii
 			return sentinel;
@@ -59,7 +59,7 @@ module.exports = function drop(limit) {
 		} catch (e) {
 			// close iterator // step 6.c.icv
 			IteratorClose(
-				iterated['[[Iterator]]'],
+				iterated,
 				function () { throw e; }
 			);
 		}

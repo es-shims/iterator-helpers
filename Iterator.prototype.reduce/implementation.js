@@ -6,8 +6,8 @@ var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
 var IsCallable = require('es-abstract/2022/IsCallable');
-var IteratorClose = require('es-abstract/2022/IteratorClose');
-var IteratorStep = require('es-abstract/2022/IteratorStep');
+var IteratorClose = require('../aos/IteratorClose');
+var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
@@ -23,7 +23,7 @@ module.exports = function reduce(reducer) {
 	var counter;
 	var next;
 	if (arguments.length < 2) { // step 3
-		next = IteratorStep(iterated['[[Iterator]]']); // step 3.a
+		next = IteratorStep(iterated); // step 3.a
 		if (!next) {
 			throw new $TypeError('Reduce of empty iterator with no initial value'); // step 3.b
 		}
@@ -36,7 +36,7 @@ module.exports = function reduce(reducer) {
 
 	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 5
-		next = IteratorStep(iterated['[[Iterator]]']); // step 5.a
+		next = IteratorStep(iterated); // step 5.a
 		if (!next) {
 			return accumulator; // step 5.b
 		}
@@ -47,7 +47,7 @@ module.exports = function reduce(reducer) {
 		} catch (e) {
 			// close iterator // step 5.e
 			IteratorClose(
-				iterated['[[Iterator]]'],
+				iterated,
 				function () { throw e; }
 			);
 		}

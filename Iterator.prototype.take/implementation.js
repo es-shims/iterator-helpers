@@ -4,8 +4,8 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $RangeError = GetIntrinsic('%RangeError%');
 
-var IteratorClose = require('es-abstract/2022/IteratorClose');
-var IteratorStep = require('es-abstract/2022/IteratorStep');
+var IteratorClose = require('../aos/IteratorClose');
+var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
@@ -46,7 +46,7 @@ module.exports = function take(limit) {
 			remaining -= 1; // step 6.b.ii.1
 		}
 
-		var next = IteratorStep(iterated['[[Iterator]]']); // step 6.b.iii
+		var next = IteratorStep(iterated); // step 6.b.iii
 		if (!next) {
 			// return void undefined; // step 6.b.iv
 			return sentinel;

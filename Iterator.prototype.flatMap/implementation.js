@@ -6,8 +6,8 @@ var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
 var IsCallable = require('es-abstract/2022/IsCallable');
-var IteratorClose = require('es-abstract/2022/IteratorClose');
-var IteratorStep = require('es-abstract/2022/IteratorStep');
+var IteratorClose = require('../aos/IteratorClose');
+var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
@@ -29,7 +29,7 @@ module.exports = function flatMap(mapper) {
 	var counter = 0; // step 3.a
 	var closure = function () {
 		// while (true) { // step 3.b
-		var next = IteratorStep(iterated['[[Iterator]]']); // step 3.b.i
+		var next = IteratorStep(iterated); // step 3.b.i
 		if (!next) {
 			// return void undefined; // step 3.b.ii
 			return sentinel;
@@ -44,17 +44,17 @@ module.exports = function flatMap(mapper) {
 				innerIterator = GetIteratorFlattenable(mapped, 'sync'); // step 3.b.vi
 			} catch (e) {
 				IteratorClose(
-					iterated['[[Iterator]]'],
+					iterated,
 					function () { throw e; }
 				); // steps 3.b.v, 3.b.vii
 			}
 			var innerAlive = true; // step 3.b.viii
 			while (innerAlive) { // step 3.b.ix
 				try {
-					var innerNext = IteratorStep(innerIterator['[[Iterator]]']); // step 3.b.ix.1
+					var innerNext = IteratorStep(innerIterator); // step 3.b.ix.1
 				} catch (e) {
 					IteratorClose(
-						iterated['[[Iterator]]'],
+						iterated,
 						function () { throw e; }
 					); // step 3.b.ix.2
 				}
@@ -66,7 +66,7 @@ module.exports = function flatMap(mapper) {
 						innerValue = IteratorValue(innerNext); // step 3.b.ix.4.a
 					} catch (e) {
 						IteratorClose(
-							iterated['[[Iterator]]'],
+							iterated,
 							function () { throw e; }
 						); // step 3.b.ix.4.b
 					}

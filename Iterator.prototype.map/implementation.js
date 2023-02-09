@@ -6,8 +6,8 @@ var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
 var IsCallable = require('es-abstract/2022/IsCallable');
-var IteratorClose = require('es-abstract/2022/IteratorClose');
-var IteratorStep = require('es-abstract/2022/IteratorStep');
+var IteratorClose = require('../aos/IteratorClose');
+var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
@@ -28,7 +28,9 @@ module.exports = function map(mapper) {
 	var counter = 0; // step 3.a
 	var closure = function () {
 		// while (true) { // step 3.b
-		var next = IteratorStep(iterated['[[Iterator]]']); // step 3.b.i
+		var next = IteratorStep(iterated); // step 3.b.i
+
+		// console.log({counter, next})
 		if (!next) {
 			// return void undefined; // step 3.b.ii
 			return sentinel;
@@ -42,7 +44,7 @@ module.exports = function map(mapper) {
 		} catch (e) {
 			// close iterator // step 3.b.v, 3.b.vii
 			IteratorClose(
-				iterated['[[Iterator]]'],
+				iterated,
 				function () { throw e; }
 			);
 			throw e;
