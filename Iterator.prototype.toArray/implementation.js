@@ -1,7 +1,12 @@
 'use strict';
 
+var GetIntrinsic = require('get-intrinsic');
+
+var $TypeError = GetIntrinsic('%TypeError%');
+
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var Type = require('es-abstract/2022/Type');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 
@@ -10,17 +15,22 @@ var callBound = require('call-bind/callBound');
 var $push = callBound('Array.prototype.push');
 
 module.exports = function toArray() {
-	var iterated = GetIteratorDirect(this); // step 1
+	var O = this; // step 1
+	if (Type(O) !== 'Object') {
+		throw new $TypeError('the receiver (`this` value) must be an Object'); // step 2
+	}
 
-	var items = []; // step 2
+	var iterated = GetIteratorDirect(O); // step 3
+
+	var items = []; // step 4
 
 	// eslint-disable-next-line no-constant-condition
-	while (true) { // step 3
-		var next = IteratorStep(iterated); // step 3.a
+	while (true) { // step 5
+		var next = IteratorStep(iterated); // step 5.a
 		if (!next) {
-			return items; // step 3.b
+			return items; // step 5.b
 		}
-		var value = IteratorValue(next); // step 3.c
-		$push(items, value); // step 3.d
+		var value = IteratorValue(next); // step 5.c
+		$push(items, value); // step 5.d
 	}
 };

@@ -10,16 +10,16 @@ var Type = require('es-abstract/2022/Type');
 
 module.exports = function GetIteratorDirect(obj) {
 	if (Type(obj) !== 'Object') {
-		throw new $TypeError('`obj` must be an Object'); // step 1
+		throw new $TypeError('Assertion failed: `obj` must be an Object');
 	}
 
-	var nextMethod = Get(obj, 'next'); // step 2
+	var nextMethod = Get(obj, 'next'); // step 1
 
 	if (!IsCallable(nextMethod)) {
-		throw new $TypeError('`nextMethod` must be a function'); // step 3
+		throw new $TypeError('`nextMethod` must be a function'); // step 2
 	}
 
-	var iteratorRecord = { '[[Iterator]]': obj, '[[NextMethod]]': nextMethod, '[[Done]]': false }; // step 4
+	var iteratorRecord = { '[[Iterator]]': obj, '[[NextMethod]]': nextMethod, '[[Done]]': false }; // step 3
 
-	return iteratorRecord; // step 5
+	return iteratorRecord; // step 4
 };

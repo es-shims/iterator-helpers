@@ -21,16 +21,26 @@ var testIterator = require('./helpers/testIterator');
 
 module.exports = {
 	tests: function (take, name, t) {
+		forEach(v.numbers, function (number) {
+			if (isNaN(number) || number < 0) {
+				t['throws'](
+					function () { take({ next: function () {} }, number); },
+					RangeError,
+					debug(number) + ' is not a non-NaN integer-coercible >= 0'
+				);
+			}
+		});
+
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
-				function () { take(nonIterator); },
+				function () { take(nonIterator, 0); },
 				TypeError,
 				debug(nonIterator) + ' is not an Object with a callable `next` method'
 			);
 
 			var badNext = { next: nonIterator };
 			t['throws'](
-				function () { take(badNext); },
+				function () { take(badNext, 0); },
 				TypeError,
 				debug(badNext) + ' is not an Object with a callable `next` method'
 			);
