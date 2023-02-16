@@ -65,5 +65,7 @@ module.exports = function take(limit) {
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 
-	return CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto); // step 9
+	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterator]]']); // step 9
+	SLOT.set(result, '[[UnderlyingIterator]]', iterated); // step 10
+	return result; // step 11
 };

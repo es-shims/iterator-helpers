@@ -61,5 +61,7 @@ module.exports = function map(mapper) {
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 
-	return CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto); // step 6
+	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterator]]']); // step 6
+	SLOT.set(result, '[[UnderlyingIterator]]', iterated); // step 7
+	return result; // step 8
 };

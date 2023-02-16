@@ -13,6 +13,8 @@ var hasSymbols = require('has-symbols/shams')();
 var index = require('../Iterator.prototype.flatMap');
 var impl = require('../Iterator.prototype.flatMap/implementation');
 
+var iterProto = require('iterator.prototype');
+
 var fnName = 'flatMap';
 
 var isEnumerable = Object.prototype.propertyIsEnumerable;
@@ -62,6 +64,23 @@ module.exports = {
 
 			testIterator(flatMap(iterator(), function (x) { return [[x]][Symbol.iterator](); }), [[1], [2], [3]], st, 'identity mapper in nested array iterator');
 			testIterator(flatMap(iterator(), function (x) { return [[2 * x]][Symbol.iterator](); }), [[2], [4], [6]], st, 'doubler mapper in nested array iterator');
+
+			var returnCalls = 0;
+			var it = {
+				__proto__: iterProto,
+				next: function () {},
+				'return': function () {
+					returnCalls += 1;
+					return { unused: true };
+				}
+			};
+			var mapped = flatMap(it, function () {});
+
+			st.deepEqual(mapped['return'](), { value: undefined, done: true }, 'return method returns "done" iterator result');
+			st.equal(returnCalls, 1, 'return is passed through');
+
+			st.deepEqual(mapped['return'](), { value: undefined, done: true }, 'return method returns "done" iterator result');
+			st.equal(returnCalls, 1, 'return only gets called the first time');
 
 			st.end();
 		});

@@ -13,6 +13,8 @@ var hasSymbols = require('has-symbols/shams')();
 var index = require('../Iterator.prototype.map');
 var impl = require('../Iterator.prototype.map/implementation');
 
+var iterProto = require('iterator.prototype');
+
 var fnName = 'map';
 
 var isEnumerable = Object.prototype.propertyIsEnumerable;
@@ -84,6 +86,23 @@ module.exports = {
 			testIterator(iterator(), [1, 2, 3], st, 'original');
 			testIterator(map(iterator(), function (x) { return x; }), [1, 2, 3], st, 'identity mapper');
 			testIterator(map(iterator(), function (x) { return 2 * x; }), [2, 4, 6], st, 'doubler mapper');
+
+			var returnCalls = 0;
+			var it = {
+				__proto__: iterProto,
+				next: function () {},
+				'return': function () {
+					returnCalls += 1;
+					return { unused: true };
+				}
+			};
+			var mapped = map(it, function () {});
+
+			st.deepEqual(mapped['return'](), { value: undefined, done: true }, 'return method returns "done" iterator result');
+			st.equal(returnCalls, 1, 'return is passed through');
+
+			st.deepEqual(mapped['return'](), { value: undefined, done: true }, 'return method returns "done" iterator result');
+			st.equal(returnCalls, 1, 'return only gets called the first time');
 
 			st.end();
 		});
