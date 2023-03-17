@@ -52,6 +52,21 @@ module.exports = {
 				et.end();
 			});
 
+			t.test('prototype descriptor', { skip: !defineProperties.supportsDescriptors }, function (pt) {
+				var desc = Object.getOwnPropertyDescriptor(Iterator, 'prototype');
+				pt.deepEqual(
+					desc,
+					{
+						configurable: false,
+						enumerable: false,
+						value: Iterator.prototype,
+						writable: false
+					}
+				);
+
+				pt.end();
+			});
+
 			module.exports.tests(Iterator, 'Iterator', t);
 
 			t.end();
