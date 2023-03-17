@@ -5,15 +5,15 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
+var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
+var GetIteratorDirect = require('../aos/GetIteratorDirect');
+var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
 var IsCallable = require('es-abstract/2022/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
-
-var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
 var iterHelperProto = require('../IteratorHelperPrototype');
 
 var SLOT = require('internal-slot');
@@ -45,7 +45,7 @@ module.exports = function flatMap(mapper) {
 			} catch (e) {
 				IteratorClose(
 					iterated,
-					function () { throw e; }
+					ThrowCompletion(e)
 				); // steps 3.b.v, 3.b.vii
 			}
 			var innerAlive = true; // step 3.b.viii
@@ -55,7 +55,7 @@ module.exports = function flatMap(mapper) {
 				} catch (e) {
 					IteratorClose(
 						iterated,
-						function () { throw e; }
+						ThrowCompletion(e)
 					); // step 3.b.ix.2
 				}
 				if (!innerNext) {
@@ -67,7 +67,7 @@ module.exports = function flatMap(mapper) {
 					} catch (e) {
 						IteratorClose(
 							iterated,
-							function () { throw e; }
+							ThrowCompletion(e)
 						); // step 3.b.ix.4.b
 					}
 					return innerValue; // step 3.b.ix.4.c

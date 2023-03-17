@@ -5,13 +5,14 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
+var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IsCallable = require('es-abstract/2022/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var NormalCompletion = require('es-abstract/2022/NormalCompletion');
+var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var ToBoolean = require('es-abstract/2022/ToBoolean');
-
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
 
 module.exports = function every(predicate) {
 	var iterated = GetIteratorDirect(this); // step 1
@@ -36,7 +37,7 @@ module.exports = function every(predicate) {
 			// close iterator // step 4.e
 			IteratorClose(
 				iterated,
-				function () { throw e; }
+				ThrowCompletion(e)
 			);
 		} finally {
 			counter += 1; // step 4.g
@@ -44,7 +45,7 @@ module.exports = function every(predicate) {
 		if (!ToBoolean(result)) {
 			return IteratorClose(
 				iterated,
-				function () { return false; }
+				NormalCompletion(false)
 			); // step 4.f
 		}
 	}

@@ -4,13 +4,14 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $RangeError = GetIntrinsic('%RangeError%');
 
+var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var NormalCompletion = require('es-abstract/2022/NormalCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
 
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
@@ -39,7 +40,7 @@ module.exports = function take(limit) {
 		if (remaining === 0) { // step 6.b.i
 			return IteratorClose( // step 6.b.i.1
 				iterated,
-				function () { return sentinel; }
+				NormalCompletion(sentinel)
 			);
 		}
 		if (remaining !== Infinity) { // step 6.b.ii

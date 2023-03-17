@@ -5,12 +5,12 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
+var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IsCallable = require('es-abstract/2022/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
-
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
+var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 
 module.exports = function reduce(reducer) {
 	var iterated = GetIteratorDirect(this); // step 1
@@ -48,7 +48,7 @@ module.exports = function reduce(reducer) {
 			// close iterator // step 5.e
 			IteratorClose(
 				iterated,
-				function () { throw e; }
+				ThrowCompletion(e)
 			);
 		}
 		counter += 1; // step 5.g

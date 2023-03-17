@@ -7,6 +7,7 @@ var $RangeError = GetIntrinsic('%RangeError%');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
 
@@ -60,7 +61,7 @@ module.exports = function drop(limit) {
 			// close iterator // step 6.c.icv
 			IteratorClose(
 				iterated,
-				function () { throw e; }
+				ThrowCompletion(e)
 			);
 		}
 		// }
