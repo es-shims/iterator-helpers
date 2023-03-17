@@ -55,6 +55,50 @@ module.exports = {
 
 			st.end();
 		});
+
+		t.test('262: test/built-ins/Iterator/prototype/filter/predicate-args', function (st) {
+			var g = function g() {
+				var arr = ['a', 'b', 'c'];
+				var i = 0;
+				return {
+					next: function () {
+						try {
+							return {
+								value: arr[i],
+								done: i >= arr.length
+							};
+						} finally {
+							i += 1;
+						}
+					}
+				};
+			};
+			var assertionCount = 0;
+			var iter = filter(
+				g(),
+				function (value, count) {
+					if (value === 'a') {
+						st.equal(count, 0, 'first iteration');
+					} else if (value === 'b') {
+						st.equal(count, 1, 'second iteration');
+					} else if (value === 'c') {
+						st.equal(count, 2, 'third iteration');
+					} else {
+						st.fail('unexpected iteration');
+					}
+					assertionCount += 1;
+					return true;
+				}
+			);
+
+			st.equal(assertionCount, 0, 'prior to iteration');
+
+			testIterator(iter, ['a', 'b', 'c'], st, 'iteration');
+
+			st.equal(assertionCount, 3);
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {
