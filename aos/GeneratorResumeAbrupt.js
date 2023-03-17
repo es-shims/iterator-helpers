@@ -35,7 +35,7 @@ module.exports = function GeneratorResumeAbrupt(generator, abruptCompletion, gen
 	}
 	if (abruptCompletion.type() === 'return') {
 		// due to representing `GeneratorContext` as a function, we can't safely re-invoke it, so we can't support sending it a return completion
-		return CreateIterResultObject(value, true);
+		return CreateIterResultObject(SLOT.get(generator, '[[CloseIfAbrupt]]')(abruptCompletion), true);
 	}
 
 	var genContext = SLOT.get(generator, '[[GeneratorContext]]'); // step 5

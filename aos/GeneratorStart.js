@@ -15,6 +15,7 @@ module.exports = function GeneratorStart(generator, closure) {
 	SLOT.assert(generator, '[[GeneratorContext]]');
 	SLOT.assert(generator, '[[GeneratorBrand]]');
 	SLOT.assert(generator, '[[Sentinel]]'); // our userland slot
+	SLOT.assert(generator, '[[CloseIfAbrupt]]'); // our second userland slot
 
 	if (!IsCallable(closure) || closure.length !== 0) {
 		throw new $TypeError('`closure` must be a function that takes no arguments');

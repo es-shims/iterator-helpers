@@ -9,6 +9,7 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var hasPropertyDescriptors = require('has-property-descriptors')();
 
 var index = require('../Iterator.prototype.filter');
 var impl = require('../Iterator.prototype.filter/implementation');
@@ -151,6 +152,30 @@ module.exports = {
 				function () { iterator.next(); },
 				SyntaxError,
 				'when the predicate and return() both throw, the predicate’s exception wins'
+			);
+
+			st.end();
+		});
+
+		t.test('262: test/built-ins/Iterator/prototype/filter/get-return-method-throws', { skip: !hasPropertyDescriptors }, function (st) {
+			var badIterator = {
+				next: function next() {
+					return {
+						done: false,
+						value: 1
+					};
+				}
+			};
+
+			Object.defineProperty(badIterator, 'return', { get: function () { throw new SyntaxError(); } });
+
+			var iter = filter(badIterator, function () { return true; });
+			iter.next();
+
+			st['throws'](
+				function () { iter['return'](); },
+				SyntaxError,
+				'gets the `return` method, whose getter throws'
 			);
 
 			st.end();

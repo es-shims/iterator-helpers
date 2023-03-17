@@ -5,6 +5,7 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
+var CompletionRecord = require('es-abstract/2022/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
@@ -25,6 +26,16 @@ module.exports = function flatMap(mapper) {
 		throw new $TypeError('`mapper` must be a function'); // step 2
 	}
 
+	var closeIfAbrupt = function (abruptCompletion) {
+		if (!(abruptCompletion instanceof CompletionRecord)) {
+			throw new $TypeError('`abruptCompletion` must be a Completion Record');
+		}
+		IteratorClose(
+			iterated,
+			abruptCompletion
+		);
+	};
+
 	var sentinel = {};
 	var counter = 0; // step 3.a
 	var closure = function () {
@@ -43,20 +54,14 @@ module.exports = function flatMap(mapper) {
 				// yield mapped // step 3.b.vi
 				innerIterator = GetIteratorFlattenable(mapped, 'sync'); // step 3.b.vi
 			} catch (e) {
-				IteratorClose(
-					iterated,
-					ThrowCompletion(e)
-				); // steps 3.b.v, 3.b.vii
+				closeIfAbrupt(ThrowCompletion(e)); // steps 3.b.v, 3.b.vii
 			}
 			var innerAlive = true; // step 3.b.viii
 			while (innerAlive) { // step 3.b.ix
 				try {
 					var innerNext = IteratorStep(innerIterator); // step 3.b.ix.1
 				} catch (e) {
-					IteratorClose(
-						iterated,
-						ThrowCompletion(e)
-					); // step 3.b.ix.2
+					closeIfAbrupt(ThrowCompletion(e)); // step 3.b.ix.2
 				}
 				if (!innerNext) {
 					innerAlive = false; // step 3.b.ix.3.a
@@ -65,10 +70,7 @@ module.exports = function flatMap(mapper) {
 					try {
 						innerValue = IteratorValue(innerNext); // step 3.b.ix.4.a
 					} catch (e) {
-						IteratorClose(
-							iterated,
-							ThrowCompletion(e)
-						); // step 3.b.ix.4.b
+						closeIfAbrupt(ThrowCompletion(e)); // step 3.b.ix.4.b
 					}
 					return innerValue; // step 3.b.ix.4.c
 				}
@@ -80,6 +82,7 @@ module.exports = function flatMap(mapper) {
 		return void undefined;
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
+	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
 	return CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto); // step 4
 };

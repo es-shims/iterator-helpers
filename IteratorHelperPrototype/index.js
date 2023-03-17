@@ -31,7 +31,7 @@ if (hasProto) {
 		return GeneratorResume(this, void undefined, 'Iterator Helper');
 	};
 	implementation['return'] = function () {
-		var C = function () {}; // step 1
+		var C = new CompletionRecord('return', void undefined); // step 1
 		return GeneratorResumeAbrupt(this, C, 'Iterator Helper');
 	};
 }

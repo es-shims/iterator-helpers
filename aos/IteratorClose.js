@@ -7,7 +7,6 @@ var $TypeError = GetIntrinsic('%TypeError%');
 var Call = require('es-abstract/2022/Call');
 var CompletionRecord = require('es-abstract/2022/CompletionRecord');
 var GetMethod = require('es-abstract/2022/GetMethod');
-var IsCallable = require('es-abstract/2022/IsCallable');
 var Type = require('es-abstract/2022/Type');
 
 var assertRecord = require('es-abstract/helpers/assertRecord');
@@ -20,12 +19,16 @@ module.exports = function IteratorClose(iteratorRecord, completion) {
 		throw new $TypeError('Assertion failed: iteratorRecord.[[Iterator]] must be an Object'); // step 1
 	}
 
-	if (!IsCallable(completion) && !(completion instanceof CompletionRecord)) { // step 2
-		throw new $TypeError('Assertion failed: completion is not a thunk representing a Completion Record, nor a Completion Record instance');
+	if (!(completion instanceof CompletionRecord)) { // step 2
+		throw new $TypeError('Assertion failed: completion is not a Completion Record instance');
 	}
-	var completionThunk = completion instanceof CompletionRecord ? function () {
-		return completion['?']();
-	} : completion;
+	var completionThunk = function () {
+		var value = completion.value();
+		if (completion.type() === 'throw') {
+			throw value;
+		}
+		return value;
+	};
 
 	var iterator = iteratorRecord['[[Iterator]]']; // step 3
 

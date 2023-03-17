@@ -20,6 +20,8 @@ module.exports = function CreateIteratorFromClosure(closure, brand, proto) {
 
 	SLOT.assert(closure, '[[Sentinel]]'); // our userland slot
 	SLOT.set(generator, '[[Sentinel]]'); // our userland slot
+	SLOT.assert(closure, '[[CloseIfAbrupt]]'); // our second userland slot
+	SLOT.set(generator, '[[CloseIfAbrupt]]', SLOT.get(closure, '[[CloseIfAbrupt]]')); // our second userland slot
 
 	GeneratorStart(generator, closure); // step 13
 

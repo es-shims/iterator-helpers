@@ -9,6 +9,7 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var hasPropertyDescriptors = require('has-property-descriptors')();
 
 var index = require('../Iterator.prototype.drop');
 var impl = require('../Iterator.prototype.drop/implementation');
@@ -51,6 +52,34 @@ module.exports = {
 			testIterator(drop(iterator[Symbol.iterator](), 2), [3], st, 'drop 2');
 			testIterator(drop(iterator[Symbol.iterator](), 3), [], st, 'drop 3');
 			testIterator(drop(iterator[Symbol.iterator](), Infinity), [], st, 'drop ∞');
+
+			st.end();
+		});
+
+		t.test('262: test/built-ins/Iterator/prototype/drop/get-return-method-throws', { skip: !hasPropertyDescriptors }, function (st) {
+			var badIterator = {
+				next: function next() {
+					return {
+						done: false,
+						value: 1
+					};
+				}
+			};
+
+			Object.defineProperty(badIterator, 'return', {
+				configurable: true,
+				enumerable: true,
+				get: function () { throw new SyntaxError(); }
+			});
+
+			var iter = drop(badIterator, 1);
+			iter.next();
+
+			st['throws'](
+				function () { iter['return'](); },
+				SyntaxError,
+				'gets the `return` method, whose getter throws'
+			);
 
 			st.end();
 		});

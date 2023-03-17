@@ -3,16 +3,17 @@
 var GetIntrinsic = require('get-intrinsic');
 
 var $RangeError = GetIntrinsic('%RangeError%');
+var $TypeError = GetIntrinsic('%TypeError%');
 
+var CompletionRecord = require('es-abstract/2022/CompletionRecord');
+var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
+var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
 var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
-
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 
@@ -32,6 +33,16 @@ module.exports = function drop(limit) {
 	if (integerLimit < 0) {
 		throw new $RangeError('`limit` must be a >= 0'); // step 5
 	}
+
+	var closeIfAbrupt = function (abruptCompletion) {
+		if (!(abruptCompletion instanceof CompletionRecord)) {
+			throw new $TypeError('`abruptCompletion` must be a Completion Record');
+		}
+		IteratorClose(
+			iterated,
+			abruptCompletion
+		);
+	};
 
 	var sentinel = {};
 	var remaining = integerLimit; // step 6.a
@@ -59,15 +70,14 @@ module.exports = function drop(limit) {
 			return value; // step 6.c.iii
 		} catch (e) {
 			// close iterator // step 6.c.icv
-			IteratorClose(
-				iterated,
-				ThrowCompletion(e)
-			);
+			closeIfAbrupt(ThrowCompletion(e));
+			throw e;
 		}
 		// }
-		return void undefined;
+		// return void undefined;
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
+	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
 	return CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto); // step 4
 };
