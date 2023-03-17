@@ -19,6 +19,12 @@ module.exports = {
 			TypeError,
 			name + ' throws when Call-ed'
 		);
+
+		t['throws'](
+			function () { return new Iter(); },
+			TypeError,
+			name + ' throws when Construct-ed'
+		);
 	},
 	index: function () {
 		test('Iterator: index', function (t) {

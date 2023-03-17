@@ -7,9 +7,7 @@ var $TypeError = GetIntrinsic('%TypeError%');
 var iterProto = require('iterator.prototype');
 
 var $Iterator = typeof Iterator === 'function' ? Iterator : function Iterator() {
-	if (!(this instanceof Iterator)) {
-		throw new $TypeError('`Iterator` can only be called with new');
-	}
+	throw new $TypeError('`Iterator` can not be called directly');
 };
 
 if ($Iterator.prototype !== iterProto) {

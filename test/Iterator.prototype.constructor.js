@@ -19,7 +19,17 @@ module.exports = {
 			t.notEqual(Index, $Iterator, 'index is not Iterator itself');
 			t.equal(typeof Index, 'function', 'index is a function');
 
-			t.ok(new Index() instanceof $Iterator, 'new index() instanceof Iterator');
+			t['throws'](
+				function () { Index(); }, // eslint-disable-line new-cap
+				TypeError,
+				'index throws when Call-ed'
+			);
+
+			t['throws'](
+				function () { return new Index(); },
+				TypeError,
+				'index throws when Construct-ed'
+			);
 
 			t.end();
 		});
