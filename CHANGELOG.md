@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.3](https://github.com/es-shims/iterator-helpers/compare/v1.0.2...v1.0.3) - 2023-03-17
+
+### Commits
+
+- [Fix] `drop`/`filter`/`flatMap`/`map`/`take`: properly IfAbruptCloseIterator [`ff643a0`](https://github.com/es-shims/iterator-helpers/commit/ff643a0b7c4e5c2b00e794ba9b988b47e783f235)
+- [Refactor] use `NormalCompletion`/`ThrowCompletion` instead of thunks [`68fd937`](https://github.com/es-shims/iterator-helpers/commit/68fd937b53c107481a9f868bda5b2bd5cbc00142)
+- [Fix] `filter`: IteratorClose needs to rethrow the error [`200474f`](https://github.com/es-shims/iterator-helpers/commit/200474ff289dea77c696c0c025f4602405cf3fff)
+- [Fix] `filter`: properly increment the counter [`14aa2d8`](https://github.com/es-shims/iterator-helpers/commit/14aa2d8b75fd16378c2be183fd5b008712547ed4)
+- [Fix] `Iterator` can not be `new`ed or invoked directly [`6fbd68e`](https://github.com/es-shims/iterator-helpers/commit/6fbd68e778dd455c4aa63f4e1f39e0b583610509)
+- [Fix] `Iterator.prototype` should be non-writable [`1080288`](https://github.com/es-shims/iterator-helpers/commit/108028858067e40ea56dca9a68dd6cea4966e904)
+- [Deps] update `es-abstract` [`b7913da`](https://github.com/es-shims/iterator-helpers/commit/b7913da9cddef1ec40b4827821c6069019b79093)
+- [Dev Deps] update `@es-shims/api` [`0071bed`](https://github.com/es-shims/iterator-helpers/commit/0071bed9e13231317d2cdb9ae0ecb6603784ad1f)
+
 ## [v1.0.2](https://github.com/es-shims/iterator-helpers/compare/v1.0.1...v1.0.2) - 2023-02-09
 
 ### Commits
