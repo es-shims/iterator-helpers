@@ -127,7 +127,7 @@
 	"homepage": "https://github.com/es-shims/iterator-helpers#readme",
 	"dependencies": {
 		"asynciterator.prototype": "^1.0.0",
-		"es-abstract": "^1.21.1",
+		"es-abstract": "^1.21.2",
 		"es-set-tostringtag": "^2.0.1",
 		"function-bind": "^1.1.1",
 		"globalthis": "^1.0.3",
