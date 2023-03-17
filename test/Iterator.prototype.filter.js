@@ -99,6 +99,62 @@ module.exports = {
 
 			st.end();
 		});
+
+		t.test('262: test/built-ins/Iterator/prototype/filter/predicate-throws', function (st) {
+			var returnCalls = 0;
+
+			var iter = {
+				next: function () {
+					return {
+						done: false,
+						value: 1
+					};
+				},
+				'return': function () {
+					returnCalls += 1;
+					return {};
+				}
+			};
+
+			var callbackCalls = 0;
+			var iterator = filter(iter, function () {
+				callbackCalls += 1;
+				throw new SyntaxError();
+			});
+
+			st['throws'](function () { iterator.next(); }, SyntaxError, 'next() throws');
+
+			st.equal(callbackCalls, 1);
+			st.equal(returnCalls, 1);
+
+			st.end();
+		});
+
+		t.test('262: test/built-ins/Iterator/prototype/filter/predicate-throws-then-closing-iterator-also-throws', function (st) {
+			var iter = {
+				next: function next() {
+					return {
+						done: false,
+						value: 1
+					};
+				},
+				'return': function () {
+					throw new EvalError();
+				}
+			};
+
+			var iterator = filter(iter, function () {
+				throw new SyntaxError();
+			});
+
+			st['throws'](
+				function () { iterator.next(); },
+				SyntaxError,
+				'when the predicate and return() both throw, the predicate’s exception wins'
+			);
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {

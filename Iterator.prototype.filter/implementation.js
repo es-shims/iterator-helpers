@@ -9,6 +9,7 @@ var IsCallable = require('es-abstract/2022/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
 var IteratorStep = require('../aos/IteratorStep');
 var IteratorValue = require('es-abstract/2022/IteratorValue');
+var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var ToBoolean = require('es-abstract/2022/ToBoolean');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
@@ -45,7 +46,7 @@ module.exports = function filter(predicate) {
 				}
 			} catch (e) {
 				// close iterator // step 3.b.v, 3.b.vii
-				IteratorClose(iterated, true);
+				IteratorClose(iterated, ThrowCompletion(e));
 				throw e;
 			} finally {
 				counter += 1; // step 3.b.viii
