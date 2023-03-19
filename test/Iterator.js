@@ -2,7 +2,6 @@
 
 var defineProperties = require('define-properties');
 var test = require('tape');
-var callBind = require('call-bind');
 var functionsHaveNames = require('functions-have-names')();
 
 var index = require('../Iterator');
@@ -35,7 +34,7 @@ module.exports = {
 	},
 	implementation: function () {
 		test('Iterator: implementation', function (t) {
-			module.exports.tests(callBind(impl, null), 'Iterator', t);
+			module.exports.tests(impl, 'Iterator', t);
 
 			t.end();
 		});
