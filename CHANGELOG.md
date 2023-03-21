@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.4](https://github.com/es-shims/iterator-helpers/compare/v1.0.3...v1.0.4) - 2023-03-21
+
+### Commits
+
+- [Fix] validate arguments first [`4240029`](https://github.com/es-shims/iterator-helpers/commit/42400297454909ddccc899a012dc55bbd403eb8b)
+- [Fix] close underlying iterator when helper is closed [`f5372c7`](https://github.com/es-shims/iterator-helpers/commit/f5372c78cafff64bfda5849386538f806916049a)
+- [Tests] `Iterator`: remove an unnecessary call-bind [`7d0ba59`](https://github.com/es-shims/iterator-helpers/commit/7d0ba59f672e690b189f91e0348f6b5e00f934e1)
+
 ## [v1.0.3](https://github.com/es-shims/iterator-helpers/compare/v1.0.2...v1.0.3) - 2023-03-17
 
 ### Commits
