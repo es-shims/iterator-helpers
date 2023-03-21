@@ -14,6 +14,7 @@ var IteratorValue = require('es-abstract/2022/IteratorValue');
 var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2022/ToNumber');
+var Type = require('es-abstract/2022/Type');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 
@@ -22,12 +23,17 @@ var isNaN = require('es-abstract/helpers/isNaN');
 var SLOT = require('internal-slot');
 
 module.exports = function drop(limit) {
-	var iterated = GetIteratorDirect(this); // step 1
+	var O = this; // step 1
+	if (Type(O) !== 'Object') {
+		throw new $TypeError('`this` value must be an Object'); // step 2
+	}
 
 	var numLimit = ToNumber(limit); // step 2
 	if (isNaN(numLimit)) {
 		throw new $RangeError('`limit` must be a non-NaN number'); // step 3
 	}
+
+	var iterated = GetIteratorDirect(O); // step 4
 
 	var integerLimit = ToIntegerOrInfinity(numLimit); // step 4
 	if (integerLimit < 0) {

@@ -24,14 +24,14 @@ module.exports = {
 	tests: function (drop, name, t) {
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
-				function () { drop(nonIterator); },
+				function () { drop(nonIterator, 0); },
 				TypeError,
 				debug(nonIterator) + ' is not an Object with a callable `next` method'
 			);
 
 			var badNext = { next: nonIterator };
 			t['throws'](
-				function () { drop(badNext); },
+				function () { drop(badNext, 0); },
 				TypeError,
 				debug(badNext) + ' is not an Object with a callable `next` method'
 			);
