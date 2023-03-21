@@ -83,6 +83,128 @@ module.exports = {
 
 			st.end();
 		});
+
+		t.test('262: test/built-ins/Iterator/prototype/drop/return-is-forwarded', function (st) {
+			var returnCount = 0;
+
+			var makeBadIterator = function makeBadIterator() {
+				return {
+					next: function next() {
+						return {
+							done: false,
+							value: 1
+						};
+					},
+					'return': function () {
+						returnCount += 1;
+						return {};
+					}
+				};
+			};
+
+			var iter1 = drop(makeBadIterator(), 0);
+			st.equal(returnCount, 0, 'iter1, before return()');
+			iter1['return']();
+			st.equal(returnCount, 1, 'iter1, after return()');
+
+			var iter2 = drop(makeBadIterator(), 1);
+			st.equal(returnCount, 1, 'iter2, before return()');
+			iter2['return']();
+			st.equal(returnCount, 2, 'iter2, after return()');
+
+			// 5 drops (i wish i had pipeline)
+			var iter3 = drop(
+				drop(
+					drop(
+						drop(
+							drop(
+								makeBadIterator(),
+								1
+							),
+							1
+						),
+						1
+					),
+					1
+				),
+				1
+			);
+			st.equal(returnCount, 2, 'iter3, before return()');
+			iter3['return']();
+			st.equal(returnCount, 3, 'iter3, after return()');
+
+			st.end();
+		});
+
+		t.test('262: test/built-ins/Iterator/prototype/drop/return-is-not-forwarded-after-exhaustion', { skip: !hasPropertyDescriptors }, function (st) {
+			var makeBadIterator = function makeBadIterator() {
+				return {
+					next: function next() {
+						return {
+							done: true,
+							value: undefined
+						};
+					},
+					'return': function () {
+						throw new SyntaxError();
+					}
+				};
+			};
+
+			var iter1 = drop(makeBadIterator(), 0);
+			st['throws'](
+				function () { iter1['return'](); },
+				SyntaxError,
+				'iter1, return() throws'
+			);
+			iter1.next();
+			iter1['return']();
+
+			var iter2 = drop(makeBadIterator(), 1);
+			st['throws'](
+				function () { iter2['return'](); },
+				SyntaxError,
+				'iter2, return() throws'
+			);
+			iter2.next();
+			iter2['return']();
+
+			// 5 drops (i wish i had pipeline)
+			var iter3 = drop(
+				drop(
+					drop(
+						drop(
+							drop(
+								makeBadIterator(),
+								1
+							),
+							1
+						),
+						1
+					),
+					1
+				),
+				1
+			);
+			st['throws'](
+				function () { iter3['return'](); },
+				SyntaxError,
+				'iter3, return() throws'
+			);
+			iter3.next();
+			iter3['return']();
+
+			var iter4 = drop(makeBadIterator(), 10);
+			st['throws'](
+				function () { iter4['return'](); },
+				SyntaxError,
+				'iter4, return() throws'
+			);
+			iter4.next();
+			iter4['return']();
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {

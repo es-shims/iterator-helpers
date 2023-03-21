@@ -28,6 +28,7 @@
 				"GetIteratorDirect",
 				"GetIteratorFlattenable",
 				"GetMethod",
+				"IsArray",
 				"IsCallable",
 				"IteratorClose",
 				"IteratorComplete",

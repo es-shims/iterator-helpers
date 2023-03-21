@@ -180,6 +180,76 @@ module.exports = {
 
 			st.end();
 		});
+
+		t.test('262: test/built-ins/Iterator/prototype/drop/return-is-forwarded', function (st) {
+			var returnCount = 0;
+
+			var badIterator = {
+				next: function next() {
+					return {
+						done: false,
+						value: 1
+					};
+				},
+				'return': function () {
+					returnCount += 1;
+					return {};
+				}
+			};
+
+			var iter1 = filter(badIterator, function () { return false; });
+			st.equal(returnCount, 0, 'iter1, before return()');
+			iter1['return']();
+			st.equal(returnCount, 1, 'iter1, after return()');
+
+			st.end();
+		});
+
+		t.test('262: test/built-ins/Iterator/prototype/drop/return-is-not-forwarded-after-exhaustion', { skip: !hasPropertyDescriptors }, function (st) {
+			var makeBadIterator = function makeBadIterator() {
+				return {
+					next: function next() {
+						return {
+							done: true,
+							value: undefined
+						};
+					},
+					'return': function () {
+						throw new SyntaxError();
+					}
+				};
+			};
+
+			var iter1 = filter(makeBadIterator(), function () { return true; });
+			st['throws'](
+				function () { iter1['return'](); },
+				SyntaxError,
+				'iter1, return() throws'
+			);
+			iter1.next();
+			iter1['return']();
+
+			// 3 filters (i wish i had pipeline)
+			var iter2 = filter(
+				filter(
+					filter(
+						makeBadIterator(),
+						function () { return true; }
+					),
+					function () { return true; }
+				),
+				function () { return true; }
+			);
+			st['throws'](
+				function () { iter2['return'](); },
+				SyntaxError,
+				'iter2, return() throws'
+			);
+			iter2.next();
+			iter2['return']();
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {
