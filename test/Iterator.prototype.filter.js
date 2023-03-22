@@ -45,6 +45,31 @@ module.exports = {
 			);
 		});
 
+		t.test('observable lookups', { skip: !hasPropertyDescriptors }, function (st) {
+			var effects = [];
+
+			var obj = {};
+			Object.defineProperty(obj, 'next', {
+				configurable: true,
+				enumerable: true,
+				get: function next() {
+					effects.push('get next');
+					return function () {
+						return { done: true, value: undefined };
+					};
+				}
+			});
+
+			st['throws'](
+				function () { filter(obj, null); },
+				TypeError
+			);
+
+			st.deepEqual(effects, []);
+
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);

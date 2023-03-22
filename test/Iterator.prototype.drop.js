@@ -37,6 +37,34 @@ module.exports = {
 			);
 		});
 
+		t.test('observable lookups', { skip: !hasPropertyDescriptors }, function (st) {
+			var effects = [];
+
+			var obj = {};
+			Object.defineProperty(obj, 'next', {
+				configurable: true,
+				enumerable: true,
+				get: function next() {
+					effects.push('get next');
+					return function () {
+						return { done: true, value: undefined };
+					};
+				}
+			});
+			drop(obj, {
+				valueOf: function valueOf() {
+					effects.push('ToNumber limit');
+					return 0;
+				}
+			});
+
+			st.deepEqual(effects, [
+				'ToNumber limit',
+				'get next'
+			]);
+			st.end();
+		});
+
 		var iterator = [1, 2, 3];
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {

@@ -9,6 +9,7 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var hasPropertyDescriptors = require('has-property-descriptors')();
 
 var index = require('../Iterator.prototype.every');
 var impl = require('../Iterator.prototype.every/implementation');
@@ -42,6 +43,31 @@ module.exports = {
 				TypeError,
 				debug(nonFunction) + ' is not a function'
 			);
+		});
+
+		t.test('observable lookups', { skip: !hasPropertyDescriptors }, function (st) {
+			var effects = [];
+
+			var obj = {};
+			Object.defineProperty(obj, 'next', {
+				configurable: true,
+				enumerable: true,
+				get: function next() {
+					effects.push('get next');
+					return function () {
+						return { done: true, value: undefined };
+					};
+				}
+			});
+
+			st['throws'](
+				function () { every(obj, null); },
+				TypeError
+			);
+
+			st.deepEqual(effects, []);
+
+			st.end();
 		});
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
