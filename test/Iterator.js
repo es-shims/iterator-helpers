@@ -24,6 +24,27 @@ module.exports = {
 			TypeError,
 			name + ' throws when Construct-ed'
 		);
+
+		var SubIter;
+		var SubSubIter;
+		try {
+			/* eslint no-new-func: 0 */
+			SubIter = Function('Iter', 'return class SubIter extends Iter {};')(Iter);
+			SubSubIter = Function('SubIter', 'return class SubSubIter extends SubIter {};')(SubIter);
+		} catch (e) { /**/ }
+
+		t.test('class inheritance', { skip: !SubIter }, function (st) {
+			st.doesNotThrow(
+				function () { return new SubIter(); },
+				'Extending ' + name + ' does not throw when Construct-ed'
+			);
+			st.doesNotThrow(
+				function () { return new SubSubIter(); },
+				'Extending ' + name + ' twice does not throw when Construct-ed'
+			);
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator: index', function (t) {
