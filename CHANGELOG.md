@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.5](https://github.com/es-shims/iterator-helpers/compare/v1.0.4...v1.0.5) - 2023-03-22
+
+### Commits
+
+- [Tests] add passing tests for 4240029 [`c2082fe`](https://github.com/es-shims/iterator-helpers/commit/c2082fee3e73dc1998a67fbe0014e3ebdceb8ec0)
+- [Fix] properly allow subclasses of Iterator to be constructed [`5cebe2a`](https://github.com/es-shims/iterator-helpers/commit/5cebe2a5767393696d0ce4e9325edf78c300f938)
+
 ## [v1.0.4](https://github.com/es-shims/iterator-helpers/compare/v1.0.3...v1.0.4) - 2023-03-21
 
 ### Commits
