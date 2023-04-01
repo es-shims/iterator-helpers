@@ -5,8 +5,8 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var Call = require('es-abstract/2022/Call');
-var Get = require('es-abstract/2022/Get');
 var GetIterator = require('es-abstract/2022/GetIterator');
+var GetIteratorDirect = require('./GetIteratorDirect');
 var IsCallable = require('es-abstract/2022/IsCallable');
 var Type = require('es-abstract/2022/Type');
 
@@ -32,13 +32,5 @@ module.exports = function GetIteratorFlattenable(obj) {
 	if (Type(iterator) !== 'Object') {
 		throw new $TypeError('iterator must be an Object'); // step 5
 	}
-	var nextMethod = Get(iterator, 'next'); // step 6
-
-	if (!IsCallable(nextMethod)) {
-		throw new $TypeError('nextMethod must be a function'); // step 7
-	}
-
-	var iteratorRecord = { '[[Iterator]]': iterator, '[[NextMethod]]': nextMethod, '[[Done]]': false }; // step 8
-
-	return iteratorRecord;
+	return GetIteratorDirect(iterator); // step 6
 };
