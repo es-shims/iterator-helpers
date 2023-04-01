@@ -58,7 +58,7 @@ module.exports = function flatMap(mapper) {
 			try {
 				mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iv
 				// yield mapped // step 6.b.vi
-				innerIterator = GetIteratorFlattenable(mapped, 'sync'); // step 6.b.vi
+				innerIterator = GetIteratorFlattenable(mapped); // step 6.b.vi
 			} catch (e) {
 				closeIfAbrupt(ThrowCompletion(e)); // steps 6.b.v, 6.b.vii
 			}

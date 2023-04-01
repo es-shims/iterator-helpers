@@ -18,7 +18,7 @@ module.exports = function from(O) {
 		O = ToObject(O); // step 1
 	}
 
-	var iteratorRecord = GetIteratorFlattenable(O, 'sync'); // step 2
+	var iteratorRecord = GetIteratorFlattenable(O); // step 2
 
 	var hasInstance = OrdinaryHasInstance($Iterator, iteratorRecord['[[Iterator]]']); // step 3
 
