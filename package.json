@@ -134,7 +134,8 @@
 		"has-proto": "^1.0.1",
 		"has-symbols": "^1.0.3",
 		"internal-slot": "^1.0.5",
-		"iterator.prototype": "^1.1.0"
+		"iterator.prototype": "^1.1.0",
+		"safe-array-concat": "^1.0.0"
 	},
 	"devDependencies": {
 		"@es-shims/api": "^2.3.1",

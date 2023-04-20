@@ -12,10 +12,9 @@ var Type = require('es-abstract/2022/Type');
 
 var every = require('es-abstract/helpers/every');
 
-var callBound = require('call-bind/callBound');
 var SLOT = require('internal-slot');
 
-var $concat = callBound('Array.prototype.concat');
+var safeConcat = require('safe-array-concat');
 
 var isString = function isString(slot) {
 	return Type(slot) === 'String';
@@ -34,7 +33,7 @@ module.exports = function CreateIteratorFromClosure(closure, generatorBrand, pro
 			throw new $TypeError('`extraSlots` must be a List of String internal slot names');
 		}
 	}
-	var internalSlotsList = $concat(extraSlots, ['[[GeneratorContext]]', '[[GeneratorBrand]]', '[[GeneratorState]]']); // step 3
+	var internalSlotsList = safeConcat(extraSlots, ['[[GeneratorContext]]', '[[GeneratorBrand]]', '[[GeneratorState]]']); // step 3
 	var generator = OrdinaryObjectCreate(proto, internalSlotsList); // steps 4, 6
 	SLOT.set(generator, '[[GeneratorBrand]]', generatorBrand); // step 5
 
