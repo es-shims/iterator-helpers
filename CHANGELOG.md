@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.6](https://github.com/es-shims/iterator-helpers/compare/v1.0.5...v1.0.6) - 2023-04-20
+
+### Commits
+
+- [Refactor] `GetIteratorFlattenable`: remove hint [`781fc7c`](https://github.com/es-shims/iterator-helpers/commit/781fc7c28615aaaef139cbcd9e6ade513419bea1)
+- [Refactor] `GetIteratorFlattenable`: use `GetIteratorDirect` [`026118b`](https://github.com/es-shims/iterator-helpers/commit/026118b8c884adaee5ab0eb12de838ef9abdbb6f)
+- [Refactor] use `safe-array-concat` [`1d985a4`](https://github.com/es-shims/iterator-helpers/commit/1d985a449be212523f05ba4a359a162931ddf3d3)
+
 ## [v1.0.5](https://github.com/es-shims/iterator-helpers/compare/v1.0.4...v1.0.5) - 2023-03-22
 
 ### Commits
