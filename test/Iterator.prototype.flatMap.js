@@ -9,6 +9,7 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var StringToCodePoints = require('es-abstract/2022/StringToCodePoints');
 
 var index = require('../Iterator.prototype.flatMap');
 var impl = require('../Iterator.prototype.flatMap/implementation');
@@ -57,11 +58,66 @@ module.exports = {
 				'non-iterable return value throws'
 			);
 
+			forEach(v.strings, function (string) {
+				st['throws'](
+					function () { flatMap(iterator(), function () { return string; }).next(); },
+					TypeError,
+					'non-object return value throws even if iterable (' + debug(string) + ')'
+				);
+
+				testIterator(
+					flatMap(iterator(), function () { return Object(string); }),
+					[].concat(StringToCodePoints(string), StringToCodePoints(string), StringToCodePoints(string)),
+					st,
+					'boxed string (' + debug(string) + ')'
+				);
+			});
+
 			testIterator(flatMap(iterator(), function (x) { return [x][Symbol.iterator](); }), [1, 2, 3], st, 'identity mapper in array iterator');
 			testIterator(flatMap(iterator(), function (x) { return [2 * x][Symbol.iterator](); }), [2, 4, 6], st, 'doubler mapper in array iterator');
 
 			testIterator(flatMap(iterator(), function (x) { return [[x]][Symbol.iterator](); }), [[1], [2], [3]], st, 'identity mapper in nested array iterator');
 			testIterator(flatMap(iterator(), function (x) { return [[2 * x]][Symbol.iterator](); }), [[2], [4], [6]], st, 'doubler mapper in nested array iterator');
+
+			testIterator(flatMap([0, 1, 2, 3][Symbol.iterator](), function (value) {
+				var result = [];
+				for (var i = 0; i < value; ++i) {
+					result.push(value);
+				}
+				return result;
+			}), [1, 2, 2, 3, 3, 3], st, 'test262: test/built-ins/Iterator/prototype/flatMap/flattens-iteratable');
+
+			testIterator(flatMap([0, 1, 2, 3][Symbol.iterator](), function (value) {
+				var i = 0;
+				return {
+					next: function () {
+						if (i < value) {
+							i += 1;
+							return {
+								value: value,
+								done: false
+							};
+						}
+						return {
+							value: undefined,
+							done: true
+						};
+
+					}
+				};
+			}), [1, 2, 2, 3, 3, 3], st, 'test262: test/built-ins/Iterator/prototype/flatMap/flattens-iterator');
+
+			testIterator(flatMap([0][Symbol.iterator](), function () {
+				var n = [0, 1, 2][Symbol.iterator]();
+
+				var ret = {
+					next: function next() {
+						return n.next();
+					}
+				};
+				ret[Symbol.iterator] = 0;
+				return ret;
+			}), [0, 1, 2], st, 'test262: test/built-ins/Iterator/prototype/flatMap/iterable-to-iterator-fallback');
 
 			st.end();
 		});

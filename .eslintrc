@@ -12,6 +12,7 @@
 		"func-name-matching": 0,
 		"id-length": 0,
 		"max-lines-per-function": 0,
+		"max-statements": 0,
 		"multiline-comment-style": 0,
 		"new-cap": [2, {
 			"capIsNewExceptions": [
@@ -39,6 +40,7 @@
 				"OrdinaryHasInstance",
 				"OrdinaryObjectCreate",
 				"PromiseResolve",
+				"StringToCodePoints",
 				"ThrowCompletion",
 				"ToBoolean",
 				"ToIntegerOrInfinity",

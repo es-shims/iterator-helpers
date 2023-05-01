@@ -4,11 +4,15 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
+var AdvanceStringIndex = require('es-abstract/2022/AdvanceStringIndex');
 var Call = require('es-abstract/2022/Call');
-var GetIterator = require('es-abstract/2022/GetIterator');
 var GetIteratorDirect = require('./GetIteratorDirect');
+var GetV = require('es-abstract/2022/GetV');
+var IsArray = require('es-abstract/2022/IsArray');
 var IsCallable = require('es-abstract/2022/IsCallable');
 var Type = require('es-abstract/2022/Type');
+
+var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 
 module.exports = function GetIteratorFlattenable(obj) {
 	if (Type(obj) !== 'Object') {
@@ -18,9 +22,14 @@ module.exports = function GetIteratorFlattenable(obj) {
 	var method = void undefined; // step 2
 
 	// method = Get(obj, Symbol.iterator); // step 5.a
-	method = function () {
-		return GetIterator(obj);
-	};
+	method = getIteratorMethod(
+		{
+			AdvanceStringIndex: AdvanceStringIndex,
+			GetMethod: GetV,
+			IsArray: IsArray
+		},
+		obj
+	);
 
 	var iterator;
 	if (!IsCallable(method)) { // step 3
