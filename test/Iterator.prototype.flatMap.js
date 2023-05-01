@@ -119,6 +119,27 @@ module.exports = {
 				return ret;
 			}), [0, 1, 2], st, 'test262: test/built-ins/Iterator/prototype/flatMap/iterable-to-iterator-fallback');
 
+			var counts = [];
+			testIterator(flatMap(['a', 'b', 'c', 'd', 'e'][Symbol.iterator](), function (value, count) {
+				counts.push(count);
+
+				if (value === 'a' || value === 'b') {
+					return [0];
+				}
+				if (value === 'c') {
+					return [1, 2];
+				}
+				if (value === 'd') {
+					return [3, 4, 5];
+				}
+				if (value === 'e') {
+					return [6, 7, 8, 9];
+				}
+
+				return st.fail('got unexpected value: ' + debug(v));
+			}), [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], st, 'test262: test/built-ins/Iterator/prototype/flatMap/mapper-args');
+			st.deepEqual(counts, [0, 1, 2, 3, 4], 'count values are as expected');
+
 			st.end();
 		});
 	},

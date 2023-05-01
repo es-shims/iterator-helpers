@@ -59,46 +59,44 @@ module.exports = function flatMap(mapper) {
 			var value = IteratorValue(next); // step 6.b.iii
 		}
 
-		try {
-			if (innerIterator === sentinel) {
-				innerAlive = true; // step 6.b.viii
-				try {
-					var mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iv
-					// yield mapped // step 6.b.vi
-					innerIterator = GetIteratorFlattenable(mapped); // step 6.b.vi
-				} catch (e) {
-					innerAlive = false;
-					innerIterator = sentinel;
-					closeIfAbrupt(ThrowCompletion(e)); // steps 6.b.v, 6.b.vii
-				}
+		if (innerIterator === sentinel) {
+			innerAlive = true; // step 6.b.viii
+			try {
+				var mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iv
+				// yield mapped // step 6.b.vi
+				innerIterator = GetIteratorFlattenable(mapped); // step 6.b.vi
+			} catch (e) {
+				innerAlive = false;
+				innerIterator = sentinel;
+				closeIfAbrupt(ThrowCompletion(e)); // steps 6.b.v, 6.b.vii
+			} finally {
+				counter += 1; // step 6.b.x
 			}
-			// while (innerAlive) { // step 6.b.ix
-			if (innerAlive) {
-				var innerNext;
-				try {
-					innerNext = IteratorStep(innerIterator); // step 6.b.ix.1
-				} catch (e) {
-					innerIterator = sentinel;
-					closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.2
-				}
-				if (!innerNext) {
-					innerAlive = false; // step 6.b.ix.3.a
-					innerIterator = sentinel;
-					return closure();
-				}
-				// step 6.b.ix.4
-				var innerValue;
-				try {
-					innerValue = IteratorValue(innerNext); // step 6.b.ix.4.a
-				} catch (e) {
-					innerAlive = false;
-					innerIterator = sentinel;
-					closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.4.b
-				}
-				return innerValue; // step 6.b.ix.4.c
+		}
+		// while (innerAlive) { // step 6.b.ix
+		if (innerAlive) {
+			var innerNext;
+			try {
+				innerNext = IteratorStep(innerIterator); // step 6.b.ix.1
+			} catch (e) {
+				innerIterator = sentinel;
+				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.2
 			}
-		} finally {
-			counter += 1; // step 6.b.x
+			if (!innerNext) {
+				innerAlive = false; // step 6.b.ix.3.a
+				innerIterator = sentinel;
+				return closure();
+			}
+			// step 6.b.ix.4
+			var innerValue;
+			try {
+				innerValue = IteratorValue(innerNext); // step 6.b.ix.4.a
+			} catch (e) {
+				innerAlive = false;
+				innerIterator = sentinel;
+				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.4.b
+			}
+			return innerValue; // step 6.b.ix.4.c
 		}
 		// }
 		// return void undefined;
