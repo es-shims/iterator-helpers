@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.9](https://github.com/es-shims/iterator-helpers/compare/v1.0.8...v1.0.9) - 2023-05-02
+
+### Commits
+
+- [Refactor] use 2022 AO instead of 2015 AO [`75ee5c4`](https://github.com/es-shims/iterator-helpers/commit/75ee5c4dea0037f02a61c240114bb6bd8c8b48f1)
+
 ## [v1.0.8](https://github.com/es-shims/iterator-helpers/compare/v1.0.7...v1.0.8) - 2023-05-02
 
 ### Commits
