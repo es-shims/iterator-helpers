@@ -32,71 +32,83 @@ module.exports = function flatMap(mapper) {
 
 	var iterated = GetIteratorDirect(O); // step 4
 
+	var sentinel = { sentinel: true };
+	var innerIterator = sentinel;
+
 	var closeIfAbrupt = function (abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
-		IteratorClose(
-			iterated,
-			abruptCompletion
-		);
+		try {
+			if (innerIterator !== sentinel) {
+				IteratorClose(
+					innerIterator,
+					abruptCompletion
+				);
+			}
+		} finally {
+			innerIterator = sentinel;
+
+			IteratorClose(
+				iterated,
+				abruptCompletion
+			);
+		}
 	};
 
-	var sentinel = { sentinel: true };
-	var counter = 0; // step 6.a
-	var innerIterator = sentinel;
+	var counter = 0; // step 5.a
 	var innerAlive = false;
 	var closure = function () {
-		// while (true) { // step 6.b
+		// while (true) { // step 5.b
 		if (innerIterator === sentinel) {
-			var next = IteratorStep(iterated); // step 6.b.i
+			var next = IteratorStep(iterated); // step 5.b.i
 			if (!next) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				// return void undefined; // step 6.b.ii
+				// return void undefined; // step 5.b.ii
 				return sentinel;
 			}
-			var value = IteratorValue(next); // step 6.b.iii
+			var value = IteratorValue(next); // step 5.b.iii
 		}
 
 		if (innerIterator === sentinel) {
-			innerAlive = true; // step 6.b.viii
+			innerAlive = true; // step 5.b.viii
 			try {
-				var mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iv
-				// yield mapped // step 6.b.vi
-				innerIterator = GetIteratorFlattenable(mapped); // step 6.b.vi
+				var mapped = Call(mapper, void undefined, [value, counter]); // step 5.b.iv
+				// yield mapped // step 5.b.vi
+				innerIterator = GetIteratorFlattenable(mapped); // step 5.b.vi
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // steps 6.b.v, 6.b.vii
+				closeIfAbrupt(ThrowCompletion(e)); // steps 5.b.v, 5.b.vii
 			} finally {
-				counter += 1; // step 6.b.x
+				counter += 1; // step 5.b.x
 			}
 		}
-		// while (innerAlive) { // step 6.b.ix
+		// while (innerAlive) { // step 5.b.ix
 		if (innerAlive) {
 			var innerNext;
 			try {
-				innerNext = IteratorStep(innerIterator); // step 6.b.ix.1
+				innerNext = IteratorStep(innerIterator); // step 5.b.ix.1
 			} catch (e) {
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.2
+				closeIfAbrupt(ThrowCompletion(e)); // step 5.b.ix.2
 			}
 			if (!innerNext) {
-				innerAlive = false; // step 6.b.ix.3.a
+				innerAlive = false; // step 5.b.ix.3.a
 				innerIterator = sentinel;
 				return closure();
 			}
-			// step 6.b.ix.4
+			// step 5.b.ix.4
 			var innerValue;
 			try {
-				innerValue = IteratorValue(innerNext); // step 6.b.ix.4.a
+				innerValue = IteratorValue(innerNext); // step 5.b.ix.4.a
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.ix.4.b
+				closeIfAbrupt(ThrowCompletion(e)); // step 5.b.ix.4.b
 			}
-			return innerValue; // step 6.b.ix.4.c
+			return innerValue; // step 5.b.ix.4.c
 		}
 		// }
 		// return void undefined;

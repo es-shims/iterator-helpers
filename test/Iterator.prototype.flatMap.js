@@ -140,6 +140,41 @@ module.exports = {
 			}), [0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], st, 'test262: test/built-ins/Iterator/prototype/flatMap/mapper-args');
 			st.deepEqual(counts, [0, 1, 2, 3, 4], 'count values are as expected');
 
+			st.test('return protocol', function (s2t) {
+				var returnCount = 0;
+
+				var iter = flatMap([0][Symbol.iterator](), function () {
+					return {
+						next: function next() {
+							return {
+								done: false,
+								value: 1
+							};
+						},
+						'return': function () {
+							returnCount += 1;
+							return {};
+						}
+					};
+				});
+				s2t.equal(returnCount, 0, '`return` is not called yet');
+
+				s2t.deepEqual(iter.next(), {
+					done: false,
+					value: 1
+				});
+
+				s2t.equal(returnCount, 0, '`return` is not called after first yield');
+
+				iter['return']();
+				s2t.equal(returnCount, 1, '`return` is called when iterator return is called');
+
+				iter['return']();
+				s2t.equal(returnCount, 1, '`return` is not called again when iterator return is called again');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},
