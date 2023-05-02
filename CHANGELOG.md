@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.7](https://github.com/es-shims/iterator-helpers/compare/v1.0.6...v1.0.7) - 2023-05-01
+
+### Commits
+
+- [Fix] `flatMap`: properly handle yielded iterables [`3a78767`](https://github.com/es-shims/iterator-helpers/commit/3a78767e86394d45b212a225e4253745f8b1dc8d)
+- [Fix] `flatMap`: only increment the count when iterating the outer iterator [`955d0b0`](https://github.com/es-shims/iterator-helpers/commit/955d0b00f5660db0d9febef2a16426dfc32e8be4)
+
 ## [v1.0.6](https://github.com/es-shims/iterator-helpers/compare/v1.0.5...v1.0.6) - 2023-04-20
 
 ### Commits
