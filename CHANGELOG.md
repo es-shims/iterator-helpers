@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.8](https://github.com/es-shims/iterator-helpers/compare/v1.0.7...v1.0.8) - 2023-05-02
+
+### Commits
+
+- [Fix] `flatMap`: close the inner iterator when applicable [`4dc94e0`](https://github.com/es-shims/iterator-helpers/commit/4dc94e0117e34b4c99f9ed96c4fe306896c47da1)
+
 ## [v1.0.7](https://github.com/es-shims/iterator-helpers/compare/v1.0.6...v1.0.7) - 2023-05-01
 
 ### Commits
