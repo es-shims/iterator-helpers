@@ -6,7 +6,7 @@ var iterProto = require('iterator.prototype');
 var SLOT = require('internal-slot');
 
 var CompletionRecord = require('es-abstract/2022/CompletionRecord');
-var CreateIterResultObject = require('es-abstract/2015/CreateIterResultObject');
+var CreateIterResultObject = require('es-abstract/2022/CreateIterResultObject');
 var GeneratorResume = require('../aos/GeneratorResume');
 var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
 var IteratorClose = require('../aos/IteratorClose');
