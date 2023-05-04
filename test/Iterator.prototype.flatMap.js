@@ -76,8 +76,9 @@ module.exports = {
 			testIterator(flatMap(iterator(), function (x) { return [x][Symbol.iterator](); }), [1, 2, 3], st, 'identity mapper in array iterator');
 			testIterator(flatMap(iterator(), function (x) { return [2 * x][Symbol.iterator](); }), [2, 4, 6], st, 'doubler mapper in array iterator');
 
-			testIterator(flatMap(iterator(), function (x) { return [[x]][Symbol.iterator](); }), [[1], [2], [3]], st, 'identity mapper in nested array iterator');
-			testIterator(flatMap(iterator(), function (x) { return [[2 * x]][Symbol.iterator](); }), [[2], [4], [6]], st, 'doubler mapper in nested array iterator');
+			testIterator(flatMap(iterator(), function () { return []; }), [], st, 'empty mapper in nested array iterator');
+			testIterator(flatMap(iterator(), function (x) { return [[x, x + 1]][Symbol.iterator](); }), [[1, 2], [2, 3], [3, 4]], st, 'identity mapper in nested array iterator');
+			testIterator(flatMap(iterator(), function (x) { return [[2 * x, 2 * (x + 1)]][Symbol.iterator](); }), [[2, 4], [4, 6], [6, 8]], st, 'doubler mapper in nested array iterator');
 
 			testIterator(flatMap([0, 1, 2, 3][Symbol.iterator](), function (value) {
 				var result = [];
