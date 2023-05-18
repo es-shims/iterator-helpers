@@ -116,7 +116,7 @@ module.exports = {
 						return n.next();
 					}
 				};
-				ret[Symbol.iterator] = 0;
+				ret[Symbol.iterator] = null;
 				return ret;
 			}), [0, 1, 2], st, 'test262: test/built-ins/Iterator/prototype/flatMap/iterable-to-iterator-fallback');
 
