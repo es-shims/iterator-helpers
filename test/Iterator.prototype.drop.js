@@ -10,6 +10,7 @@ var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
 var hasPropertyDescriptors = require('has-property-descriptors')();
+var iterate = require('iterate-iterator');
 
 var index = require('../Iterator.prototype.drop');
 var impl = require('../Iterator.prototype.drop/implementation');
@@ -24,14 +25,14 @@ module.exports = {
 	tests: function (drop, name, t) {
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
-				function () { drop(nonIterator, 0); },
+				function () { iterate(drop(nonIterator, 0)); },
 				TypeError,
 				debug(nonIterator) + ' is not an Object with a callable `next` method'
 			);
 
 			var badNext = { next: nonIterator };
 			t['throws'](
-				function () { drop(badNext, 0); },
+				function () { iterate(drop(badNext, 0)); },
 				TypeError,
 				debug(badNext) + ' is not an Object with a callable `next` method'
 			);

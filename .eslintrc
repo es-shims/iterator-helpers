@@ -58,6 +58,7 @@
 		{
 			"files": "test/**",
 			"rules": {
+				"eqeqeq": ["error", "allow-null"],
 				"max-params": 0,
 			},
 		},

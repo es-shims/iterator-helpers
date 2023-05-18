@@ -23,17 +23,19 @@ module.exports = {
 	tests: function (take, name, t) {
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
-				function () { take(nonIterator, 0); },
+				function () { take(nonIterator, 1).next(); },
 				TypeError,
 				debug(nonIterator) + ' is not an Object with a callable `next` method'
 			);
 
-			var badNext = { next: nonIterator };
-			t['throws'](
-				function () { take(badNext, 0); },
-				TypeError,
-				debug(badNext) + ' is not an Object with a callable `next` method'
-			);
+			if (nonIterator != null && typeof nonIterator !== 'string') {
+				var badNext = { next: nonIterator };
+				t['throws'](
+					function () { take(badNext, 1).next(); },
+					TypeError,
+					debug(badNext) + ' is not an Object with a callable `next` method'
+				);
+			}
 		});
 
 		var iterator = [1, 2, 3];

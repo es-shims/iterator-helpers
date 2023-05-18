@@ -42,7 +42,7 @@ module.exports = {
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			if (typeof nonIterator !== 'string') {
 				t['throws'](
-					function () { from(nonIterator); },
+					function () { from(nonIterator).next(); },
 					TypeError,
 					debug(nonIterator) + ' is not an iterable Object'
 				);
@@ -54,7 +54,7 @@ module.exports = {
 				var badIterable = {};
 				badIterable[Symbol.iterator] = nonFunction;
 				st['throws'](
-					function () { from(badIterable); },
+					function () { from(badIterable).next(); },
 					TypeError,
 					debug(badIterable) + ' is not a function'
 				);
