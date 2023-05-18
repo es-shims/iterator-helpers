@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.10](https://github.com/es-shims/iterator-helpers/compare/v1.0.9...v1.0.10) - 2023-05-18
+
+### Commits
+
+- [patch] remove IsCallable check on NextMethod, deferring errors to callsite [`bbb7efa`](https://github.com/es-shims/iterator-helpers/commit/bbb7efac8349273fe17c86194ef13af45bcb8e24)
+- [patch] change Symbol.iterator fallback from callable check to nullish check [`ec3e255`](https://github.com/es-shims/iterator-helpers/commit/ec3e255dfe30ea6650d8a697e6c4f16fa393e923)
+- [Tests] add test cases [`5117c47`](https://github.com/es-shims/iterator-helpers/commit/5117c477348407ebdfc9410dd437a68634c39a8e)
+- [Dev Deps] update `@es-shims/api` [`9fa13a0`](https://github.com/es-shims/iterator-helpers/commit/9fa13a0739f353536de58b2b648aa9eacfa49479)
+- [Dev Deps] update `@es-shims/api` [`b74b0ac`](https://github.com/es-shims/iterator-helpers/commit/b74b0ac2bd7e920f760bae7ba7c6c5310f5123d8)
+
 ## [v1.0.9](https://github.com/es-shims/iterator-helpers/compare/v1.0.8...v1.0.9) - 2023-05-02
 
 ### Commits
