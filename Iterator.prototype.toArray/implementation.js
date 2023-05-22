@@ -14,6 +14,10 @@ var callBound = require('call-bind/callBound');
 var $push = callBound('Array.prototype.push');
 
 module.exports = function toArray() {
+	if (this instanceof toArray) {
+		throw new $TypeError('`toArray` is not a constructor');
+	}
+
 	var O = this; // step 1
 
 	if (Type(O) !== 'Object') {

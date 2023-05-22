@@ -21,6 +21,10 @@ var iterHelperProto = require('../IteratorHelperPrototype');
 var SLOT = require('internal-slot');
 
 module.exports = function filter(predicate) {
+	if (this instanceof filter) {
+		throw new $TypeError('`filter` is not a constructor');
+	}
+
 	var O = this; // step 1
 	if (Type(O) !== 'Object') {
 		throw new $TypeError('`this` value must be an Object'); // step 2

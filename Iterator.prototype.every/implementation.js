@@ -16,6 +16,10 @@ var ToBoolean = require('es-abstract/2022/ToBoolean');
 var Type = require('es-abstract/2022/Type');
 
 module.exports = function every(predicate) {
+	if (this instanceof every) {
+		throw new $TypeError('`every` is not a constructor');
+	}
+
 	var O = this; // step 1
 	if (Type(O) !== 'Object') {
 		throw new $TypeError('`this` value must be an Object'); // step 2

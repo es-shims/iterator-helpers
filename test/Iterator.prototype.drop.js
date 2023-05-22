@@ -23,6 +23,12 @@ var testIterator = require('./helpers/testIterator');
 
 module.exports = {
 	tests: function (drop, name, t) {
+		t['throws'](
+			function () { return new drop(); }, // eslint-disable-line new-cap
+			TypeError,
+			'`' + name + '` itself is not a constructor'
+		);
+
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
 				function () { iterate(drop(nonIterator, 0)); },
@@ -66,21 +72,34 @@ module.exports = {
 			st.end();
 		});
 
-		var iterator = [1, 2, 3];
+		var arr = [1, 2, 3];
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
+			var iterator = callBind(arr[Symbol.iterator], arr);
+
 			st['throws'](
-				function () { drop(iterator[Symbol.iterator](), -3); },
+				function () { drop(iterator(), -3); },
 				RangeError,
 				'-3 is not >= 0'
 			);
 
-			testIterator(iterator[Symbol.iterator](), [1, 2, 3], st, 'original');
-			testIterator(drop(iterator[Symbol.iterator](), 0), [1, 2, 3], st, 'drop 0');
-			testIterator(drop(iterator[Symbol.iterator](), 1), [2, 3], st, 'drop 1');
-			testIterator(drop(iterator[Symbol.iterator](), 2), [3], st, 'drop 2');
-			testIterator(drop(iterator[Symbol.iterator](), 3), [], st, 'drop 3');
-			testIterator(drop(iterator[Symbol.iterator](), Infinity), [], st, 'drop ∞');
+			st['throws'](
+				function () { return new drop(iterator()); }, // eslint-disable-line new-cap
+				TypeError,
+				'`' + name + '` iterator is not a constructor'
+			);
+			st['throws'](
+				function () { return new drop(iterator(), 0); }, // eslint-disable-line new-cap
+				TypeError,
+				'`' + name + '` iterator is not a constructor'
+			);
+
+			testIterator(iterator(), [1, 2, 3], st, 'original');
+			testIterator(drop(iterator(), 0), [1, 2, 3], st, 'drop 0');
+			testIterator(drop(iterator(), 1), [2, 3], st, 'drop 1');
+			testIterator(drop(iterator(), 2), [3], st, 'drop 2');
+			testIterator(drop(iterator(), 3), [], st, 'drop 3');
+			testIterator(drop(iterator(), Infinity), [], st, 'drop ∞');
 
 			st.end();
 		});

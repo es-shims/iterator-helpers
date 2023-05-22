@@ -16,6 +16,10 @@ var ToBoolean = require('es-abstract/2022/ToBoolean');
 var Type = require('es-abstract/2022/Type');
 
 module.exports = function find(predicate) {
+	if (this instanceof find) {
+		throw new $TypeError('`find` is not a constructor');
+	}
+
 	var O = this; // step 1
 
 	if (Type(O) !== 'Object') {

@@ -14,6 +14,10 @@ var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var Type = require('es-abstract/2022/Type');
 
 module.exports = function reduce(reducer) {
+	if (this instanceof reduce) {
+		throw new $TypeError('`reduce` is not a constructor');
+	}
+
 	var O = this; // step 1
 	if (Type(O) !== 'Object') {
 		throw new $TypeError('`this` value must be an Object'); // step 2

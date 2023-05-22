@@ -21,6 +21,12 @@ var testIterator = require('./helpers/testIterator');
 
 module.exports = {
 	tests: function (toArray, name, t) {
+		t['throws'](
+			function () { return new toArray(); }, // eslint-disable-line new-cap
+			TypeError,
+			'`' + name + '` is not a constructor'
+		);
+
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
 				function () { toArray(nonIterator); },
@@ -39,6 +45,12 @@ module.exports = {
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);
+
+			st['throws'](
+				function () { return new toArray(iterator()); }, // eslint-disable-line new-cap
+				TypeError,
+				'`' + name + '` iterator is not a constructor'
+			);
 
 			testIterator(iterator(), [1, 2, 3], st, 'original');
 

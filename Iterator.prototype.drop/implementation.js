@@ -23,6 +23,10 @@ var isNaN = require('es-abstract/helpers/isNaN');
 var SLOT = require('internal-slot');
 
 module.exports = function drop(limit) {
+	if (this instanceof drop) {
+		throw new $TypeError('`drop` is not a constructor');
+	}
+
 	var O = this; // step 1
 	if (Type(O) !== 'Object') {
 		throw new $TypeError('`this` value must be an Object'); // step 2

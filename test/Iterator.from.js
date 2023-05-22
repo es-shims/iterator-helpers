@@ -39,6 +39,17 @@ var getCodePoints = function getCodePoints(str) {
 
 module.exports = {
 	tests: function (from, name, t) {
+		t['throws'](
+			function () { return new from(); }, // eslint-disable-line new-cap
+			TypeError,
+			'`' + name + '` itself is not a constructor'
+		);
+		t['throws'](
+			function () { return new from({}); }, // eslint-disable-line new-cap
+			TypeError,
+			'`' + name + '` itself is not a constructor, with an argument'
+		);
+
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			if (typeof nonIterator !== 'string') {
 				t['throws'](
@@ -59,6 +70,12 @@ module.exports = {
 					debug(badIterable) + ' is not a function'
 				);
 			});
+
+			// st['throws'](
+			// 	function () { return new from([]); }, // eslint-disable-line new-cap
+			// 	RangeError,
+			// 	'`' + name + '` iterator is not a constructor'
+			// );
 
 			forEach(v.strings, function (string) {
 				var stringIt = from(string);
@@ -99,7 +116,7 @@ module.exports = {
 	},
 	implementation: function () {
 		test('Iterator.from: implementation', function (t) {
-			module.exports.tests(callBind(impl, null), 'Iterator.from', t);
+			module.exports.tests(impl, 'Iterator.from', t);
 
 			t.end();
 		});

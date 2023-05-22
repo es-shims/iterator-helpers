@@ -21,6 +21,12 @@ var testIterator = require('./helpers/testIterator');
 
 module.exports = {
 	tests: function (take, name, t) {
+		t['throws'](
+			function () { return new take(); }, // eslint-disable-line new-cap
+			TypeError,
+			'`' + name + '` itself is not a constructor'
+		);
+
 		forEach(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
 				function () { take(nonIterator, 1).next(); },
@@ -38,21 +44,34 @@ module.exports = {
 			}
 		});
 
-		var iterator = [1, 2, 3];
+		var arr = [1, 2, 3];
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
+			var iterator = callBind(arr[Symbol.iterator], arr);
+
 			st['throws'](
-				function () { take(iterator[Symbol.iterator](), -3); },
+				function () { take(iterator(), -3); },
 				RangeError,
 				'-3 is not >= 0'
 			);
 
-			testIterator(iterator[Symbol.iterator](), [1, 2, 3], st, 'original');
-			testIterator(take(iterator[Symbol.iterator](), 0), [], st, 'take 0');
-			testIterator(take(iterator[Symbol.iterator](), 1), [1], st, 'take 1');
-			testIterator(take(iterator[Symbol.iterator](), 2), [1, 2], st, 'take 2');
-			testIterator(take(iterator[Symbol.iterator](), 3), [1, 2, 3], st, 'take 3');
-			testIterator(take(iterator[Symbol.iterator](), Infinity), [1, 2, 3], st, 'take ∞');
+			st['throws'](
+				function () { return new take(iterator()); }, // eslint-disable-line new-cap
+				TypeError,
+				'`' + name + '` iterator is not a constructor'
+			);
+			st['throws'](
+				function () { return new take(iterator(), 0); }, // eslint-disable-line new-cap
+				TypeError,
+				'`' + name + '` iterator is not a constructor'
+			);
+
+			testIterator(iterator(), [1, 2, 3], st, 'original');
+			testIterator(take(iterator(), 0), [], st, 'take 0');
+			testIterator(take(iterator(), 1), [1], st, 'take 1');
+			testIterator(take(iterator(), 2), [1, 2], st, 'take 2');
+			testIterator(take(iterator(), 3), [1, 2, 3], st, 'take 3');
+			testIterator(take(iterator(), Infinity), [1, 2, 3], st, 'take ∞');
 
 			st.end();
 		});

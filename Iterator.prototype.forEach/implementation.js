@@ -14,6 +14,10 @@ var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
 var Type = require('es-abstract/2022/Type');
 
 module.exports = function forEach(fn) {
+	if (this instanceof forEach) {
+		throw new $TypeError('`forEach` is not a constructor');
+	}
+
 	var O = this; // step 1
 	if (Type(O) !== 'Object') {
 		throw new $TypeError('`this` value must be an Object'); // step 2
