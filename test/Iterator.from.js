@@ -9,6 +9,7 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var mockProperty = require('mock-property');
 
 var index = require('../Iterator.from');
 var impl = require('../Iterator.from/implementation');
@@ -100,6 +101,26 @@ module.exports = {
 			st.test('real iterators', { skip: !hasSymbols }, function (s2t) {
 				var iter = [][Symbol.iterator]();
 				s2t.equal(from(iter), iter, 'array iterator becomes itself');
+
+				s2t.end();
+			});
+
+			st.test('observability in a replaced String iterator', function (s2t) {
+				var originalStringIterator = String.prototype[Symbol.iterator];
+				var observedType;
+				s2t.teardown(mockProperty(String.prototype, Symbol.iterator, {
+					get: function () {
+						'use strict'; // eslint-disable-line strict, lines-around-directive
+
+						observedType = typeof this;
+						return originalStringIterator;
+					}
+				}));
+
+				from('');
+				s2t.equal(observedType, 'string', 'string primitive -> primitive receiver in Symbol.iterator getter');
+				from(Object(''));
+				s2t.equal(observedType, 'object', 'boxed string -> boxed string in Symbol.iterator getter');
 
 				s2t.end();
 			});

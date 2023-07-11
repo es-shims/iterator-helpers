@@ -13,9 +13,11 @@ var Type = require('es-abstract/2022/Type');
 
 var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 
-module.exports = function GetIteratorFlattenable(obj) {
+module.exports = function GetIteratorFlattenable(obj, stringHandling) {
 	if (Type(obj) !== 'Object') {
-		throw new $TypeError('obj must be an Object'); // step 1
+		if (stringHandling === 'reject-strings' || typeof obj !== 'string') {
+			throw new $TypeError('obj must be an Object'); // step 1.a
+		}
 	}
 
 	var method = void undefined; // step 2

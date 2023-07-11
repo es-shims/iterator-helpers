@@ -150,6 +150,7 @@
 		"has-strict-mode": "^1.0.1",
 		"in-publish": "^2.0.1",
 		"iterate-iterator": "^1.0.2",
+		"mock-property": "^1.0.0",
 		"npmignore": "^0.3.0",
 		"nyc": "^10.3.2",
 		"object-inspect": "^1.12.3",
