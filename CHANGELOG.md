@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.12](https://github.com/es-shims/iterator-helpers/compare/v1.0.11...v1.0.12) - 2023-07-14
+
+### Commits
+
+- [Fix] avoid creating string wrapper objects with sloppy mode flatMap mappers [`db16b34`](https://github.com/es-shims/iterator-helpers/commit/db16b34aec554934ec2bfd62629fb66cebc311f8)
+- [Deps] update `es-abstract` [`f002147`](https://github.com/es-shims/iterator-helpers/commit/f002147f0afbb2cd7c2d2e1207685f52e33abf0f)
+- [Dev Deps] update `@ljharb/eslint-config`, `aud [`42064e8`](https://github.com/es-shims/iterator-helpers/commit/42064e80e0cc37f5e4676c2133dacae7456e313f)
+- [meta] fix tidelift funding identifier [`896fd4f`](https://github.com/es-shims/iterator-helpers/commit/896fd4f2e4b419945bfbd85024a2c96248323151)
+
 ## [v1.0.11](https://github.com/es-shims/iterator-helpers/compare/v1.0.10...v1.0.11) - 2023-05-22
 
 ### Commits
