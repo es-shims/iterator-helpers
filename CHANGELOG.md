@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.13](https://github.com/es-shims/iterator-helpers/compare/v1.0.12...v1.0.13) - 2023-08-16
+
+### Fixed
+
+- [Deps] add missing deps; add eslint-plugin-import [`#3`](https://github.com/es-shims/iterator-helpers/issues/3)
+
 ## [v1.0.12](https://github.com/es-shims/iterator-helpers/compare/v1.0.11...v1.0.12) - 2023-07-14
 
 ### Commits
