@@ -4,12 +4,12 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var AdvanceStringIndex = require('es-abstract/2022/AdvanceStringIndex');
-var Call = require('es-abstract/2022/Call');
+var AdvanceStringIndex = require('es-abstract/2023/AdvanceStringIndex');
+var Call = require('es-abstract/2023/Call');
 var GetIteratorDirect = require('./GetIteratorDirect');
-var GetMethod = require('es-abstract/2022/GetMethod');
-var IsArray = require('es-abstract/2022/IsArray');
-var Type = require('es-abstract/2022/Type');
+var GetMethod = require('es-abstract/2023/GetMethod');
+var IsArray = require('es-abstract/2023/IsArray');
+var Type = require('es-abstract/2023/Type');
 
 var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 

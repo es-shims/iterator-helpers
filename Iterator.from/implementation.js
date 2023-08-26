@@ -4,10 +4,9 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var OrdinaryHasInstance = require('es-abstract/2022/OrdinaryHasInstance');
-var OrdinaryObjectCreate = require('es-abstract/2022/OrdinaryObjectCreate');
-
 var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
+var OrdinaryHasInstance = require('es-abstract/2023/OrdinaryHasInstance');
+var OrdinaryObjectCreate = require('es-abstract/2023/OrdinaryObjectCreate');
 
 var $Iterator = require('../Iterator/polyfill')();
 var $WrapForValidIteratorPrototype = require('../WrapForValidIteratorPrototype');

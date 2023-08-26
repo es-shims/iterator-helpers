@@ -4,17 +4,17 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var Call = require('es-abstract/2022/Call');
-var CompletionRecord = require('es-abstract/2022/CompletionRecord');
+var Call = require('es-abstract/2023/Call');
+var CompletionRecord = require('es-abstract/2023/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IsCallable = require('es-abstract/2022/IsCallable');
+var IsCallable = require('es-abstract/2023/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('../aos/IteratorStep');
-var IteratorValue = require('es-abstract/2022/IteratorValue');
-var ThrowCompletion = require('es-abstract/2022/ThrowCompletion');
-var ToBoolean = require('es-abstract/2022/ToBoolean');
-var Type = require('es-abstract/2022/Type');
+var IteratorStep = require('es-abstract/2023/IteratorStep');
+var IteratorValue = require('es-abstract/2023/IteratorValue');
+var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
+var ToBoolean = require('es-abstract/2023/ToBoolean');
+var Type = require('es-abstract/2023/Type');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 

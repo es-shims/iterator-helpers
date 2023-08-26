@@ -5,10 +5,10 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var GeneratorStart = require('./GeneratorStart');
-var IsArray = require('es-abstract/2022/IsArray');
-var IsCallable = require('es-abstract/2022/IsCallable');
-var OrdinaryObjectCreate = require('es-abstract/2022/OrdinaryObjectCreate');
-var Type = require('es-abstract/2022/Type');
+var IsArray = require('es-abstract/2023/IsArray');
+var IsCallable = require('es-abstract/2023/IsCallable');
+var OrdinaryObjectCreate = require('es-abstract/2023/OrdinaryObjectCreate');
+var Type = require('es-abstract/2023/Type');
 
 var every = require('es-abstract/helpers/every');
 

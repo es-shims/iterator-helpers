@@ -5,16 +5,16 @@ var GetIntrinsic = require('get-intrinsic');
 var $RangeError = GetIntrinsic('%RangeError%');
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var CompletionRecord = require('es-abstract/2022/CompletionRecord');
+var CompletionRecord = require('es-abstract/2023/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('../aos/IteratorStep');
-var IteratorValue = require('es-abstract/2022/IteratorValue');
-var NormalCompletion = require('es-abstract/2022/NormalCompletion');
-var ToIntegerOrInfinity = require('es-abstract/2022/ToIntegerOrInfinity');
-var ToNumber = require('es-abstract/2022/ToNumber');
-var Type = require('es-abstract/2022/Type');
+var IteratorStep = require('es-abstract/2023/IteratorStep');
+var IteratorValue = require('es-abstract/2023/IteratorValue');
+var NormalCompletion = require('es-abstract/2023/NormalCompletion');
+var ToIntegerOrInfinity = require('es-abstract/2023/ToIntegerOrInfinity');
+var ToNumber = require('es-abstract/2023/ToNumber');
+var Type = require('es-abstract/2023/Type');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 

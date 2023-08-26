@@ -5,12 +5,12 @@ var hasProto = require('has-proto')();
 var iterProto = require('iterator.prototype');
 var SLOT = require('internal-slot');
 
-var CompletionRecord = require('es-abstract/2022/CompletionRecord');
-var CreateIterResultObject = require('es-abstract/2022/CreateIterResultObject');
+var CompletionRecord = require('es-abstract/2023/CompletionRecord');
+var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
 var GeneratorResume = require('../aos/GeneratorResume');
 var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
 var IteratorClose = require('../aos/IteratorClose');
-var NormalCompletion = require('es-abstract/2022/NormalCompletion');
+var NormalCompletion = require('es-abstract/2023/NormalCompletion');
 
 var implementation;
 if (hasProto) {

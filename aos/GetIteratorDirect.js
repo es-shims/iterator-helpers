@@ -4,8 +4,8 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var Get = require('es-abstract/2022/Get');
-var Type = require('es-abstract/2022/Type');
+var Get = require('es-abstract/2023/Get');
+var Type = require('es-abstract/2023/Type');
 
 module.exports = function GetIteratorDirect(obj) {
 	if (Type(obj) !== 'Object') {

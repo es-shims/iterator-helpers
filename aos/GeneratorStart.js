@@ -4,9 +4,9 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var CreateIterResultObject = require('es-abstract/2022/CreateIterResultObject');
-var IsCallable = require('es-abstract/2022/IsCallable');
-var Type = require('es-abstract/2022/Type');
+var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
+var IsCallable = require('es-abstract/2023/IsCallable');
+var Type = require('es-abstract/2023/Type');
 
 var SLOT = require('internal-slot');
 

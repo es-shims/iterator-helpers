@@ -4,10 +4,10 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var Call = require('es-abstract/2022/Call');
-var CompletionRecord = require('es-abstract/2022/CompletionRecord');
-var GetMethod = require('es-abstract/2022/GetMethod');
-var Type = require('es-abstract/2022/Type');
+var Call = require('es-abstract/2023/Call');
+var CompletionRecord = require('es-abstract/2023/CompletionRecord');
+var GetMethod = require('es-abstract/2023/GetMethod');
+var Type = require('es-abstract/2023/Type');
 
 var assertRecord = require('es-abstract/helpers/assertRecord');
 

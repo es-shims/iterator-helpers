@@ -5,9 +5,9 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorStep = require('../aos/IteratorStep');
-var IteratorValue = require('es-abstract/2022/IteratorValue');
-var Type = require('es-abstract/2022/Type');
+var IteratorStep = require('es-abstract/2023/IteratorStep');
+var IteratorValue = require('es-abstract/2023/IteratorValue');
+var Type = require('es-abstract/2023/Type');
 
 var callBound = require('call-bind/callBound');
 

@@ -4,10 +4,10 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var Call = require('es-abstract/2022/Call');
-var CreateIterResultObject = require('es-abstract/2022/CreateIterResultObject');
-var GetMethod = require('es-abstract/2022/GetMethod');
-var Type = require('es-abstract/2022/Type');
+var Call = require('es-abstract/2023/Call');
+var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
+var GetMethod = require('es-abstract/2023/GetMethod');
+var Type = require('es-abstract/2023/Type');
 
 var SLOT = require('internal-slot');
 var iterProto = require('iterator.prototype');

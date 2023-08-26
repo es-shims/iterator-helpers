@@ -4,8 +4,7 @@ var GetIntrinsic = require('get-intrinsic');
 
 var $TypeError = GetIntrinsic('%TypeError%');
 
-var CreateIterResultObject = require('es-abstract/2022/CreateIterResultObject');
-
+var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
 var GeneratorValidate = require('./GeneratorValidate');
 
 var SLOT = require('internal-slot');
