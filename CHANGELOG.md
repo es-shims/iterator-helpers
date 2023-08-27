@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.14](https://github.com/es-shims/iterator-helpers/compare/v1.0.13...v1.0.14) - 2023-08-26
+
+### Commits
+
+- [Deps] update `es-abstract` [`477b123`](https://github.com/es-shims/iterator-helpers/commit/477b1233acd36fdbbccd79fbb69cde325bc3e6a9)
+- [Dev Deps] update `aud`, `eslint-plugin-import`, `tape` [`e4ea414`](https://github.com/es-shims/iterator-helpers/commit/e4ea4146feffb72fd828e5d883e960e0ad589a35)
+
 ## [v1.0.13](https://github.com/es-shims/iterator-helpers/compare/v1.0.12...v1.0.13) - 2023-08-16
 
 ### Fixed
