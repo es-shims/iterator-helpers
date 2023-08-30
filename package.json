@@ -12,6 +12,11 @@
 		"./Iterator/polyfill": "./Iterator/polyfill.js",
 		"./Iterator/implementation": "./Iterator/implementation.js",
 		"./Iterator/shim": "./Iterator/shim.js",
+		"./Iterator.prototype": "./Iterator.prototype/index.js",
+		"./Iterator.prototype/auto": "./Iterator.prototype/auto.js",
+		"./Iterator.prototype/polyfill": "./Iterator.prototype/polyfill.js",
+		"./Iterator.prototype/implementation": "./Iterator.prototype/implementation.js",
+		"./Iterator.prototype/shim": "./Iterator.prototype/shim.js",
 		"./Iterator.from": "./Iterator.from/index.js",
 		"./Iterator.from/auto": "./Iterator.from/auto.js",
 		"./Iterator.from/polyfill": "./Iterator.from/polyfill.js",
@@ -138,7 +143,7 @@
 		"has-proto": "^1.0.1",
 		"has-symbols": "^1.0.3",
 		"internal-slot": "^1.0.5",
-		"iterator.prototype": "^1.1.0",
+		"iterator.prototype": "^1.1.1",
 		"safe-array-concat": "^1.0.0"
 	},
 	"devDependencies": {
@@ -153,6 +158,7 @@
 		"for-each": "^0.3.3",
 		"functions-have-names": "^1.2.3",
 		"has-strict-mode": "^1.0.1",
+		"has-tostringtag": "^1.0.0",
 		"in-publish": "^2.0.1",
 		"iterate-iterator": "^1.0.2",
 		"make-generator-function": "^2.0.0",
