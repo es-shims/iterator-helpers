@@ -133,7 +133,7 @@
 	"dependencies": {
 		"asynciterator.prototype": "^1.0.0",
 		"call-bind": "^1.0.2",
-		"define-properties": "^1.2.0",
+		"define-properties": "^1.2.1",
 		"es-abstract": "^1.22.1",
 		"es-set-tostringtag": "^2.0.1",
 		"function-bind": "^1.1.1",
@@ -143,8 +143,8 @@
 		"has-proto": "^1.0.1",
 		"has-symbols": "^1.0.3",
 		"internal-slot": "^1.0.5",
-		"iterator.prototype": "^1.1.1",
-		"safe-array-concat": "^1.0.0"
+		"iterator.prototype": "^1.1.2",
+		"safe-array-concat": "^1.0.1"
 	},
 	"devDependencies": {
 		"@es-shims/api": "^2.4.2",
