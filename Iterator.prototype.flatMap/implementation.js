@@ -11,8 +11,7 @@ var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
 var IsCallable = require('es-abstract/2023/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
 var Type = require('es-abstract/2023/Type');
 
@@ -65,14 +64,13 @@ module.exports = function flatMap(mapper) {
 	var closure = function () {
 		// while (true) { // step 5.b
 		if (innerIterator === sentinel) {
-			var next = IteratorStep(iterated); // step 5.b.i
-			if (!next) {
+			var value = IteratorStepValue(iterated); // step 5.b.i
+			if (iterated['[[Done]]']) {
 				innerAlive = false;
 				innerIterator = sentinel;
 				// return void undefined; // step 5.b.ii
 				return sentinel;
 			}
-			var value = IteratorValue(next); // step 5.b.iii
 		}
 
 		if (innerIterator === sentinel) {
@@ -91,26 +89,19 @@ module.exports = function flatMap(mapper) {
 		}
 		// while (innerAlive) { // step 5.b.ix
 		if (innerAlive) {
-			var innerNext;
-			try {
-				innerNext = IteratorStep(innerIterator); // step 5.b.ix.1
-			} catch (e) {
-				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // step 5.b.ix.2
-			}
-			if (!innerNext) {
-				innerAlive = false; // step 5.b.ix.3.a
-				innerIterator = sentinel;
-				return closure();
-			}
 			// step 5.b.ix.4
 			var innerValue;
 			try {
-				innerValue = IteratorValue(innerNext); // step 5.b.ix.4.a
+				innerValue = IteratorStepValue(innerIterator); // step 5.b.ix.4.a
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;
 				closeIfAbrupt(ThrowCompletion(e)); // step 5.b.ix.4.b
+			}
+			if (innerIterator['[[Done]]']) {
+				innerAlive = false;
+				innerIterator = sentinel;
+				return closure();
 			}
 			return innerValue; // step 5.b.ix.4.c
 		}

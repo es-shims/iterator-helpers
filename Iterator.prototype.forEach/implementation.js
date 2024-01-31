@@ -8,8 +8,7 @@ var Call = require('es-abstract/2023/Call');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IsCallable = require('es-abstract/2023/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
 var Type = require('es-abstract/2023/Type');
 
@@ -33,21 +32,20 @@ module.exports = function forEach(fn) {
 
 	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 6
-		var next = IteratorStep(iterated); // step 6.a
-		if (!next) {
+		var value = IteratorStepValue(iterated); // step 6.a
+		if (iterated['[[Done]]']) {
 			return void undefined; // step 6.b
 		}
-		var value = IteratorValue(next); // step 6.c
 		try {
-			Call(fn, void undefined, [value, counter]); // step 6.d
+			Call(fn, void undefined, [value, counter]); // step 6.c
 		} catch (e) {
 			IteratorClose(
 				iterated,
 				ThrowCompletion(e)
-			); // steps 6.e
+			); // steps 6.d
 			throw e;
 		} finally {
-			counter += 1; // step 6.f
+			counter += 1; // step 6.e
 		}
 	}
 };

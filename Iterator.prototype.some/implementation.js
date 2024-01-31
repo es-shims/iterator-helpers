@@ -8,8 +8,7 @@ var Call = require('es-abstract/2023/Call');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IsCallable = require('es-abstract/2023/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var NormalCompletion = require('es-abstract/2023/NormalCompletion');
 var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
 var ToBoolean = require('es-abstract/2023/ToBoolean');
@@ -35,28 +34,27 @@ module.exports = function some(predicate) {
 
 	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 6
-		var next = IteratorStep(iterated); // step 6.a
-		if (!next) {
+		var value = IteratorStepValue(iterated); // step 6.a
+		if (iterated['[[Done]]']) {
 			return false; // step 6.b
 		}
-		var value = IteratorValue(next); // step 6.c
 		var result;
 		try {
-			result = Call(predicate, void undefined, [value, counter]); // step 6.d
+			result = Call(predicate, void undefined, [value, counter]); // step 6.c
 		} catch (e) {
-			// close iterator // step 6.e
+			// close iterator // step 6.d
 			IteratorClose(
 				iterated,
 				ThrowCompletion(e)
 			);
 		} finally {
-			counter += 1; // step 6.g
+			counter += 1; // step 6.f
 		}
 		if (ToBoolean(result)) {
 			return IteratorClose(
 				iterated,
 				NormalCompletion(true)
-			); // step 6.f
+			); // step 6.e
 		}
 	}
 };

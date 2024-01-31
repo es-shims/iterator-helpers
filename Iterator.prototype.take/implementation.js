@@ -9,8 +9,7 @@ var CompletionRecord = require('es-abstract/2023/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var NormalCompletion = require('es-abstract/2023/NormalCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2023/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2023/ToNumber');
@@ -68,13 +67,11 @@ module.exports = function take(limit) {
 			remaining -= 1; // step 9.b.ii.1
 		}
 
-		var next = IteratorStep(iterated); // step 9.b.iii
-		if (!next) {
-			// return void undefined; // step 9.b.iv
-			return sentinel;
+		var value = IteratorStepValue(iterated); // step 6.b.i
+		if (iterated['[[Done]]']) {
+			return sentinel; // step 6.b.ii
 		}
 
-		var value = IteratorValue(next); // step 9.b.iii
 		return value; // step 9.b.iv
 		// }
 	};

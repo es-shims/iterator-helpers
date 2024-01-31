@@ -10,8 +10,7 @@ var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IsCallable = require('es-abstract/2023/IsCallable');
 var IteratorClose = require('../aos/IteratorClose');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
 var Type = require('es-abstract/2023/Type');
 
@@ -49,16 +48,14 @@ module.exports = function map(mapper) {
 	var counter = 0; // step 6.a
 	var closure = function () {
 		// while (true) { // step 6.b
-		var next = IteratorStep(iterated); // step 6.b.i
-
-		if (!next) {
-			// return void undefined; // step 6.b.ii
-			return sentinel;
+		var value = IteratorStepValue(iterated); // step 6.b.i
+		if (iterated['[[Done]]']) {
+			return sentinel; // step 6.b.ii
 		}
-		var value = IteratorValue(next); // step 6.b.iii
+
 		var mapped;
 		try {
-			mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iv
+			mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iii
 			// yield mapped // step 6.b.vi
 			return mapped;
 		} catch (e) {

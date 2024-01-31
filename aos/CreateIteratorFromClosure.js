@@ -8,7 +8,6 @@ var GeneratorStart = require('./GeneratorStart');
 var IsArray = require('es-abstract/2023/IsArray');
 var IsCallable = require('es-abstract/2023/IsCallable');
 var OrdinaryObjectCreate = require('es-abstract/2023/OrdinaryObjectCreate');
-var Type = require('es-abstract/2023/Type');
 
 var every = require('es-abstract/helpers/every');
 
@@ -17,14 +16,14 @@ var SLOT = require('internal-slot');
 var safeConcat = require('safe-array-concat');
 
 var isString = function isString(slot) {
-	return Type(slot) === 'String';
+	return typeof slot === 'string';
 };
 
 module.exports = function CreateIteratorFromClosure(closure, generatorBrand, proto) {
 	if (!IsCallable(closure)) {
 		throw new $TypeError('`closure` must be a function');
 	}
-	if (Type(generatorBrand) !== 'String') {
+	if (typeof generatorBrand !== 'string') {
 		throw new $TypeError('`generatorBrand` must be a string');
 	}
 	var extraSlots = arguments.length > 3 ? arguments[3] : [];

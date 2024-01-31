@@ -5,8 +5,7 @@ var GetIntrinsic = require('get-intrinsic');
 var $TypeError = GetIntrinsic('%TypeError%');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorStep = require('es-abstract/2023/IteratorStep');
-var IteratorValue = require('es-abstract/2023/IteratorValue');
+var IteratorStepValue = require('../aos/IteratorStepValue');
 var Type = require('es-abstract/2023/Type');
 
 var callBound = require('call-bind/callBound');
@@ -30,11 +29,10 @@ module.exports = function toArray() {
 
 	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 5
-		var next = IteratorStep(iterated); // step 5.a
-		if (!next) {
+		var value = IteratorStepValue(iterated); // step 5.a
+		if (iterated['[[Done]]']) {
 			return items; // step 5.b
 		}
-		var value = IteratorValue(next); // step 5.c
 		$push(items, value); // step 5.d
 	}
 };
