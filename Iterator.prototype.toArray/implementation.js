@@ -1,8 +1,6 @@
 'use strict';
 
-var GetIntrinsic = require('get-intrinsic');
-
-var $TypeError = GetIntrinsic('%TypeError%');
+var $TypeError = require('es-errors/type');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorStepValue = require('../aos/IteratorStepValue');
