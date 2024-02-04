@@ -137,7 +137,7 @@
 		"es-abstract": "^1.22.3",
 		"es-set-tostringtag": "^2.0.2",
 		"function-bind": "^1.1.2",
-		"get-intrinsic": "^1.2.2",
+		"get-intrinsic": "^1.2.3",
 		"globalthis": "^1.0.3",
 		"has-property-descriptors": "^1.0.1",
 		"has-proto": "^1.0.1",
