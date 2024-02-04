@@ -158,7 +158,7 @@
 		"for-each": "^0.3.3",
 		"functions-have-names": "^1.2.3",
 		"has-strict-mode": "^1.0.1",
-		"has-tostringtag": "^1.0.0",
+		"has-tostringtag": "^1.0.2",
 		"in-publish": "^2.0.1",
 		"iterate-iterator": "^1.0.2",
 		"make-generator-function": "^2.0.0",
