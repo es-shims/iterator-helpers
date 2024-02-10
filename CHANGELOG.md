@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.16](https://github.com/es-shims/iterator-helpers/compare/v1.0.15...v1.0.16) - 2024-02-09
+
+### Commits
+
+- [Refactor] use `IteratorStepValue` [`aa62d72`](https://github.com/es-shims/iterator-helpers/commit/aa62d72c52d86218942b4792c7131f72d939b733)
+- [Refactor] use `es-errors` instead of `get-intrinsic` where possible [`05a25ae`](https://github.com/es-shims/iterator-helpers/commit/05a25aeccd0523df86b401c771d88fbea06558c9)
+- [Deps] update `call-bind`, `es-abstract`, `es-set-tostringtag`, `function-bind`, `get-intrinsic`, `has-property-descriptors`, `internal-slot`, `safe-array-concat` [`6aeee43`](https://github.com/es-shims/iterator-helpers/commit/6aeee435ed5956b7c5ee66a51b86c26827874eae)
+- [Dev Deps] update `aud`, `eslint-plugin-import`, `mock-property`, `npmignore`, `object-inspect`, `tape` [`0a21fdb`](https://github.com/es-shims/iterator-helpers/commit/0a21fdb4a59d25c248561b7f476fc9670b411855)
+- [Deps] update `call-bind`, `es-errors`, `get-intrinsic`, `internal-slot` [`5b10625`](https://github.com/es-shims/iterator-helpers/commit/5b106251dad4252a744b2e0aa0d1be4c1c62b779)
+- [meta] add missing `engines.node` [`1534039`](https://github.com/es-shims/iterator-helpers/commit/1534039eca062429c0df68dcc3459ce9ba7c69be)
+- [Deps] update `get-intrinsic` [`37da5f2`](https://github.com/es-shims/iterator-helpers/commit/37da5f201940c78526de647ef9ba84d9152349c1)
+- [Dev Deps] update `has-tostringtag` [`a7cac51`](https://github.com/es-shims/iterator-helpers/commit/a7cac51cc027e6274918cb1ea0cf1fa1a194fcd9)
+
 ## [v1.0.15](https://github.com/es-shims/iterator-helpers/compare/v1.0.14...v1.0.15) - 2023-09-13
 
 ### Commits
