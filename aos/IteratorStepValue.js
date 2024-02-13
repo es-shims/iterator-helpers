@@ -1,16 +1,19 @@
 'use strict';
 
+var $TypeError = require('es-errors/type');
+
 var Get = require('es-abstract/2023/Get');
 var IteratorComplete = require('es-abstract/2023/IteratorComplete');
 var IteratorNext = require('es-abstract/2023/IteratorNext');
-var Type = require('es-abstract/2023/Type');
 
-var assertRecord = require('es-abstract/helpers/assertRecord');
+var isIteratorRecord = require('es-abstract/helpers/records/iterator-record');
 
 // https://262.ecma-international.org/15.0/#sec-iteratorstepvalue
 
 module.exports = function IteratorStepValue(iteratorRecord) {
-	assertRecord(Type, 'Iterator Record', 'iteratorRecord', iteratorRecord);
+	if (!isIteratorRecord(iteratorRecord)) {
+		throw new $TypeError('Assertion failed: `iteratorRecord` must be an Iterator Record'); // step 1
+	}
 	/* eslint no-param-reassign: 0 */
 
 	var result;

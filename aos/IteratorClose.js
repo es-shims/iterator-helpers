@@ -7,12 +7,14 @@ var CompletionRecord = require('es-abstract/2023/CompletionRecord');
 var GetMethod = require('es-abstract/2023/GetMethod');
 var Type = require('es-abstract/2023/Type');
 
-var assertRecord = require('es-abstract/helpers/assertRecord');
+var isIteratorRecord = require('es-abstract/helpers/records/iterator-record');
 
 // https://262.ecma-international.org/14.0/#sec-iteratorclose
 
 module.exports = function IteratorClose(iteratorRecord, completion) {
-	assertRecord(Type, 'Iterator Record', 'iteratorRecord', iteratorRecord);
+	if (!isIteratorRecord(iteratorRecord)) {
+		throw new $TypeError('Assertion failed: `iteratorRecord` must be an Iterator Record'); // step 1
+	}
 	if (Type(iteratorRecord['[[Iterator]]']) !== 'Object') {
 		throw new $TypeError('Assertion failed: iteratorRecord.[[Iterator]] must be an Object'); // step 1
 	}
