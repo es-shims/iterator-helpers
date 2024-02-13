@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.17](https://github.com/es-shims/iterator-helpers/compare/v1.0.16...v1.0.17) - 2024-02-13
+
+### Fixed
+
+- [Fix] avoid use of internal `assertRecord` helper from `es-abstract` [`#5`](https://github.com/es-shims/iterator-helpers/issues/5)
+
+### Commits
+
+- [Deps] update `call-bind`, `es-abstract`, `has-property-descriptors` [`e563ee7`](https://github.com/es-shims/iterator-helpers/commit/e563ee7230897c41f7f3623a11fc0ecc6862ee1c)
+
 ## [v1.0.16](https://github.com/es-shims/iterator-helpers/compare/v1.0.15...v1.0.16) - 2024-02-09
 
 ### Commits
