@@ -131,7 +131,6 @@
 	},
 	"homepage": "https://github.com/es-shims/iterator-helpers#readme",
 	"dependencies": {
-		"asynciterator.prototype": "^1.0.0",
 		"call-bind": "^1.0.7",
 		"define-properties": "^1.2.1",
 		"es-abstract": "^1.22.4",
