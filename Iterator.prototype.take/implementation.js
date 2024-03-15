@@ -3,15 +3,15 @@
 var $RangeError = require('es-errors/range');
 var $TypeError = require('es-errors/type');
 
-var CompletionRecord = require('es-abstract/2023/CompletionRecord');
+var CompletionRecord = require('es-abstract/2024/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorClose = require('../aos/IteratorClose');
-var IteratorStepValue = require('../aos/IteratorStepValue');
-var NormalCompletion = require('es-abstract/2023/NormalCompletion');
-var ToIntegerOrInfinity = require('es-abstract/2023/ToIntegerOrInfinity');
-var ToNumber = require('es-abstract/2023/ToNumber');
-var Type = require('es-abstract/2023/Type');
+var IteratorClose = require('es-abstract/2024/IteratorClose');
+var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
+var NormalCompletion = require('es-abstract/2024/NormalCompletion');
+var ToIntegerOrInfinity = require('es-abstract/2024/ToIntegerOrInfinity');
+var ToNumber = require('es-abstract/2024/ToNumber');
+var Type = require('es-abstract/2024/Type');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 

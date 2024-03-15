@@ -3,8 +3,8 @@
 var $TypeError = require('es-errors/type');
 
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorStepValue = require('../aos/IteratorStepValue');
-var Type = require('es-abstract/2023/Type');
+var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
+var Type = require('es-abstract/2024/Type');
 
 var callBound = require('call-bind/callBound');
 

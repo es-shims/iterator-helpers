@@ -2,9 +2,10 @@
 
 var $TypeError = require('es-errors/type');
 
-var CompletionRecord = require('es-abstract/2023/CompletionRecord');
-var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
+var CompletionRecord = require('es-abstract/2024/CompletionRecord');
+var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
 var GeneratorValidate = require('./GeneratorValidate');
+var NormalCompletion = require('es-abstract/2024/NormalCompletion');
 
 var SLOT = require('internal-slot');
 
@@ -32,7 +33,7 @@ module.exports = function GeneratorResumeAbrupt(generator, abruptCompletion, gen
 	}
 	if (abruptCompletion.type() === 'return') {
 		// due to representing `GeneratorContext` as a function, we can't safely re-invoke it, so we can't support sending it a return completion
-		return CreateIterResultObject(SLOT.get(generator, '[[CloseIfAbrupt]]')(abruptCompletion), true);
+		return CreateIterResultObject(SLOT.get(generator, '[[CloseIfAbrupt]]')(NormalCompletion(abruptCompletion.value())), true);
 	}
 
 	var genContext = SLOT.get(generator, '[[GeneratorContext]]'); // step 5

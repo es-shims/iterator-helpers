@@ -2,9 +2,9 @@
 
 var $TypeError = require('es-errors/type');
 
-var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
-var IsCallable = require('es-abstract/2023/IsCallable');
-var Type = require('es-abstract/2023/Type');
+var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
+var IsCallable = require('es-abstract/2024/IsCallable');
+var Type = require('es-abstract/2024/Type');
 
 var SLOT = require('internal-slot');
 

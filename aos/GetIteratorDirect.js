@@ -2,8 +2,8 @@
 
 var $TypeError = require('es-errors/type');
 
-var Get = require('es-abstract/2023/Get');
-var Type = require('es-abstract/2023/Type');
+var Get = require('es-abstract/2024/Get');
+var Type = require('es-abstract/2024/Type');
 
 module.exports = function GetIteratorDirect(obj) {
 	if (Type(obj) !== 'Object') {

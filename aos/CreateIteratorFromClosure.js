@@ -3,9 +3,9 @@
 var $TypeError = require('es-errors/type');
 
 var GeneratorStart = require('./GeneratorStart');
-var IsArray = require('es-abstract/2023/IsArray');
-var IsCallable = require('es-abstract/2023/IsCallable');
-var OrdinaryObjectCreate = require('es-abstract/2023/OrdinaryObjectCreate');
+var IsArray = require('es-abstract/2024/IsArray');
+var IsCallable = require('es-abstract/2024/IsCallable');
+var OrdinaryObjectCreate = require('es-abstract/2024/OrdinaryObjectCreate');
 
 var every = require('es-abstract/helpers/every');
 

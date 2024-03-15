@@ -2,10 +2,10 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2023/Call');
-var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
-var GetMethod = require('es-abstract/2023/GetMethod');
-var Type = require('es-abstract/2023/Type');
+var Call = require('es-abstract/2024/Call');
+var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
+var GetMethod = require('es-abstract/2024/GetMethod');
+var Type = require('es-abstract/2024/Type');
 
 var SLOT = require('internal-slot');
 var iterProto = require('../Iterator.prototype/implementation');

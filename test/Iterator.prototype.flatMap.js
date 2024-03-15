@@ -10,7 +10,7 @@ var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
 
-var StringToCodePoints = require('es-abstract/2023/StringToCodePoints');
+var StringToCodePoints = require('es-abstract/2024/StringToCodePoints');
 
 var index = require('../Iterator.prototype.flatMap');
 var impl = require('../Iterator.prototype.flatMap/implementation');

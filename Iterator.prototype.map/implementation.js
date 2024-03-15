@@ -2,15 +2,15 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2023/Call');
-var CompletionRecord = require('es-abstract/2023/CompletionRecord');
+var Call = require('es-abstract/2024/Call');
+var CompletionRecord = require('es-abstract/2024/CompletionRecord');
 var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IsCallable = require('es-abstract/2023/IsCallable');
-var IteratorClose = require('../aos/IteratorClose');
-var IteratorStepValue = require('../aos/IteratorStepValue');
-var ThrowCompletion = require('es-abstract/2023/ThrowCompletion');
-var Type = require('es-abstract/2023/Type');
+var IsCallable = require('es-abstract/2024/IsCallable');
+var IteratorClose = require('es-abstract/2024/IteratorClose');
+var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
+var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
+var Type = require('es-abstract/2024/Type');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 

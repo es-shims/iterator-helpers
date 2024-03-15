@@ -2,7 +2,7 @@
 
 var $TypeError = require('es-errors/type');
 
-var CreateIterResultObject = require('es-abstract/2023/CreateIterResultObject');
+var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
 var GeneratorValidate = require('./GeneratorValidate');
 
 var SLOT = require('internal-slot');

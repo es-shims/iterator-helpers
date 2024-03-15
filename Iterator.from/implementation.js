@@ -3,8 +3,8 @@
 var $TypeError = require('es-errors/type');
 
 var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
-var OrdinaryHasInstance = require('es-abstract/2023/OrdinaryHasInstance');
-var OrdinaryObjectCreate = require('es-abstract/2023/OrdinaryObjectCreate');
+var OrdinaryHasInstance = require('es-abstract/2024/OrdinaryHasInstance');
+var OrdinaryObjectCreate = require('es-abstract/2024/OrdinaryObjectCreate');
 
 var $Iterator = require('../Iterator/polyfill')();
 var $WrapForValidIteratorPrototype = require('../WrapForValidIteratorPrototype');
