@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.18](https://github.com/es-shims/iterator-helpers/compare/v1.0.17...v1.0.18) - 2024-03-15
+
+### Commits
+
+- [Deps] update `es-abstract` [`6b45f15`](https://github.com/es-shims/iterator-helpers/commit/6b45f150e939cfbf93b816431a407c0838250e85)
+- [Deps] update `es-set-tostringtag`, `has-proto`, `safe-array-concat` [`6350106`](https://github.com/es-shims/iterator-helpers/commit/6350106c9e5c18a67754ced3fd90465b0032f1e3)
+- [Dev Deps] update `tape` [`5509b40`](https://github.com/es-shims/iterator-helpers/commit/5509b408791402d2f7d7882f905741e5a5dd805b)
+- [Deps] remove an unused dep [`78e34a5`](https://github.com/es-shims/iterator-helpers/commit/78e34a5452e7b7ef3dc239a62dd8a7324fbb2305)
+
 ## [v1.0.17](https://github.com/es-shims/iterator-helpers/compare/v1.0.16...v1.0.17) - 2024-02-13
 
 ### Fixed
