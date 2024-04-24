@@ -9,6 +9,7 @@ var forEachNormal = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
+var iterate = require('iterate-iterator');
 
 var index = require('../Iterator.prototype.forEach');
 var impl = require('../Iterator.prototype.forEach/implementation');
@@ -29,14 +30,14 @@ module.exports = {
 
 		forEachNormal(v.primitives.concat(v.objects), function (nonIterator) {
 			t['throws'](
-				function () { forEach(nonIterator); },
+				function () { iterate(forEach(nonIterator, function () {})); },
 				TypeError,
 				debug(nonIterator) + ' is not an Object with a callable `next` method'
 			);
 
 			var badNext = { next: nonIterator };
 			t['throws'](
-				function () { forEach(badNext); },
+				function () { iterate(forEach(badNext, function () {})); },
 				TypeError,
 				debug(badNext) + ' is not an Object with a callable `next` method'
 			);
