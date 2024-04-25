@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.0.19](https://github.com/es-shims/iterator-helpers/compare/v1.0.18...v1.0.19) - 2024-04-24
+
+### Commits
+
+- [patch] remove unused AOs [`698cef7`](https://github.com/es-shims/iterator-helpers/commit/698cef79757378a74500690d5a5dc2a6b86cd304)
+- [Fix] `drop`, `filter`, `flatMap`, `map`: rpatch a v8 bug when polyfilling [`3670395`](https://github.com/es-shims/iterator-helpers/commit/36703956321c201933c4c701c78304669a46947b)
+- [Deps] update `es-abstract` [`d2b47a5`](https://github.com/es-shims/iterator-helpers/commit/d2b47a5f46d3f874aad67375346cb58bf8c9e8b2)
+
 ## [v1.0.18](https://github.com/es-shims/iterator-helpers/compare/v1.0.17...v1.0.18) - 2024-03-15
 
 ### Commits

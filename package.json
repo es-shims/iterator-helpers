@@ -1,6 +1,6 @@
 {
 	"name": "es-iterator-helpers",
-	"version": "1.0.18",
+	"version": "1.0.19",
 	"description": "An ESnext spec-compliant iterator helpers shim/polyfill/replacement that works as far down as ES3.",
 	"main": "index.json",
 	"exports": {
