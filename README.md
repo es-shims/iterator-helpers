@@ -46,6 +46,8 @@ npm install --save es-iterator-helpers
 
 ## Usage/Examples
 
+Using explicit imports:
+
 ```js
 const map = require('es-iterator-helpers/Iterator.prototype.map');
 const toArray = require('es-iterator-helpers/Iterator.prototype.toArray');
@@ -67,10 +69,21 @@ assert.deepEqual(
 );
 ```
 
-```js
-require('./auto'); // shim all of the methods
+Shim using `require`:
 
-require('./Iterator.prototype.map/auto'); // shim the “map” method
+```js
+require('es-iterator-helpers/auto'); // shim all of the methods
+
+require('es-iterator-helpers/Iterator.prototype.map/auto'); // shim the “map” method
+```
+
+Shim using `import` syntax:
+
+[](#preventEval)
+```js
+import 'es-iterator-helpers/auto'; // shim all of the methods
+
+import 'es-iterator-helpers/Iterator.prototype.map/auto'; // shim the “map” method
 ```
 
 ## Tests
