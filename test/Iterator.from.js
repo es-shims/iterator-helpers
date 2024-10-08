@@ -100,7 +100,14 @@ module.exports = {
 
 			st.test('real iterators', { skip: !hasSymbols }, function (s2t) {
 				var iter = [][Symbol.iterator]();
-				s2t.equal(from(iter), iter, 'array iterator becomes itself');
+				// eslint-disable-next-line no-proto
+				var arrayIterHasIterProto = hasProto && iter.__proto__.__proto__ !== Object.prototype;
+				s2t.equal(
+					from(iter),
+					iter,
+					'array iterator becomes itself',
+					{ skip: !arrayIterHasIterProto && 'node 0.12 - 3 do not have Iterator.prototype in the proto chains' }
+				);
 
 				s2t.end();
 			});

@@ -9,7 +9,7 @@
 
 An ESnext spec-compliant sync iterator helpers shim/polyfill/replacement that works as far down as ES3.
 
-This package implements the [es-shim API](https://github.com/es-shims/api) “multi” interface. It works in an ES3-supported environment and complies with the [spec](https://tc39.es/proposal-iterator-helpers/).
+This package implements the [es-shim API](https://github.com/es-shims/api) “multi” interface. It works in an ES3-supported environment and complies with the [iterator helpers spec](https://tc39.es/proposal-iterator-helpers/) and the [iterator sequencing spec](https://tc39.es/proposal-iterator-sequencing/).
 
 Because the `Iterator.prototype` methods depend on a receiver (the `this` value), the main export in each subdirectory takes the iterator to operate on as the first argument.
 
@@ -19,6 +19,7 @@ The main export of the package itself is simply an array of the available direct
 
  - [`Iterator` constructor](https://tc39.es/proposal-iterator-helpers/#sec-iterator-constructor)
  - [`Iterator.prototype`](https://tc39.es/proposal-iterator-helpers/#sec-iterator.prototype)
+ - [`Iterator.concat`](https://tc39.es/proposal-iterator-sequencing/)
  - [`Iterator.from`](https://tc39.es/proposal-iterator-helpers/#sec-iterator.from)
  - [`Iterator.prototype.constructor`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.constructor)
  - [`Iterator.prototype.drop`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.drop)
@@ -37,6 +38,7 @@ The main export of the package itself is simply an array of the available direct
 
  - node v22, Chrome >= v122: has a [bug](https://issues.chromium.org/issues/336839115)
  - node < v22, Chrome < v122, Safari <= v17.1, Firefox <= v125: not implemented
+ - all environments lack Iterator.concat
 
 ## Getting started
 
