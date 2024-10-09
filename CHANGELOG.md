@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.1.0](https://github.com/es-shims/iterator-helpers/compare/v1.0.19...v1.1.0) - 2024-10-09
+
+### Commits
+
+- [New] add `Iterator.concat` [`1c07c21`](https://github.com/es-shims/iterator-helpers/commit/1c07c21d42fa6f3de516191a2b7fb848679314e7)
+- [readme] add ESM and CJS examples [`ae0b60c`](https://github.com/es-shims/iterator-helpers/commit/ae0b60cae42a5e6174809859e29d16085042e3b2)
+- [Dev Deps] update `@es-shims/api`, `auto-changelog`, `es-value-fixtures`, `eslint-plugin-import`, `tape` [`bd34766`](https://github.com/es-shims/iterator-helpers/commit/bd34766d527cc625dcbc242297290a793f21b055)
+- [Dev Deps] update `@ljharb/eslint-config`, `mock-property`, `object-inspect`, `tape` [`2016080`](https://github.com/es-shims/iterator-helpers/commit/201608082a32bc1fa114c012eeb72744e1bf5bfa)
+- [readme] fix copy-paste errors [`799255c`](https://github.com/es-shims/iterator-helpers/commit/799255ce358f9f19ab54cc2377aafb404463d917)
+- [Tests] replace `aud` with `npm audit` [`4c48a77`](https://github.com/es-shims/iterator-helpers/commit/4c48a77d90a6894863ad160fd0f88b3fc76653b6)
+- [Deps] update `globalthis` [`14d9e97`](https://github.com/es-shims/iterator-helpers/commit/14d9e971f976da482cbb7ee76b583db9ce17e056)
+- [Dev Deps] update `@es-shims/api` [`15d84bb`](https://github.com/es-shims/iterator-helpers/commit/15d84bbbe1864dfd028f30f98251cbdf19e74908)
+- [Dev Deps] add missing peer dep [`34559b9`](https://github.com/es-shims/iterator-helpers/commit/34559b9a263dfbc3551fd0ff586639692c04e514)
+
 ## [v1.0.19](https://github.com/es-shims/iterator-helpers/compare/v1.0.18...v1.0.19) - 2024-04-24
 
 ### Commits
