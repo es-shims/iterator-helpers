@@ -9,7 +9,7 @@ var CompletionRecord = require('es-abstract/2024/CompletionRecord');
 var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
 var GeneratorResume = require('../aos/GeneratorResume');
 var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
-var IteratorClose = require('es-abstract/2024/IteratorClose');
+var IteratorCloseAll = require('../aos/IteratorCloseAll');
 var NormalCompletion = require('es-abstract/2024/NormalCompletion');
 
 var implementation;
@@ -22,13 +22,13 @@ if (hasProto) {
 		'return': function () {
 			var O = this; // step 1
 
-			SLOT.assert(O, '[[UnderlyingIterator]]'); // step 2
+			SLOT.assert(O, '[[UnderlyingIterators]]'); // step 2
 
 			SLOT.assert(O, '[[GeneratorState]]'); // step 3
 
 			if (SLOT.get(O, '[[GeneratorState]]') === 'suspendedStart') { // step 4
 				SLOT.set(O, '[[GeneratorState]]', 'completed'); // step 4.a
-				IteratorClose(SLOT.get(O, '[[UnderlyingIterator]]'), NormalCompletion('unused')); // step 4.c
+				IteratorCloseAll(SLOT.get(O, '[[UnderlyingIterators]]'), NormalCompletion('unused')); // step 4.c
 				return CreateIterResultObject(void undefined, true); // step 4.d
 			}
 

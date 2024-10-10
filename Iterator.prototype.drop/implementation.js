@@ -85,9 +85,9 @@ module.exports = function drop(limit) {
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
-	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterator]]']); // step 4
+	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 4
 
-	SLOT.set(result, '[[UnderlyingIterator]]', iterated); // step 5
+	SLOT.set(result, '[[UnderlyingIterators]]', [iterated]); // step 5
 
 	return result; // step 6
 };
