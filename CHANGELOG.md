@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.0](https://github.com/es-shims/iterator-helpers/compare/v1.1.0...v1.2.0) - 2024-11-04
+
+### Commits
+
+- [New] add `Iterator.zip`, `Iterator.zipKeyed` [`d11073f`](https://github.com/es-shims/iterator-helpers/commit/d11073fd27fcdaf696c3d9b00634b6a5144f75b1)
+- [Fix] `concat`: add missing slot for `.return`; convert singular slot to plural slot [`cc4b586`](https://github.com/es-shims/iterator-helpers/commit/cc4b586cdb0ad6ba540043077c3d71ff79d528cd)
+- [Dev Deps] update `@es-shims/api` [`dd14f1b`](https://github.com/es-shims/iterator-helpers/commit/dd14f1b9f06c37f3bcb0a20bacd6e7f031c0724d)
+
 ## [v1.1.0](https://github.com/es-shims/iterator-helpers/compare/v1.0.19...v1.1.0) - 2024-10-09
 
 ### Commits
