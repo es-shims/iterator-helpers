@@ -21,6 +21,8 @@ The main export of the package itself is simply an array of the available direct
  - [`Iterator.prototype`](https://tc39.es/proposal-iterator-helpers/#sec-iterator.prototype)
  - [`Iterator.concat`](https://tc39.es/proposal-iterator-sequencing/)
  - [`Iterator.from`](https://tc39.es/proposal-iterator-helpers/#sec-iterator.from)
+ - [`Iterator.zip`](https://tc39.es/proposal-joint-iteration/#sec-iterator.zip)
+ - [`Iterator.zipKeyed`](https://tc39.es/proposal-joint-iteration/#sec-iterator.zipkeyed)
  - [`Iterator.prototype.constructor`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.constructor)
  - [`Iterator.prototype.drop`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.drop)
  - [`Iterator.prototype.every`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.every)
@@ -38,7 +40,7 @@ The main export of the package itself is simply an array of the available direct
 
  - node v22, Chrome >= v122: has a [bug](https://issues.chromium.org/issues/336839115)
  - node < v22, Chrome < v122, Safari <= v17.1, Firefox <= v125: not implemented
- - all environments lack Iterator.concat
+ - all environments lack Iterator.concat, Iterator.zip, Iterator.zipKeyed
 
 ## Getting started
 
