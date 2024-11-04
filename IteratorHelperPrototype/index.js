@@ -5,12 +5,12 @@ var hasProto = require('has-proto')();
 var iterProto = require('../Iterator.prototype/implementation');
 var SLOT = require('internal-slot');
 
-var CompletionRecord = require('es-abstract/2024/CompletionRecord');
 var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
 var GeneratorResume = require('../aos/GeneratorResume');
 var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
 var IteratorCloseAll = require('../aos/IteratorCloseAll');
 var NormalCompletion = require('es-abstract/2024/NormalCompletion');
+var ReturnCompletion = require('../aos/ReturnCompletion');
 
 var implementation;
 if (hasProto) {
@@ -32,7 +32,7 @@ if (hasProto) {
 				return CreateIterResultObject(void undefined, true); // step 4.d
 			}
 
-			var C = new CompletionRecord('return', void undefined); // step 5
+			var C = ReturnCompletion(void undefined); // step 5
 
 			return GeneratorResumeAbrupt(O, C, 'Iterator Helper'); // step 6
 		}
@@ -47,7 +47,7 @@ if (hasProto) {
 		return GeneratorResume(this, void undefined, 'Iterator Helper');
 	};
 	implementation['return'] = function () {
-		var C = new CompletionRecord('return', void undefined); // step 1
+		var C = ReturnCompletion(void undefined); // step 1
 		return GeneratorResumeAbrupt(this, C, 'Iterator Helper');
 	};
 }

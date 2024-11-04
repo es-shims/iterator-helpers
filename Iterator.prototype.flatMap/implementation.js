@@ -76,7 +76,7 @@ module.exports = function flatMap(mapper) {
 			try {
 				var mapped = Call(mapper, void undefined, [value, counter]); // step 5.b.iv
 				// yield mapped // step 5.b.vi
-				innerIterator = GetIteratorFlattenable(mapped, 'reject-strings'); // step 5.b.vi
+				innerIterator = GetIteratorFlattenable(mapped, 'REJECT-STRINGS'); // step 5.b.vi
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;

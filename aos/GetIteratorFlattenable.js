@@ -11,9 +11,15 @@ var Type = require('es-abstract/2024/Type');
 
 var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 
+// https://tc39.es/proposal-iterator-helpers/#sec-getiteratorflattenable
+
 module.exports = function GetIteratorFlattenable(obj, stringHandling) {
+	if (stringHandling !== 'REJECT-STRINGS' && stringHandling !== 'ITERATE-STRINGS') {
+		throw new $TypeError('Assertion failed: `stringHandling` must be "REJECT-STRINGS" or "ITERATE-STRINGS"');
+	}
+
 	if (Type(obj) !== 'Object') {
-		if (stringHandling === 'reject-strings' || typeof obj !== 'string') {
+		if (stringHandling === 'REJECT-STRINGS' || typeof obj !== 'string') {
 			throw new $TypeError('obj must be an Object'); // step 1.a
 		}
 	}

@@ -16,7 +16,7 @@ module.exports = function from(O) {
 		throw new $TypeError('`Iterator.from` is not a constructor');
 	}
 
-	var iteratorRecord = GetIteratorFlattenable(O, 'iterate-strings'); // step 1
+	var iteratorRecord = GetIteratorFlattenable(O, 'ITERATE-STRINGS'); // step 1
 
 	var hasInstance = OrdinaryHasInstance($Iterator, iteratorRecord['[[Iterator]]']); // step 2
 
