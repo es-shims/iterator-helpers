@@ -406,6 +406,44 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('test262: test/built-ins/Iterator/concat/return-is-forwarded', function (s2t) {
+				var returnCount = 0;
+
+				var testIterator1 = {
+					next: function () {
+						return {
+							done: false,
+							value: 1
+						};
+					},
+					'return': function () {
+						returnCount += 1;
+						return {};
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return testIterator1;
+				};
+
+				var iterator = concat(iterable);
+				s2t.equal(returnCount, 0);
+
+				var iterResult = iterator.next();
+				s2t.equal(returnCount, 0);
+				s2t.equal(iterResult.done, false);
+				s2t.equal(iterResult.value, 1);
+
+				iterator['return']();
+				s2t.equal(returnCount, 1);
+
+				iterator['return']();
+				s2t.equal(returnCount, 1);
+
+				s2t.end();
+			});
+
 			st.test('test262: test/built-ins/Iterator/concat/return-is-not-forwarded-after-exhaustion', function (s2t) {
 				var testIterator1 = {
 					next: function () {
@@ -528,6 +566,40 @@ module.exports = {
 				s2t.equal(enterCount, 0);
 
 				s2t['throws'](function () { iterator.next(); }, TypeError);
+
+				s2t.equal(enterCount, 1);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/throws-typeerror-when-generator-is-running-return', function (s2t) {
+				var enterCount = 0;
+
+				var iterator;
+
+				var testIterator1 = {
+					next: function () {
+						return { done: false };
+					},
+					'return': function () {
+						enterCount += 1;
+						iterator['return']();
+						return { done: false };
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return testIterator1;
+				};
+
+				iterator = concat(iterable);
+
+				iterator.next();
+
+				s2t.equal(enterCount, 0);
+
+				s2t['throws'](function () { iterator['return'](); }, TypeError);
 
 				s2t.equal(enterCount, 1);
 
