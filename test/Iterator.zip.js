@@ -41,13 +41,15 @@ module.exports = {
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			forEach(v.nonFunctions, function (nonFunction) {
-				var badIterable = {};
-				badIterable[Symbol.iterator] = nonFunction;
-				st['throws'](
-					function () { zip([[], badIterable, []]).next(); },
-					TypeError,
-					debug(badIterable) + ' is not a function'
-				);
+				if (nonFunction != null) {
+					var badIterable = {};
+					badIterable[Symbol.iterator] = nonFunction;
+					st['throws'](
+						function () { zip([[], badIterable, []]).next(); },
+						TypeError,
+						debug(badIterable) + ' is not a function'
+					);
+				}
 			});
 
 			forEach(v.strings, function (string) {
