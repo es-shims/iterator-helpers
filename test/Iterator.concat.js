@@ -278,6 +278,53 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('test262: test/built-ins/Iterator/concat/next-method-returns-non-object', function (s2t) {
+				var nonObjectIterator = {
+					next: function () {
+						return null;
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return nonObjectIterator;
+				};
+
+				var iterator = concat(iterable);
+
+				s2t['throws'](function () { iterator.next(); }, TypeError);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/next-method-returns-throwing-done', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var throwingIterator = {
+					next: function () {
+						var result = { done: null, value: 1 };
+						Object.defineProperty(result, 'done', {
+							get: function () {
+								throw new EvalError();
+							}
+						});
+						return result;
+					},
+					'return': function () {
+						throw new Error();
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return throwingIterator;
+				};
+
+				var iterator = concat(iterable);
+
+				s2t['throws'](function () { iterator.next(); }, EvalError);
+
+				s2t.end();
+			});
+
 			st.test('test262: test/built-ins/Iterator/concat/next-method-returns-throwing-value-done', { skip: !hasPropertyDescriptors }, function (s2t) {
 				function ReturnCalledError() {}
 				function ValueGetterError() {}
@@ -308,6 +355,53 @@ module.exports = {
 
 				s2t.equal(iterResult.done, true);
 				s2t.equal(iterResult.value, undefined);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/next-method-returns-throwing-value', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var throwingIterator = {
+					next: function () {
+						var result = { value: null, done: false };
+						Object.defineProperty(result, 'value', {
+							get: function () {
+								throw new EvalError();
+							}
+						});
+						return result;
+					},
+					'return': function () {
+						throw new Error();
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return throwingIterator;
+				};
+
+				var iterator = concat(iterable);
+
+				s2t['throws'](function () { iterator.next(); }, EvalError);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/next-method-throws', function (s2t) {
+				var throwingIterator = {
+					next: function () {
+						throw new EvalError();
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return throwingIterator;
+				};
+
+				var iterator = concat(iterable);
+
+				s2t['throws'](function () { iterator.next(); }, EvalError);
 
 				s2t.end();
 			});
@@ -407,6 +501,35 @@ module.exports = {
 
 				iterator['return'](1, 2);
 				s2t.equal(returnCalled, 3);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/throws-typeerror-when-generator-is-running-next', function (s2t) {
+				var enterCount = 0;
+
+				var iterator;
+
+				var testIterator1 = {
+					next: function () {
+						enterCount += 1;
+						iterator.next();
+						return { done: false };
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return testIterator1;
+				};
+
+				iterator = concat(iterable);
+
+				s2t.equal(enterCount, 0);
+
+				s2t['throws'](function () { iterator.next(); }, TypeError);
+
+				s2t.equal(enterCount, 1);
 
 				s2t.end();
 			});
