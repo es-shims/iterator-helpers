@@ -68,6 +68,7 @@
 			"files": "test/**",
 			"rules": {
 				"eqeqeq": ["error", "allow-null"],
+				"func-style": 0,
 				"max-params": 0,
 				"import/no-extraneous-dependencies": [2, { "devDependencies": true }],
 			},
