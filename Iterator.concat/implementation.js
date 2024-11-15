@@ -9,7 +9,7 @@ var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
 var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var GetMethod = require('es-abstract/2024/GetMethod');
 var IsArray = require('es-abstract/2024/IsArray');
-var IteratorCloseAll = require('../aos/IteratorCloseAll');
+var IteratorClose = require('es-abstract/2024/IteratorClose');
 var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
 var Type = require('es-abstract/2024/Type');
 
@@ -83,13 +83,16 @@ module.exports = function concat() {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
 		iterablesIndex = iterables.length;
-		innerAlive = false;
-		if (iteratorRecord) {
-			IteratorCloseAll(
-				[iteratorRecord],
+		if (innerAlive) {
+			innerAlive = false;
+			var toClose = iteratorRecord;
+			iteratorRecord = null;
+			IteratorClose(
+				toClose,
 				abruptCompletion
 			);
 		}
+		return abruptCompletion['?']();
 	};
 
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation

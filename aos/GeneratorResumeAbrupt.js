@@ -5,7 +5,6 @@ var $TypeError = require('es-errors/type');
 var CompletionRecord = require('es-abstract/2024/CompletionRecord');
 var CreateIterResultObject = require('es-abstract/2024/CreateIterResultObject');
 var GeneratorValidate = require('./GeneratorValidate');
-var NormalCompletion = require('es-abstract/2024/NormalCompletion');
 
 var SLOT = require('internal-slot');
 
@@ -25,15 +24,21 @@ module.exports = function GeneratorResumeAbrupt(generator, abruptCompletion, gen
 	var value = abruptCompletion.value();
 
 	if (state === 'completed') { // step 3
-		return CreateIterResultObject(value, true); // steps 3.a-b
+		if (abruptCompletion.type() === 'return') { // step 3.a
+			var returnIfAbrupt = SLOT.get(generator, '[[CloseIfAbrupt]]');
+			returnIfAbrupt(abruptCompletion);
+			return CreateIterResultObject(value, true); // steps 3.a-b
+		}
+		return abruptCompletion['?'](); // step 3.b
 	}
 
 	if (state !== 'suspendedYield') {
 		throw new $TypeError('Assertion failed: generator state is unexpected: ' + state); // step 4
 	}
+
 	if (abruptCompletion.type() === 'return') {
 		// due to representing `GeneratorContext` as a function, we can't safely re-invoke it, so we can't support sending it a return completion
-		return CreateIterResultObject(SLOT.get(generator, '[[CloseIfAbrupt]]')(NormalCompletion(abruptCompletion.value())), true);
+		return CreateIterResultObject(SLOT.get(generator, '[[CloseIfAbrupt]]')(abruptCompletion), true);
 	}
 
 	var genContext = SLOT.get(generator, '[[GeneratorContext]]'); // step 5
