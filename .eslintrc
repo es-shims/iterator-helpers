@@ -54,6 +54,7 @@
 				"ToBoolean",
 				"ToIntegerOrInfinity",
 				"ToNumber",
+				"ToPropertyDescriptor",
 				"Type",
 			],
 		}],

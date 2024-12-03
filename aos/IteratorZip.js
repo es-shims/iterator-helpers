@@ -12,7 +12,7 @@ var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
 var isAbstractClosure = require('es-abstract/helpers/isAbstractClosure');
 var IsArray = require('es-abstract/helpers/IsArray');
 var isIteratorRecord = require('es-abstract/helpers/records/iterator-record');
-var some = require('es-abstract/helpers/some');
+var every = require('es-abstract/helpers/every');
 
 var callBound = require('call-bind/callBound');
 
@@ -27,7 +27,7 @@ var SLOT = require('internal-slot');
 // https://tc39.es/proposal-joint-iteration/#sec-IteratorZip
 
 module.exports = function IteratorZip(iters, mode, padding, finishResults) {
-	if (!IsArray(iters) || !some(iters, isIteratorRecord)) {
+	if (!IsArray(iters) || !every(iters, isIteratorRecord)) {
 		throw new $TypeError('`iters` must be a List of IteratorRecords');
 	}
 

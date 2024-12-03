@@ -13,6 +13,7 @@ var IsDataDescriptor = require('es-abstract/2024/IsDataDescriptor');
 var IteratorZip = require('../aos/IteratorZip');
 var OrdinaryObjectCreate = require('es-abstract/2024/OrdinaryObjectCreate');
 var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
+var ToPropertyDescriptor = require('es-abstract/2024/ToPropertyDescriptor');
 var Type = require('es-abstract/2024/Type');
 
 var forEach = require('es-abstract/helpers/forEach');
@@ -43,10 +44,10 @@ module.exports = function zipKeyed(iterables) {
 
 	var paddingOption; // step 6
 
-	if (mode === 'longest') {
-		paddingOption = Get(options, 'padding'); // step 7
+	if (mode === 'longest') { // step 7
+		paddingOption = Get(options, 'padding'); // step 7.a
 		if (typeof paddingOption !== 'undefined' && Type(paddingOption) !== 'Object') {
-			throw new $TypeError('`padding` option must be an Object'); // step 7.1
+			throw new $TypeError('`padding` option must be an Object'); // step 7.b
 		}
 	}
 
@@ -61,7 +62,7 @@ module.exports = function zipKeyed(iterables) {
 	forEach(allKeys, function (key) { // step 12
 		var desc;
 		try {
-			desc = gOPD(iterables, key); // step 12.a
+			desc = ToPropertyDescriptor(gOPD(iterables, key)); // step 12.a
 		} catch (e) {
 			IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.b
 		}
@@ -92,8 +93,7 @@ module.exports = function zipKeyed(iterables) {
 				try {
 					iter = GetIteratorFlattenable(value, 'REJECT-STRINGS'); // step 12.c.iv.2
 				} catch (e) {
-					// step 12.c.iv.3
-					// 3. IfAbruptCloseIterators(e, iters).
+					IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.c.iv.3
 				}
 				iters[iters.length] = iter; // step 12.c.iv.4
 			}
