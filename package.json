@@ -163,7 +163,7 @@
 		"safe-array-concat": "^1.1.2"
 	},
 	"devDependencies": {
-		"@es-shims/api": "^3.0.1",
+		"@es-shims/api": "^3.0.2",
 		"@ljharb/eslint-config": "^21.1.1",
 		"auto-changelog": "^2.5.0",
 		"encoding": "^0.1.13",
