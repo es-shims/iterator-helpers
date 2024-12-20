@@ -7,7 +7,7 @@ var $TypeError = require('es-errors/type');
 var $defineProperty = hasPropertyDescriptors && GetIntrinsic('%Object.defineProperty%', true);
 
 var iterProto = require('iterator.prototype');
-var callBound = require('call-bind/callBound');
+var callBound = require('call-bound');
 
 var $isPrototypeOf = callBound('Object.prototype.isPrototypeOf');
 

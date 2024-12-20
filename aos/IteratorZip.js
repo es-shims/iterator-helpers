@@ -14,7 +14,7 @@ var IsArray = require('es-abstract/helpers/IsArray');
 var isIteratorRecord = require('es-abstract/helpers/records/iterator-record');
 var every = require('es-abstract/helpers/every');
 
-var callBound = require('call-bind/callBound');
+var callBound = require('call-bound');
 
 var $indexOf = callBound('Array.prototype.indexOf');
 var $slice = callBound('Array.prototype.slice');

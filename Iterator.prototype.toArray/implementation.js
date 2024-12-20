@@ -6,10 +6,6 @@ var GetIteratorDirect = require('../aos/GetIteratorDirect');
 var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
 var Type = require('es-abstract/2024/Type');
 
-var callBound = require('call-bind/callBound');
-
-var $push = callBound('Array.prototype.push');
-
 module.exports = function toArray() {
 	if (this instanceof toArray) {
 		throw new $TypeError('`toArray` is not a constructor');
@@ -31,6 +27,6 @@ module.exports = function toArray() {
 		if (iterated['[[Done]]']) {
 			return items; // step 5.b
 		}
-		$push(items, value); // step 5.d
+		items[items.length] = value; // step 5.d
 	}
 };
