@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.1](https://github.com/es-shims/iterator-helpers/compare/v1.2.0...v1.2.1) - 2024-12-20
+
+### Commits
+
+- [Tests] `Iterator.concat`: add most of the tests from https://github.com/tc39/test262/pull/4326 [`2e340da`](https://github.com/es-shims/iterator-helpers/commit/2e340daf021139ea41dc828c7f99452114db8561)
+- [Fix] `Iterator.concat`: rewrite implementation to match updated spec text [`1a70fd3`](https://github.com/es-shims/iterator-helpers/commit/1a70fd33ab81738ad2b748812a431d51e0c4d758)
+- [Fix] `IteratorZip` AO: allow an empty list of iterators [`265e566`](https://github.com/es-shims/iterator-helpers/commit/265e5664dade59e2faa5d7d2e203b92cd0af5c35)
+- [actions] split out node 10-20, and 20+ [`3cc9db0`](https://github.com/es-shims/iterator-helpers/commit/3cc9db03118e2b4b6432e262e7936a7e2f3074c4)
+- [Fix] `IteratorHelperPrototype`: in pre-proto envs, use same `.return` impl [`da02ab6`](https://github.com/es-shims/iterator-helpers/commit/da02ab656dce1c4f73355290a3bd9e4c25ccc3b6)
+- [Deps] update `call-bind`, `es-abstract`, `get-intrinsic`, `gopd`, `has-proto`, `internal-slot`, `iterator.prototype`, `safe-array-concat` [`e9eefab`](https://github.com/es-shims/iterator-helpers/commit/e9eefab99fb496f9a4600193126c69c321394d42)
+- [Tests] `Iterator.zip`: nullish non-function Symbol.iterator does not throw [`c6b0705`](https://github.com/es-shims/iterator-helpers/commit/c6b0705e2b601c1c8d412679eca4fe4618051d8f)
+- [Refactor] use `call-bound` directly [`92afc5a`](https://github.com/es-shims/iterator-helpers/commit/92afc5a7ed014b5e2b52db1b1a6a99d16f50d5d2)
+- [Deps] update `gopd`, `has-proto`, `has-symbols` [`7f8a1c0`](https://github.com/es-shims/iterator-helpers/commit/7f8a1c0049dfd649bea9a707b9c451ba7e9f3b0e)
+- [readme] add missing info for `Iterator.zip`, `Iterator.zipKeyed` [`dd80b2f`](https://github.com/es-shims/iterator-helpers/commit/dd80b2f1718092219e94e24afdc1737f062e3df4)
+- [Dev Deps] update `@es-shims/api` [`1e9857c`](https://github.com/es-shims/iterator-helpers/commit/1e9857c497f8f4e6053c9adb7dddb98b6800c628)
+- [Deps] update `es-abstract` [`c8157da`](https://github.com/es-shims/iterator-helpers/commit/c8157da5194372ddc968e0f512d0740544752d30)
+- [Deps] update `es-abstract` [`256de0e`](https://github.com/es-shims/iterator-helpers/commit/256de0e1aa45d6d0ad12a19ef04491816bcb7288)
+- [Dev Deps] update `object-inspect` [`2f8544b`](https://github.com/es-shims/iterator-helpers/commit/2f8544b7baa80174e7368d475a4e3fa577418938)
+
 ## [v1.2.0](https://github.com/es-shims/iterator-helpers/compare/v1.1.0...v1.2.0) - 2024-11-04
 
 ### Commits
