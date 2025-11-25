@@ -2,9 +2,10 @@
 
 var $TypeError = require('es-errors/type');
 
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var Type = require('es-abstract/2024/Type');
+var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
+
+var isObject = require('es-abstract/helpers/isObject');
 
 module.exports = function toArray() {
 	if (this instanceof toArray) {
@@ -13,7 +14,7 @@ module.exports = function toArray() {
 
 	var O = this; // step 1
 
-	if (Type(O) !== 'Object') {
+	if (!isObject(O)) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 

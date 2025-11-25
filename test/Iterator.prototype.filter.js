@@ -283,7 +283,7 @@ module.exports = {
 				),
 				function () { return true; }
 			);
-			st['throws'](
+			st['throws']( // TODO
 				function () { iter2['return'](); },
 				SyntaxError,
 				'iter2, return() throws'

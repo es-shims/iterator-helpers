@@ -11,7 +11,7 @@ var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
 var iterate = require('iterate-iterator');
 
-var StringToCodePoints = require('es-abstract/2024/StringToCodePoints');
+var StringToCodePoints = require('es-abstract/2025/StringToCodePoints');
 
 var index = require('../Iterator.prototype.flatMap');
 var impl = require('../Iterator.prototype.flatMap/implementation');

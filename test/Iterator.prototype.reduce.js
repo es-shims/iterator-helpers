@@ -72,7 +72,7 @@ module.exports = {
 			var ret = reduce(
 				iterator(),
 				function (acc, x, i) {
-					// eslint-disable-next-line no-invalid-this
+
 					results.push({ acc: acc, value: x, count: i, 'this': this, args: arguments.length });
 					return acc + x;
 				}
@@ -91,7 +91,7 @@ module.exports = {
 			var ret2 = reduce(
 				iterator(),
 				function (acc, x, i) {
-					// eslint-disable-next-line no-invalid-this
+
 					results2.push({ acc: acc, value: x, count: i, 'this': this, args: arguments.length });
 					return acc + x;
 				},

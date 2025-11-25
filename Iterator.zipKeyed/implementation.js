@@ -2,21 +2,21 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2024/Call');
-var CreateDataPropertyOrThrow = require('es-abstract/2024/CreateDataPropertyOrThrow');
-var Get = require('es-abstract/2024/Get');
-var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
+var Call = require('es-abstract/2025/Call');
+var CreateDataPropertyOrThrow = require('es-abstract/2025/CreateDataPropertyOrThrow');
+var Get = require('es-abstract/2025/Get');
+var GetIteratorFlattenable = require('es-abstract/2025/GetIteratorFlattenable');
 var GetOptionsObject = require('../aos/GetOptionsObject');
 var IfAbruptCloseIterators = require('../aos/IfAbruptCloseIterators');
-var IsAccessorDescriptor = require('es-abstract/2024/IsAccessorDescriptor');
-var IsDataDescriptor = require('es-abstract/2024/IsDataDescriptor');
+var IsAccessorDescriptor = require('es-abstract/2025/IsAccessorDescriptor');
+var IsDataDescriptor = require('es-abstract/2025/IsDataDescriptor');
 var IteratorZip = require('../aos/IteratorZip');
-var OrdinaryObjectCreate = require('es-abstract/2024/OrdinaryObjectCreate');
-var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
-var ToPropertyDescriptor = require('es-abstract/2024/ToPropertyDescriptor');
-var Type = require('es-abstract/2024/Type');
+var OrdinaryObjectCreate = require('es-abstract/2025/OrdinaryObjectCreate');
+var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
+var ToPropertyDescriptor = require('es-abstract/2025/ToPropertyDescriptor');
 
 var forEach = require('es-abstract/helpers/forEach');
+var isObject = require('es-abstract/helpers/isObject');
 var ownKeys = require('es-abstract/helpers/OwnPropertyKeys');
 
 var gOPD = require('gopd');
@@ -26,7 +26,7 @@ module.exports = function zipKeyed(iterables) {
 		throw new $TypeError('`Iterator.zip` is not a constructor');
 	}
 
-	if (Type(iterables) !== 'Object') {
+	if (!isObject(iterables)) {
 		throw new $TypeError('`iterables` must be an Object'); // step 1
 	}
 
@@ -46,7 +46,7 @@ module.exports = function zipKeyed(iterables) {
 
 	if (mode === 'longest') { // step 7
 		paddingOption = Get(options, 'padding'); // step 7.a
-		if (typeof paddingOption !== 'undefined' && Type(paddingOption) !== 'Object') {
+		if (typeof paddingOption !== 'undefined' && !isObject(paddingOption)) {
 			throw new $TypeError('`padding` option must be an Object'); // step 7.b
 		}
 	}
@@ -91,7 +91,7 @@ module.exports = function zipKeyed(iterables) {
 				keys[keys.length] = key; // step 12.c.iv.1
 				var iter;
 				try {
-					iter = GetIteratorFlattenable(value, 'REJECT-STRINGS'); // step 12.c.iv.2
+					iter = GetIteratorFlattenable(value, 'REJECT-PRIMITIVES'); // step 12.c.iv.2
 				} catch (e) {
 					IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.c.iv.3
 				}

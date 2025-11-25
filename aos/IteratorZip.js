@@ -2,12 +2,12 @@
 
 var $TypeError = require('es-errors/type');
 
-var CreateIteratorFromClosure = require('./CreateIteratorFromClosure');
+var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
 var IteratorCloseAll = require('./IteratorCloseAll');
-var IteratorStep = require('es-abstract/2024/IteratorStep');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var NormalCompletion = require('es-abstract/2024/NormalCompletion');
-var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
+var IteratorStep = require('es-abstract/2025/IteratorStep');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
+var NormalCompletion = require('es-abstract/2025/NormalCompletion');
+var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 
 var isAbstractClosure = require('es-abstract/helpers/isAbstractClosure');
 var IsArray = require('es-abstract/helpers/IsArray');

@@ -2,16 +2,17 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2024/Call');
-var CompletionRecord = require('es-abstract/2024/CompletionRecord');
-var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var GetIteratorFlattenable = require('../aos/GetIteratorFlattenable');
-var IsCallable = require('es-abstract/2024/IsCallable');
-var IteratorClose = require('es-abstract/2024/IteratorClose');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
-var Type = require('es-abstract/2024/Type');
+var Call = require('es-abstract/2025/Call');
+var CompletionRecord = require('es-abstract/2025/CompletionRecord');
+var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
+var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var GetIteratorFlattenable = require('es-abstract/2025/GetIteratorFlattenable');
+var IsCallable = require('es-abstract/2025/IsCallable');
+var IteratorClose = require('es-abstract/2025/IteratorClose');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
+var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
+
+var isObject = require('es-abstract/helpers/isObject');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 
@@ -23,7 +24,7 @@ module.exports = function flatMap(mapper) {
 	}
 
 	var O = this; // step 1
-	if (Type(O) !== 'Object') {
+	if (!isObject(O)) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
@@ -76,7 +77,7 @@ module.exports = function flatMap(mapper) {
 			try {
 				var mapped = Call(mapper, void undefined, [value, counter]); // step 5.b.iv
 				// yield mapped // step 5.b.vi
-				innerIterator = GetIteratorFlattenable(mapped, 'REJECT-STRINGS'); // step 5.b.vi
+				innerIterator = GetIteratorFlattenable(mapped, 'REJECT-PRIMITIVES'); // step 5.b.vi
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;

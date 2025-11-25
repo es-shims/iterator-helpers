@@ -153,12 +153,12 @@ module.exports = {
 			var iter1 = drop(makeBadIterator(), 0);
 			st.equal(returnCount, 0, 'iter1, before return()');
 			iter1['return']();
-			st.equal(returnCount, 1, 'iter1, after return()');
+			st.equal(returnCount, 1, 'iter1, after return()'); // TODO
 
 			var iter2 = drop(makeBadIterator(), 1);
-			st.equal(returnCount, 1, 'iter2, before return()');
+			st.equal(returnCount, 1, 'iter2, before return()'); // TODO
 			iter2['return']();
-			st.equal(returnCount, 2, 'iter2, after return()');
+			st.equal(returnCount, 2, 'iter2, after return()'); // TODO
 
 			// 5 drops (i wish i had pipeline)
 			var iter3 = drop(
@@ -177,9 +177,9 @@ module.exports = {
 				),
 				1
 			);
-			st.equal(returnCount, 2, 'iter3, before return()');
+			st.equal(returnCount, 2, 'iter3, before return()'); // TODO
 			iter3['return']();
-			st.equal(returnCount, 3, 'iter3, after return()');
+			st.equal(returnCount, 3, 'iter3, after return()'); // TODO
 
 			st.end();
 		});
@@ -199,7 +199,7 @@ module.exports = {
 				};
 			};
 
-			var iter1 = drop(makeBadIterator(), 0);
+			var iter1 = drop(makeBadIterator(), 0); // TODO
 			st['throws'](
 				function () { iter1['return'](); },
 				SyntaxError,

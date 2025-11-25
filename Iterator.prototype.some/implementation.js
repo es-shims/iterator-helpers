@@ -2,15 +2,16 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2024/Call');
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IsCallable = require('es-abstract/2024/IsCallable');
-var IteratorClose = require('es-abstract/2024/IteratorClose');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var NormalCompletion = require('es-abstract/2024/NormalCompletion');
-var ThrowCompletion = require('es-abstract/2024/ThrowCompletion');
-var ToBoolean = require('es-abstract/2024/ToBoolean');
-var Type = require('es-abstract/2024/Type');
+var Call = require('es-abstract/2025/Call');
+var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var IsCallable = require('es-abstract/2025/IsCallable');
+var IteratorClose = require('es-abstract/2025/IteratorClose');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
+var NormalCompletion = require('es-abstract/2025/NormalCompletion');
+var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
+var ToBoolean = require('es-abstract/2025/ToBoolean');
+
+var isObject = require('es-abstract/helpers/isObject');
 
 module.exports = function some(predicate) {
 	if (this instanceof some) {
@@ -18,7 +19,7 @@ module.exports = function some(predicate) {
 	}
 
 	var O = this; // step 1
-	if (Type(O) !== 'Object') {
+	if (!isObject(O)) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 

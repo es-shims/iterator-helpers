@@ -72,7 +72,7 @@ module.exports = {
 			var ret = forEach(
 				iterator(),
 				function (x, i) {
-					// eslint-disable-next-line no-invalid-this
+
 					results.push({ value: x, count: i, 'this': this, args: arguments.length });
 				}
 			);

@@ -71,7 +71,7 @@ module.exports = {
 			map(fakeIterator, function (x, i) {
 				result.value = x;
 				result.counter = i;
-				result.receiver = this; // eslint-disable-line no-invalid-this
+				result.receiver = this;
 				result.args = arguments.length;
 				return fakeIterator;
 			}),

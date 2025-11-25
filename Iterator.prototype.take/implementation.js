@@ -3,18 +3,18 @@
 var $RangeError = require('es-errors/range');
 var $TypeError = require('es-errors/type');
 
-var CompletionRecord = require('es-abstract/2024/CompletionRecord');
-var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var IteratorClose = require('es-abstract/2024/IteratorClose');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var NormalCompletion = require('es-abstract/2024/NormalCompletion');
-var ToIntegerOrInfinity = require('es-abstract/2024/ToIntegerOrInfinity');
-var ToNumber = require('es-abstract/2024/ToNumber');
-var Type = require('es-abstract/2024/Type');
+var CompletionRecord = require('es-abstract/2025/CompletionRecord');
+var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
+var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var IteratorClose = require('es-abstract/2025/IteratorClose');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
+var NormalCompletion = require('es-abstract/2025/NormalCompletion');
+var ToIntegerOrInfinity = require('es-abstract/2025/ToIntegerOrInfinity');
+var ToNumber = require('es-abstract/2025/ToNumber');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 
+var isObject = require('es-abstract/helpers/isObject');
 var isNaN = require('es-abstract/helpers/isNaN');
 
 var SLOT = require('internal-slot');
@@ -25,7 +25,7 @@ module.exports = function take(limit) {
 	}
 
 	var O = this; // step 1
-	if (Type(O) !== 'Object') {
+	if (!isObject(O)) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 

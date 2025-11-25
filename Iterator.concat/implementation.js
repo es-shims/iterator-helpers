@@ -2,18 +2,18 @@
 
 var $TypeError = require('es-errors/type');
 
-var AdvanceStringIndex = require('es-abstract/2024/AdvanceStringIndex');
-var Call = require('es-abstract/2024/Call');
-var CompletionRecord = require('es-abstract/2024/CompletionRecord');
-var CreateIteratorFromClosure = require('../aos/CreateIteratorFromClosure');
-var GetIteratorDirect = require('../aos/GetIteratorDirect');
-var GetMethod = require('es-abstract/2024/GetMethod');
-var IsArray = require('es-abstract/2024/IsArray');
+var AdvanceStringIndex = require('es-abstract/2025/AdvanceStringIndex');
+var Call = require('es-abstract/2025/Call');
+var CompletionRecord = require('es-abstract/2025/CompletionRecord');
+var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
+var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var GetMethod = require('es-abstract/2025/GetMethod');
+var IsArray = require('es-abstract/2025/IsArray');
 var IteratorCloseAll = require('../aos/IteratorCloseAll');
-var IteratorStepValue = require('es-abstract/2024/IteratorStepValue');
-var Type = require('es-abstract/2024/Type');
+var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
 
 var forEach = require('es-abstract/helpers/forEach');
+var isObject = require('es-abstract/helpers/isObject');
 var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
@@ -28,7 +28,7 @@ module.exports = function concat() {
 	var iterables = []; // step 1
 
 	forEach(arguments, function (item) { // step 2
-		if (Type(item) !== 'Object') {
+		if (!isObject(item)) {
 			throw new $TypeError('`Iterator.concat` requires all arguments to be objects'); // step 2.1
 		}
 		// var method = GetMethod(item, Symbol.iterator); // step 2.2
@@ -57,7 +57,7 @@ module.exports = function concat() {
 		var iterable = iterables[iterablesIndex]; // step 3.a
 		if (!innerAlive) {
 			var iter = Call(iterable['[[OpenMethod]]'], iterable['[[Iterable]]']); // step 3.a.i
-			if (Type(iter) !== 'Object') {
+			if (!isObject(iter)) {
 				throw new $TypeError('`Iterator.concat` iterator method did not return an object'); // step 3.a.ii
 			}
 			iteratorRecord = GetIteratorDirect(iter); // step 3.a.iii
