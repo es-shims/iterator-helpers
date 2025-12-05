@@ -50,6 +50,7 @@ module.exports = function concat() {
 	var iterablesIndex = 0;
 	var iteratorRecord;
 	var innerAlive = false;
+	var openIters = []; // track the current open iterator for return() forwarding
 	var closure = function () { // step 3
 		if (iterablesIndex >= iterables.length) {
 			return sentinel;
@@ -61,6 +62,7 @@ module.exports = function concat() {
 				throw new $TypeError('`Iterator.concat` iterator method did not return an object'); // step 3.a.ii
 			}
 			iteratorRecord = GetIteratorDirect(iter); // step 3.a.iii
+			openIters[0] = iteratorRecord; // track the open iterator
 			innerAlive = true; // step 3.a.iv
 		}
 
@@ -68,6 +70,7 @@ module.exports = function concat() {
 			var innerValue = IteratorStepValue(iteratorRecord); // step 3.a.v.1
 			if (iteratorRecord['[[Done]]']) { // step 3.a.v.2
 				innerAlive = false; // step 3.a.v.2.a
+				openIters.length = 0; // no open iterator now
 			} else { // step 3.a.v.3
 				// 1. Let completion be Completion(Yield(innerValue)).
 				return innerValue; // step 3.a.v.3.a
@@ -84,11 +87,10 @@ module.exports = function concat() {
 		}
 		iterablesIndex = iterables.length;
 		innerAlive = false;
-		if (iteratorRecord) {
-			IteratorCloseAll(
-				[iteratorRecord],
-				abruptCompletion
-			);
+		if (openIters.length > 0) {
+			var toClose = openIters.slice();
+			openIters.length = 0; // prevent double-closing
+			IteratorCloseAll(toClose, abruptCompletion);
 		}
 	};
 
@@ -96,6 +98,6 @@ module.exports = function concat() {
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
 	var gen = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 5
-	SLOT.set(gen, '[[UnderlyingIterators]]', []); // step 6
+	SLOT.set(gen, '[[UnderlyingIterators]]', openIters); // step 6 - share the array reference
 	return gen; // step 7
 };

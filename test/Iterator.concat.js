@@ -604,6 +604,44 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('test262: test/built-ins/Iterator/concat/return-is-forwarded', function (s2t) {
+				var returnCount = 0;
+
+				var testIterator1 = {
+					next: function () {
+						return { done: false, value: 1 };
+					},
+					'return': function () {
+						returnCount += 1;
+						return { done: true, value: undefined };
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return testIterator1;
+				};
+
+				var iterator = concat(iterable);
+
+				s2t.equal(returnCount, 0, 'return not called before next()');
+
+				iterator.next();
+
+				s2t.equal(returnCount, 0, 'return not called after next()');
+
+				iterator['return']();
+
+				s2t.equal(returnCount, 1, 'return called once after iterator.return()');
+
+				// Subsequent return() calls should not forward again
+				iterator['return']();
+
+				s2t.equal(returnCount, 1, 'return not called again on subsequent return()');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},
