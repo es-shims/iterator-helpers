@@ -183,6 +183,64 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: return closes all underlying iterators', function (s2t) {
+				var return1Calls = 0;
+				var return2Calls = 0;
+
+				var iter1 = {
+					next: function () { return { done: false, value: 1 }; },
+					'return': function () {
+						return1Calls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+				iter1[Symbol.iterator] = function () { return iter1; };
+
+				var iter2 = {
+					next: function () { return { done: false, value: 2 }; },
+					'return': function () {
+						return2Calls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+				iter2[Symbol.iterator] = function () { return iter2; };
+
+				var zipIter = zip([iter1, iter2]);
+				zipIter.next();
+				s2t.equal(return1Calls, 0, 'return not called before calling return()');
+				s2t.equal(return2Calls, 0, 'return not called before calling return()');
+
+				zipIter['return']();
+				s2t.equal(return1Calls, 1, 'iter1.return called once');
+				s2t.equal(return2Calls, 1, 'iter2.return called once');
+
+				s2t.end();
+			});
+
+			st.test('262: next method throws closes other iterators', function (s2t) {
+				var return2Calls = 0;
+
+				var iter1 = {
+					next: function () { throw new EvalError('iter1 next threw'); }
+				};
+				iter1[Symbol.iterator] = function () { return iter1; };
+
+				var iter2 = {
+					next: function () { return { done: false, value: 2 }; },
+					'return': function () {
+						return2Calls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+				iter2[Symbol.iterator] = function () { return iter2; };
+
+				var zipIter = zip([iter1, iter2]);
+				s2t['throws'](function () { zipIter.next(); }, EvalError, 'throws error from iter1.next');
+				s2t.equal(return2Calls, 1, 'iter2.return called when iter1.next throws');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},

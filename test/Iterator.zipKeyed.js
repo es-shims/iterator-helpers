@@ -278,6 +278,40 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: return closes all underlying iterators', function (s2t) {
+				var returnACalls = 0;
+				var returnBCalls = 0;
+
+				var iterA = {
+					next: function () { return { done: false, value: 1 }; },
+					'return': function () {
+						returnACalls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+				iterA[Symbol.iterator] = function () { return iterA; };
+
+				var iterB = {
+					next: function () { return { done: false, value: 2 }; },
+					'return': function () {
+						returnBCalls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+				iterB[Symbol.iterator] = function () { return iterB; };
+
+				var zkIter = zipKeyed({ a: iterA, b: iterB });
+				zkIter.next();
+				s2t.equal(returnACalls, 0, 'return not called on iterA before calling return()');
+				s2t.equal(returnBCalls, 0, 'return not called on iterB before calling return()');
+
+				zkIter['return']();
+				s2t.equal(returnACalls, 1, 'iterA.return called once');
+				s2t.equal(returnBCalls, 1, 'iterB.return called once');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},

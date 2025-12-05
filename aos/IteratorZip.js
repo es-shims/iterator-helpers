@@ -2,6 +2,7 @@
 
 var $TypeError = require('es-errors/type');
 
+var CompletionRecord = require('es-abstract/2025/CompletionRecord');
 var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
 var IteratorCloseAll = require('./IteratorCloseAll');
 var IteratorStep = require('es-abstract/2025/IteratorStep');
@@ -46,6 +47,13 @@ module.exports = function IteratorZip(iters, mode, padding, finishResults) {
 	var iterCount = iters.length; // step 1
 
 	var openIters = $slice(iters); // step 2
+
+	var closeIfAbrupt = function (abruptCompletion) {
+		if (!(abruptCompletion instanceof CompletionRecord)) {
+			throw new $TypeError('`abruptCompletion` must be a Completion Record');
+		}
+		IteratorCloseAll(openIters, abruptCompletion);
+	};
 
 	var sentinel = {};
 	var closure = function () {
@@ -139,7 +147,7 @@ module.exports = function IteratorZip(iters, mode, padding, finishResults) {
 		return finishResults(results); // step 3.b.iv
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
-	SLOT.set(closure, '[[CloseIfAbrupt]]', finishResults); // for the userland implementation
+	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
 	var gen = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 4
 
