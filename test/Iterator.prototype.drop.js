@@ -101,6 +101,170 @@ module.exports = {
 			testIterator(drop(iterator(), 3), [], st, 'drop 3');
 			testIterator(drop(iterator(), Infinity), [], st, 'drop ∞');
 
+			st.test('262: limit-tonumber', function (s2t) {
+				// ToNumber coercion
+				testIterator(drop(iterator(), '1'), [2, 3], s2t, 'string "1" coerced to 1');
+				testIterator(drop(iterator(), 1.9), [2, 3], s2t, '1.9 truncated to 1');
+				testIterator(drop(iterator(), { valueOf: function () { return 1; } }), [2, 3], s2t, 'object with valueOf');
+				testIterator(drop(iterator(), true), [2, 3], s2t, 'true coerced to 1');
+				testIterator(drop(iterator(), null), [1, 2, 3], s2t, 'null coerced to 0');
+
+				s2t.end();
+			});
+
+			st.test('262: limit-tonumber-throws', function (s2t) {
+				s2t['throws'](
+					function () { drop(iterator(), { valueOf: function () { throw new EvalError('valueOf threw'); } }); },
+					EvalError,
+					'throws when valueOf throws'
+				);
+
+				s2t['throws'](
+					function () { drop(iterator(), Symbol('test')); },
+					TypeError,
+					'throws when limit is a Symbol'
+				);
+
+				s2t.end();
+			});
+
+			st.test('262: limit-rangeerror', function (s2t) {
+				s2t['throws'](function () { drop(iterator(), -1); }, RangeError, '-1 throws RangeError');
+				s2t['throws'](function () { drop(iterator(), -Infinity); }, RangeError, '-Infinity throws RangeError');
+				s2t['throws'](function () { drop(iterator(), NaN); }, RangeError, 'NaN throws RangeError');
+
+				s2t.end();
+			});
+
+			st.test('262: result is iterator', function (s2t) {
+				var iter = drop(iterator(), 1);
+				s2t.equal(typeof iter.next, 'function', 'has next method');
+				s2t.equal(typeof iter[Symbol.iterator], 'function', 'has Symbol.iterator method');
+				s2t.equal(iter[Symbol.iterator](), iter, 'Symbol.iterator returns itself');
+
+				s2t.end();
+			});
+
+			st.test('262: get next method only once', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var nextGets = 0;
+				var testIter = {};
+				Object.defineProperty(testIter, 'next', {
+					get: function () {
+						nextGets += 1;
+						return function () {
+							return { done: true, value: undefined };
+						};
+					}
+				});
+
+				var iter = drop(testIter, 1);
+				s2t.equal(nextGets, 1, 'next retrieved once on creation');
+				iter.next();
+				s2t.equal(nextGets, 1, 'next not retrieved again');
+
+				s2t.end();
+			});
+
+			st.test('262: next method returns non-object throws', function (s2t) {
+				var badIterator = {
+					next: function () {
+						return null;
+					}
+				};
+
+				var iter = drop(badIterator, 1);
+				s2t['throws'](function () { iter.next(); }, TypeError, 'throws when next returns null');
+
+				s2t.end();
+			});
+
+			st.test('262: next method returns throwing done', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var throwingIterator = {
+					next: function () {
+						var result = { value: 1 };
+						Object.defineProperty(result, 'done', {
+							get: function () {
+								throw new EvalError('done getter threw');
+							}
+						});
+						return result;
+					}
+				};
+
+				var iter = drop(throwingIterator, 1);
+				s2t['throws'](function () { iter.next(); }, EvalError, 'throws when done getter throws');
+
+				s2t.end();
+			});
+
+			st.test('262: next method throws', function (s2t) {
+				var throwingIterator = {
+					next: function () {
+						throw new EvalError('next threw');
+					}
+				};
+
+				var iter = drop(throwingIterator, 1);
+				s2t['throws'](function () { iter.next(); }, EvalError, 'throws error from next');
+
+				s2t.end();
+			});
+
+			st.test('262: throws TypeError when generator is running', function (s2t) {
+				var reentrantIterator;
+				var testIter = {
+					next: function () {
+						reentrantIterator.next();
+						return { done: false, value: 1 };
+					}
+				};
+
+				reentrantIterator = drop(testIter, 0);
+				s2t['throws'](function () { reentrantIterator.next(); }, TypeError, 'throws on reentrant next()');
+
+				s2t.end();
+			});
+
+			st.test('262: limit-equals-total', function (s2t) {
+				testIterator(drop(iterator(), 3), [], s2t, 'drop exactly 3 from 3-item iterator');
+
+				s2t.end();
+			});
+
+			st.test('262: limit-greater-than-total', function (s2t) {
+				testIterator(drop(iterator(), 5), [], s2t, 'drop 5 from 3-item iterator');
+				testIterator(drop(iterator(), 100), [], s2t, 'drop 100 from 3-item iterator');
+
+				s2t.end();
+			});
+
+			st.test('262: limit-less-than-total', function (s2t) {
+				testIterator(drop(iterator(), 1), [2, 3], s2t, 'drop 1 from 3-item iterator');
+				testIterator(drop(iterator(), 2), [3], s2t, 'drop 2 from 3-item iterator');
+
+				s2t.end();
+			});
+
+			st.test('262: exhaustion does not call return', function (s2t) {
+				var returnCalls = 0;
+
+				var testIter = {
+					next: function () {
+						return { done: true, value: undefined };
+					},
+					'return': function () {
+						returnCalls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+
+				var iter = drop(testIter, 1);
+				iter.next();
+				s2t.equal(returnCalls, 0, 'return not called on exhaustion');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 

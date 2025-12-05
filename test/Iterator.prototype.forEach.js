@@ -89,6 +89,106 @@ module.exports = {
 				'forEach callback receives the expected values'
 			);
 
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/fn-args', function (s2t) {
+				var assertionCount = 0;
+				var result = forEach(
+					['a', 'b', 'c'][Symbol.iterator](),
+					function (value, count) {
+						if (value === 'a') {
+							s2t.equal(count, 0);
+						} else if (value === 'b') {
+							s2t.equal(count, 1);
+						} else if (value === 'c') {
+							s2t.equal(count, 2);
+						} else {
+							s2t.fail('unexpected value');
+						}
+						assertionCount += 1;
+					}
+				);
+				s2t.equal(result, undefined, 'forEach returns undefined');
+				s2t.equal(assertionCount, 3, 'callback called three times');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/fn-this', function (s2t) {
+				var expectedThis = (function () { return this; }()); // eslint-disable-line no-invalid-this
+				var assertionCount = 0;
+				var result = forEach(
+					[0][Symbol.iterator](),
+					function () {
+						s2t.equal(this, expectedThis, 'fn this is undefined'); // eslint-disable-line no-invalid-this
+						assertionCount += 1;
+					}
+				);
+				s2t.equal(result, undefined);
+				s2t.equal(assertionCount, 1);
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/fn-called-for-each-yielded-value', function (s2t) {
+				var values = [];
+				forEach(
+					[1, 2, 3, 4, 5][Symbol.iterator](),
+					function (value) { values.push(value); }
+				);
+				s2t.deepEqual(values, [1, 2, 3, 4, 5], 'callback called for each value');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/fn-throws', function (s2t) {
+				var returnCount = 0;
+				var testIter = {
+					next: function () {
+						return { done: false, value: 1 };
+					},
+					'return': function () {
+						returnCount += 1;
+						return { done: true };
+					}
+				};
+
+				var callbackCount = 0;
+				s2t['throws'](
+					function () {
+						forEach(testIter, function () {
+							callbackCount += 1;
+							throw new SyntaxError('callback threw');
+						});
+					},
+					SyntaxError
+				);
+				s2t.equal(callbackCount, 1, 'callback called once');
+				s2t.equal(returnCount, 1, 'iterator closed when callback throws');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/iterator-already-exhausted', function (s2t) {
+				var iter = [][Symbol.iterator]();
+				var callbackCount = 0;
+				var result = forEach(iter, function () {
+					callbackCount += 1;
+				});
+				s2t.equal(result, undefined, 'forEach returns undefined for empty iterator');
+				s2t.equal(callbackCount, 0, 'callback not called');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/prototype/forEach/result-is-undefined', function (s2t) {
+				var result = forEach(
+					[1, 2, 3][Symbol.iterator](),
+					function () {}
+				);
+				s2t.equal(result, undefined, 'forEach returns undefined');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},

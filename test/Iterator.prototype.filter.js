@@ -293,6 +293,231 @@ module.exports = {
 
 			st.end();
 		});
+
+		t.test('262: predicate-this', { skip: !hasSymbols }, function (st) {
+			var thisValue;
+			var iter = filter(
+				[1][Symbol.iterator](),
+				function () {
+					thisValue = this;
+					return true;
+				}
+			);
+			iter.next();
+			st.equal(thisValue, undefined, 'predicate this is undefined');
+
+			st.end();
+		});
+
+		t.test('262: predicate-returns-non-boolean', { skip: !hasSymbols }, function (st) {
+			// truthy non-boolean values should pass
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return 1; }),
+				[1, 2, 3],
+				st,
+				'truthy number passes'
+			);
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return 'yes'; }),
+				[1, 2, 3],
+				st,
+				'truthy string passes'
+			);
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return {}; }),
+				[1, 2, 3],
+				st,
+				'truthy object passes'
+			);
+
+			// falsy non-boolean values should fail
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return 0; }),
+				[],
+				st,
+				'falsy number fails'
+			);
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return ''; }),
+				[],
+				st,
+				'falsy string fails'
+			);
+			testIterator(
+				filter([1, 2, 3][Symbol.iterator](), function () { return null; }),
+				[],
+				st,
+				'null fails'
+			);
+
+			st.end();
+		});
+
+		t.test('262: result is iterator', { skip: !hasSymbols }, function (st) {
+			var iterator = filter([1, 2][Symbol.iterator](), function () { return true; });
+			st.equal(typeof iterator.next, 'function', 'has next method');
+			st.equal(typeof iterator[Symbol.iterator], 'function', 'has Symbol.iterator method');
+			st.equal(iterator[Symbol.iterator](), iterator, 'Symbol.iterator returns itself');
+
+			st.end();
+		});
+
+		t.test('262: get next method only once', { skip: !hasPropertyDescriptors }, function (st) {
+			var nextGets = 0;
+			var testIter = {};
+			Object.defineProperty(testIter, 'next', {
+				get: function () {
+					nextGets += 1;
+					return function () {
+						return { done: true, value: undefined };
+					};
+				}
+			});
+
+			var iter = filter(testIter, function () { return true; });
+			st.equal(nextGets, 1, 'next retrieved once on creation');
+			iter.next();
+			st.equal(nextGets, 1, 'next not retrieved again');
+
+			st.end();
+		});
+
+		t.test('262: get next method throws', { skip: !hasPropertyDescriptors }, function (st) {
+			var testIter = {};
+			Object.defineProperty(testIter, 'next', {
+				get: function () {
+					throw new EvalError('next getter threw');
+				}
+			});
+
+			st['throws'](
+				function () { filter(testIter, function () { return true; }); },
+				EvalError,
+				'throws when getting next throws'
+			);
+
+			st.end();
+		});
+
+		t.test('262: next method returns non-object throws', function (st) {
+			var badIterator = {
+				next: function () {
+					return null;
+				}
+			};
+
+			var iter = filter(badIterator, function () { return true; });
+			st['throws'](function () { iter.next(); }, TypeError, 'throws when next returns null');
+
+			st.end();
+		});
+
+		t.test('262: next method returns throwing done', { skip: !hasPropertyDescriptors }, function (st) {
+			var throwingIterator = {
+				next: function () {
+					var result = { value: 1 };
+					Object.defineProperty(result, 'done', {
+						get: function () {
+							throw new EvalError('done getter threw');
+						}
+					});
+					return result;
+				}
+			};
+
+			var iter = filter(throwingIterator, function () { return true; });
+			st['throws'](function () { iter.next(); }, EvalError, 'throws when done getter throws');
+
+			st.end();
+		});
+
+		t.test('262: next method returns throwing value', { skip: !hasPropertyDescriptors }, function (st) {
+			var throwingIterator = {
+				next: function () {
+					var result = { done: false };
+					Object.defineProperty(result, 'value', {
+						get: function () {
+							throw new EvalError('value getter threw');
+						}
+					});
+					return result;
+				}
+			};
+
+			var iter = filter(throwingIterator, function () { return true; });
+			st['throws'](function () { iter.next(); }, EvalError, 'throws when value getter throws');
+
+			st.end();
+		});
+
+		t.test('262: next method throws', function (st) {
+			var throwingIterator = {
+				next: function () {
+					throw new EvalError('next threw');
+				}
+			};
+
+			var iter = filter(throwingIterator, function () { return true; });
+			st['throws'](function () { iter.next(); }, EvalError, 'throws error from next');
+
+			st.end();
+		});
+
+		t.test('262: iterator already exhausted', function (st) {
+			var testIter = {
+				next: function () {
+					return { done: true, value: undefined };
+				}
+			};
+
+			var predicateCalls = 0;
+			var iter = filter(testIter, function () {
+				predicateCalls += 1;
+				return true;
+			});
+
+			var result = iter.next();
+			st.equal(result.done, true, 'done is true');
+			st.equal(result.value, undefined, 'value is undefined');
+			st.equal(predicateCalls, 0, 'predicate not called for exhausted iterator');
+
+			st.end();
+		});
+
+		t.test('262: throws TypeError when generator is running', function (st) {
+			var reentrantIterator;
+			var testIter = {
+				next: function () {
+					reentrantIterator.next();
+					return { done: false, value: 1 };
+				}
+			};
+
+			reentrantIterator = filter(testIter, function () { return true; });
+			st['throws'](function () { reentrantIterator.next(); }, TypeError, 'throws on reentrant next()');
+
+			st.end();
+		});
+
+		t.test('262: exhaustion does not call return', function (st) {
+			var returnCalls = 0;
+
+			var testIter = {
+				next: function () {
+					return { done: true, value: undefined };
+				},
+				'return': function () {
+					returnCalls += 1;
+					return { done: true, value: undefined };
+				}
+			};
+
+			var iter = filter(testIter, function () { return true; });
+			iter.next();
+			st.equal(returnCalls, 0, 'return not called on exhaustion');
+
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {
