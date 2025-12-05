@@ -534,6 +534,76 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('test262: test/built-ins/Iterator/concat/result-is-iterator', function (s2t) {
+				var iter = concat();
+				s2t.equal(typeof iter.next, 'function', 'concat() result has next method');
+				s2t.equal(typeof iter[Symbol.iterator], 'function', 'concat() result has Symbol.iterator');
+				s2t.equal(iter[Symbol.iterator](), iter, 'concat() result Symbol.iterator returns itself');
+
+				var customIter = { next: function () { return { done: true, value: undefined }; } };
+				var iterable = {};
+				iterable[Symbol.iterator] = function () { return customIter; };
+				iter = concat(iterable);
+				s2t.equal(typeof iter.next, 'function', 'concat(iterable) result has next method');
+				s2t.equal(typeof iter[Symbol.iterator], 'function', 'concat(iterable) result has Symbol.iterator');
+				s2t.equal(iter[Symbol.iterator](), iter, 'concat(iterable) result Symbol.iterator returns itself');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/single-argument', function (s2t) {
+				var array = [1, 2, 3];
+				var iterator = concat(array);
+
+				for (var i = 0; i < array.length; i += 1) {
+					var iterResult = iterator.next();
+					s2t.equal(iterResult.done, false, 'not done at index ' + i);
+					s2t.equal(iterResult.value, array[i], 'correct value at index ' + i);
+				}
+
+				var finalResult = iterator.next();
+				s2t.equal(finalResult.done, true, 'done after all values');
+				s2t.equal(finalResult.value, undefined, 'value is undefined when done');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/many-arguments', function (s2t) {
+				var iterables = [
+					[],
+					[1],
+					[2, 3],
+					[4, 5, 6],
+					[7, 8, 9, 10]
+				];
+
+				var iterator = concat(iterables[0], iterables[1], iterables[2], iterables[3], iterables[4]);
+
+				var expected = [].concat(iterables[0], iterables[1], iterables[2], iterables[3], iterables[4]);
+
+				for (var i = 0; i < expected.length; i += 1) {
+					var iterResult = iterator.next();
+					s2t.equal(iterResult.done, false, 'not done at index ' + i);
+					s2t.equal(iterResult.value, expected[i], 'correct value at index ' + i);
+				}
+
+				var finalResult = iterator.next();
+				s2t.equal(finalResult.done, true, 'done after all values');
+				s2t.equal(finalResult.value, undefined, 'value is undefined when done');
+
+				s2t.end();
+			});
+
+			st.test('test262: test/built-ins/Iterator/concat/zero-arguments', function (s2t) {
+				var iterator = concat();
+
+				var iterResult = iterator.next();
+				s2t.equal(iterResult.done, true, 'done immediately with zero arguments');
+				s2t.equal(iterResult.value, undefined, 'value is undefined');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},
