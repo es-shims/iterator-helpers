@@ -120,6 +120,7 @@ export default [
 					'CreateIteratorResultObject',
 					'GeneratorResume',
 					'GeneratorResumeAbrupt',
+					'GeneratorValidate',
 					'Get',
 					'GetIntrinsic',
 					'GetIterator',

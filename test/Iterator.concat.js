@@ -642,6 +642,43 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('test262: test/built-ins/Iterator/concat/throws-typeerror-when-generator-is-running-return', function (s2t) {
+				var enterCount = 0;
+				var iterator;
+
+				var reentrantTestIterator = {
+					next: function () {
+						return { done: false };
+					},
+					'return': function () {
+						enterCount += 1;
+						iterator['return'](); // re-entrant call
+						return { done: false };
+					}
+				};
+
+				var iterable = {};
+				iterable[Symbol.iterator] = function () {
+					return reentrantTestIterator;
+				};
+
+				iterator = concat(iterable);
+
+				iterator.next();
+
+				s2t.equal(enterCount, 0, 'return not entered before calling return()');
+
+				s2t['throws'](
+					function () { iterator['return'](); },
+					TypeError,
+					'throws TypeError when generator is running during return()'
+				);
+
+				s2t.equal(enterCount, 1, 'return entered exactly once before throwing');
+
+				s2t.end();
+			});
+
 			st.end();
 		});
 	},

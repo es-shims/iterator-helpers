@@ -7,7 +7,7 @@ var SLOT = require('internal-slot');
 
 var CreateIteratorResultObject = require('es-abstract/2025/CreateIteratorResultObject');
 var GeneratorResume = require('es-abstract/2025/GeneratorResume');
-var GeneratorResumeAbrupt = require('es-abstract/2025/GeneratorResumeAbrupt');
+var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
 var IteratorCloseAll = require('../aos/IteratorCloseAll');
 var ReturnCompletion = require('es-abstract/2025/ReturnCompletion');
 
