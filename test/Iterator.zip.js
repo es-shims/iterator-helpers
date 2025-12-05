@@ -142,6 +142,10 @@ module.exports = {
 			});
 
 			st.test('262: basic strict mode', function (s2t) {
+				// strict mode succeeds when lengths match
+				testIterator(zip([[1, 2], [3, 4]], { mode: 'strict' }), [[1, 3], [2, 4]], s2t, 'strict mode succeeds with equal lengths');
+				testIterator(zip([[1], [2], [3]], { mode: 'strict' }), [[1, 2, 3]], s2t, 'strict mode with three iterators of length 1');
+
 				// strict mode throws when lengths differ
 				var strictIter1 = zip([[1, 2, 3], [4, 5]], { mode: 'strict' });
 				strictIter1.next(); // [1, 4]

@@ -108,21 +108,23 @@ module.exports = function IteratorZip(iters, mode, padding, finishResults) {
 									); // step 3.b.iii.2.d.iii.ii.vi.i
 								}
 							}
-						} else { // step 3.b.iii.2.d.iv
-							if (mode !== 'longest') {
-								throw new $TypeError('Assertion failed: `mode` is not "longest"'); // step 3.b.iii.2.d.iv.i
-							}
-
-							if (openIters.length === 0) {
-								return sentinel; // ReturnCompletion(undefined); // step 3.b.iii.2.d.iv.ii
-							}
-
-							// eslint-disable-next-line no-param-reassign
-							iters[i] = null; // step 3.b.iii.2.d.iv.iii
-							// i += 1;
-
-							result = padding[i]; // step 3.b.iii.2.d.iv.iv
+							return sentinel; // step 3.b.iii.2.d.iii.iii - all iterators done in strict mode
 						}
+
+						// step 3.b.iii.2.d.iv
+						if (mode !== 'longest') {
+							throw new $TypeError('Assertion failed: `mode` is not "longest"'); // step 3.b.iii.2.d.iv.i
+						}
+
+						if (openIters.length === 0) {
+							return sentinel; // ReturnCompletion(undefined); // step 3.b.iii.2.d.iv.ii
+						}
+
+						// eslint-disable-next-line no-param-reassign
+						iters[i] = null; // step 3.b.iii.2.d.iv.iii
+						// i += 1;
+
+						result = padding[i]; // step 3.b.iii.2.d.iv.iv
 					}
 				}
 
