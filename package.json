@@ -178,6 +178,7 @@
 		"has-tostringtag": "^1.0.2",
 		"in-publish": "^2.0.1",
 		"iterate-iterator": "^1.0.2",
+		"jiti": "^0.0.0",
 		"make-generator-function": "^2.1.0",
 		"mock-property": "^1.1.0",
 		"npmignore": "^0.3.2",
