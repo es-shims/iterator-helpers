@@ -149,7 +149,7 @@
 		"call-bind": "^1.0.8",
 		"call-bound": "^1.0.4",
 		"define-properties": "^1.2.1",
-		"es-abstract": "^1.24.0",
+		"es-abstract": "^1.24.1",
 		"es-errors": "^1.3.0",
 		"es-set-tostringtag": "^2.1.0",
 		"function-bind": "^1.1.2",
