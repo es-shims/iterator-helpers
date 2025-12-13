@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.2](https://github.com/es-shims/iterator-helpers/compare/v1.2.1...v1.2.2) - 2025-12-13
+
+### Commits
+
+- [Tests] joint iteration: add missing & passing test262 tests [`34258f3`](https://github.com/es-shims/iterator-helpers/commit/34258f36f9b346fe92ac5c001ba75784568665d1)
+- [Deps] update `call-bound`, `es-abstract`, `get-intrinsic` [`e05660b`](https://github.com/es-shims/iterator-helpers/commit/e05660b9e2197f27ee428f1739944f49b3ed0f7c)
+- [Tests] `Iterator.from`, `Iterator.prototype.toArray`: add missing & passing test262 tests [`7831bd6`](https://github.com/es-shims/iterator-helpers/commit/7831bd66b07dcee905e06506ff9f9d352971a388)
+- [Dev Deps] update `eslint`, `@ljharb/eslint-config` [`35ecd14`](https://github.com/es-shims/iterator-helpers/commit/35ecd14f2d26a8664a6b524bbbd85c270c1c610a)
+- [Fix] `IteratorZip`: return should close all underlying iterators [`5bcab73`](https://github.com/es-shims/iterator-helpers/commit/5bcab73b01369f13b9f379c804a7f7f7b7995e32)
+- [Fix] `IteratorHelperPrototype`: throw TypeError when `return()` is called re-entrantly [`0acdd41`](https://github.com/es-shims/iterator-helpers/commit/0acdd4107c075f6b6b8822e0ce4a2a799ca476d0)
+- [Tests] `Iterator.concat`: add missing & passing test262 tests [`9645f4d`](https://github.com/es-shims/iterator-helpers/commit/9645f4da1052674ec2c7b5809ec8c164d8adda1a)
+- [Fix] `Iterator.concat`: prevent `return()` from being forwarded multiple times [`1271d61`](https://github.com/es-shims/iterator-helpers/commit/1271d61cc35606a627b8412609400a11e6d5f797)
+- [Fix] `Iterator.zip`: strict mode should return sentinel after all iterators done [`f4c8b99`](https://github.com/es-shims/iterator-helpers/commit/f4c8b99ca39dea551d38b17ade315b03b64e4a46)
+- [Dev Deps] update `@es-shims/api`, `@ljharb/eslint-config`, `eslint`, `eslint-plugin-import`, `has-strict-mode`, `make-generator-function`, `npmignore` [`acba233`](https://github.com/es-shims/iterator-helpers/commit/acba233094b3ef70d8d20e41c4ea084a6b47447a)
+- [Deps] update `es-abstract`, `es-set-tostringtag`, `get-intrinsic`, `iterator.prototype` [`06515e7`](https://github.com/es-shims/iterator-helpers/commit/06515e7d1f5d5e7c98777eba6aec50d1cdaf6a4d)
+- [Dev Deps] update `es-value-fixtures`, `for-each`, `object-inspect` [`2afe7a3`](https://github.com/es-shims/iterator-helpers/commit/2afe7a38fd08ca98ca173070350e370535caa325)
+- [Dev Deps] update `@ljharb/eslint-config`, `eslint` [`18fa1c1`](https://github.com/es-shims/iterator-helpers/commit/18fa1c1ca56070d68e6f4db37a365e1f98d27a53)
+- [Fix] `GeneratorResumeAbrupt`: set state to COMPLETED after return completion [`10e5e21`](https://github.com/es-shims/iterator-helpers/commit/10e5e21fd1ed9dc156bfca7644843f4a11799543)
+- [Deps] update `es-abstract` [`3469d15`](https://github.com/es-shims/iterator-helpers/commit/3469d1543a0730156a95bb90747efebfe46ba1a0)
+- [Dev Deps] add missing peer dep [`a0d780d`](https://github.com/es-shims/iterator-helpers/commit/a0d780d64a4742004e316ee9b70f445711b5a4db)
+
 ## [v1.2.1](https://github.com/es-shims/iterator-helpers/compare/v1.2.0...v1.2.1) - 2024-12-20
 
 ### Commits
