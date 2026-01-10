@@ -87,7 +87,7 @@ module.exports = function IteratorZip(iters, mode, padding, finishResults) {
 					if (iter['[[Done]]']) { // step 3.b.iii.2.d
 						$splice(openIters, $indexOf(openIters, iter), 1); // step 3.b.iii.2.d.i
 						if (mode === 'shortest') { // step 3.b.iii.2.d.ii
-							IteratorCloseAll(openIters, NormalCompletion(undefined)); // step 3.b.iii.2.d.ii.i
+							IteratorCloseAll(openIters, NormalCompletion(void undefined)); // step 3.b.iii.2.d.ii.i
 							return sentinel;
 						} else if (mode === 'strict') { // step 3.b.iii.2.d.iii
 							if (i !== 0) { // step 3.b.iii.2.d.iii.i

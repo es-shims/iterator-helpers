@@ -24,7 +24,7 @@ module.exports = function zip(iterables) {
 		throw new $TypeError('`iterables` must be an Object'); // step 1
 	}
 
-	var options = GetOptionsObject(arguments.length > 1 ? arguments[1] : undefined); // step 2
+	var options = GetOptionsObject(arguments.length > 1 ? arguments[1] : void undefined); // step 2
 
 	var mode = Get(options, 'mode'); // step 3
 
@@ -106,7 +106,7 @@ module.exports = function zip(iterables) {
 
 			if (usingIterator) { // step 14.b.v
 				try {
-					IteratorClose(paddingIter, NormalCompletion(undefined)); // step 14.b.v.1
+					IteratorClose(paddingIter, NormalCompletion(void undefined)); // step 14.b.v.1
 				} catch (e) {
 					IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 14.b.v.2
 				}

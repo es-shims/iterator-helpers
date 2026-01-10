@@ -40,7 +40,7 @@ module.exports = /* GetIntrinsic('%WrapForValidIteratorPrototype%', true) || */ 
 		var returnMethod = GetMethod(iterator, 'return'); // step 5
 
 		if (typeof returnMethod === 'undefined') { // step 6
-			return CreateIteratorResultObject(undefined, true); // step 6.a
+			return CreateIteratorResultObject(void undefined, true); // step 6.a
 		}
 		return Call(returnMethod, iterator); // step 7
 	}

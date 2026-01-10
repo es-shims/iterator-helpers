@@ -30,7 +30,7 @@ module.exports = function zipKeyed(iterables) {
 		throw new $TypeError('`iterables` must be an Object'); // step 1
 	}
 
-	var options = GetOptionsObject(arguments.length > 1 ? arguments[1] : undefined); // step 2
+	var options = GetOptionsObject(arguments.length > 1 ? arguments[1] : void undefined); // step 2
 
 	var mode = Get(options, 'mode'); // step 3
 
