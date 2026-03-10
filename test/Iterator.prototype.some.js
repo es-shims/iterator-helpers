@@ -96,12 +96,12 @@ module.exports = {
 			});
 
 			st.test('test262: test/built-ins/Iterator/prototype/some/predicate-this', function (s2t) {
-				var expectedThis = (function () { return this; }()); // eslint-disable-line no-invalid-this
+				var expectedThis = (function () { return this; }());
 				var assertionCount = 0;
 				var result = some(
 					[0][Symbol.iterator](),
 					function () {
-						s2t.equal(this, expectedThis, 'predicate this is undefined'); // eslint-disable-line no-invalid-this
+						s2t.equal(this, expectedThis, 'predicate this is undefined');
 						assertionCount += 1;
 						return true;
 					}

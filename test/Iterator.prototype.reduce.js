@@ -161,12 +161,12 @@ module.exports = {
 			});
 
 			st.test('test262: test/built-ins/Iterator/prototype/reduce/reducer-this', function (s2t) {
-				var expectedThis = (function () { return this; }()); // eslint-disable-line no-invalid-this
+				var expectedThis = (function () { return this; }());
 				var assertionCount = 0;
 				var result = reduce(
 					[0, 1][Symbol.iterator](),
 					function () {
-						s2t.equal(this, expectedThis, 'reducer this is undefined'); // eslint-disable-line no-invalid-this
+						s2t.equal(this, expectedThis, 'reducer this is undefined');
 						assertionCount += 1;
 						return 0;
 					}

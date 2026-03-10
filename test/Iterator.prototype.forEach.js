@@ -113,12 +113,12 @@ module.exports = {
 			});
 
 			st.test('test262: test/built-ins/Iterator/prototype/forEach/fn-this', function (s2t) {
-				var expectedThis = (function () { return this; }()); // eslint-disable-line no-invalid-this
+				var expectedThis = (function () { return this; }());
 				var assertionCount = 0;
 				var result = forEach(
 					[0][Symbol.iterator](),
 					function () {
-						s2t.equal(this, expectedThis, 'fn this is undefined'); // eslint-disable-line no-invalid-this
+						s2t.equal(this, expectedThis, 'fn this is undefined');
 						assertionCount += 1;
 					}
 				);

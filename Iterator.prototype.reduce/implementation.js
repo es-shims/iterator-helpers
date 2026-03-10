@@ -40,7 +40,6 @@ module.exports = function reduce(reducer) {
 		counter = 0;
 	}
 
-	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 8
 		var value = IteratorStepValue(iterated); // step 8.a
 		if (iterated['[[Done]]']) {

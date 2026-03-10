@@ -31,7 +31,6 @@ module.exports = function every(predicate) {
 
 	var counter = 0; // step 5
 
-	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 6
 		var value = IteratorStepValue(iterated); // step 6.a
 		if (iterated['[[Done]]']) {

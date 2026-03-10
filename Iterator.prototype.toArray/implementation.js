@@ -22,7 +22,6 @@ module.exports = function toArray() {
 
 	var items = []; // step 4
 
-	// eslint-disable-next-line no-constant-condition
 	while (true) { // step 5
 		var value = IteratorStepValue(iterated); // step 5.a
 		if (iterated['[[Done]]']) {

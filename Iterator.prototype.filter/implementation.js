@@ -47,7 +47,6 @@ module.exports = function filter(predicate) {
 	var sentinel = {};
 	var counter = 0; // step 6.a
 	var closure = function () {
-		// eslint-disable-next-line no-constant-condition
 		while (true) { // step 6.b
 			var value = IteratorStepValue(iterated); // step 6.b.i
 			if (iterated['[[Done]]']) {
