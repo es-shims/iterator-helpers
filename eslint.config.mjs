@@ -142,6 +142,7 @@ export default [
 					'OrdinaryHasInstance',
 					'OrdinaryObjectCreate',
 					'ReturnCompletion',
+					'SameValueZero',
 					'StringToCodePoints',
 					'ThrowCompletion',
 					'ToBoolean',

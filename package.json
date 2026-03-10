@@ -67,6 +67,11 @@
 		"./Iterator.prototype.flatMap/polyfill": "./Iterator.prototype.flatMap/polyfill.js",
 		"./Iterator.prototype.flatMap/implementation": "./Iterator.prototype.flatMap/implementation.js",
 		"./Iterator.prototype.flatMap/shim": "./Iterator.prototype.flatMap/shim.js",
+		"./Iterator.prototype.includes": "./Iterator.prototype.includes/index.js",
+		"./Iterator.prototype.includes/auto": "./Iterator.prototype.includes/auto.js",
+		"./Iterator.prototype.includes/polyfill": "./Iterator.prototype.includes/polyfill.js",
+		"./Iterator.prototype.includes/implementation": "./Iterator.prototype.includes/implementation.js",
+		"./Iterator.prototype.includes/shim": "./Iterator.prototype.includes/shim.js",
 		"./Iterator.prototype.reduce": "./Iterator.prototype.reduce/index.js",
 		"./Iterator.prototype.reduce/auto": "./Iterator.prototype.reduce/auto.js",
 		"./Iterator.prototype.reduce/polyfill": "./Iterator.prototype.reduce/polyfill.js",
@@ -161,6 +166,7 @@
 		"has-symbols": "^1.1.0",
 		"internal-slot": "^1.1.0",
 		"iterator.prototype": "^1.1.5",
+		"math-intrinsics": "^1.1.0",
 		"safe-array-concat": "^1.1.3"
 	},
 	"devDependencies": {
