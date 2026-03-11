@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.0](https://github.com/es-shims/iterator-helpers/compare/v1.2.2...v1.3.0) - 2026-03-11
+
+### Commits
+
+- [New] add `Iterator.prototype.includes` [`554f43a`](https://github.com/es-shims/iterator-helpers/commit/554f43a323e2817c0ce06b5a01e7334e569ca896)
+- [Dev Deps] update `@ljharb/eslint-config`, `eslint` [`f61fcfa`](https://github.com/es-shims/iterator-helpers/commit/f61fcfaa1c2880ac429f13b7167952d237f19561)
+- [Robustness] use `void` [`876d259`](https://github.com/es-shims/iterator-helpers/commit/876d259f89852ed1bb482079679b71a1288fb013)
+- [Dev Deps] update `@ljharb/eslint-config`, `npmignore` [`07d3e98`](https://github.com/es-shims/iterator-helpers/commit/07d3e9874cc29c42f6e3f49ca30eeff23e46c172)
+- [readme] update spec URL [`132faeb`](https://github.com/es-shims/iterator-helpers/commit/132faeb555c60be67be547b018249f881f2e66cf)
+- [readme] replace runkit CI badge with shields.io check-runs badge [`fbd6ffe`](https://github.com/es-shims/iterator-helpers/commit/fbd6ffee76f28c0aa1f99180d6971caa6a36f39c)
+
 ## [v1.2.2](https://github.com/es-shims/iterator-helpers/compare/v1.2.1...v1.2.2) - 2025-12-13
 
 ### Commits
