@@ -160,6 +160,38 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('strict mode: errored iterator not double-closed', function (s2t) {
+				var closeCounts = { a: 0, b: 0 };
+				var iterA = {
+					next: function () { return { done: true, value: undefined }; },
+					'return': function () {
+						closeCounts.a += 1;
+						return { done: true };
+					}
+				};
+				iterA[Symbol.iterator] = function () { return iterA; };
+				var iterB = {
+					next: function () { throw new EvalError('iterB.next threw'); },
+					'return': function () {
+						closeCounts.b += 1;
+						return { done: true };
+					}
+				};
+				iterB[Symbol.iterator] = function () { return iterB; };
+
+				var strictZip = zip([iterA, iterB], { mode: 'strict' });
+				// iterA.next() returns done:true, then in strict mode we check iterB
+				// iterB.next() throws - iterB should be removed from openIters before closing
+				s2t['throws'](
+					function () { strictZip.next(); },
+					EvalError,
+					'strict mode propagates error from next()'
+				);
+				s2t.equal(closeCounts.b, 0, 'errored iterator is not closed again');
+
+				s2t.end();
+			});
+
 			st.test('262: padding option validation', function (s2t) {
 				// padding is only used in longest mode
 				s2t.doesNotThrow(function () { zip([[1], [2]], { mode: 'shortest', padding: null }); }, 'invalid padding ignored in shortest mode');
