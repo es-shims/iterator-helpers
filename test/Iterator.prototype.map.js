@@ -53,6 +53,24 @@ module.exports = {
 			);
 		});
 
+		t.test('early-error calls return on receiver', function (st) {
+			var returnCalls = 0;
+			var obj = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+			st['throws'](
+				function () { map(obj, 'not a function'); },
+				TypeError,
+				'throws TypeError for non-callable mapper'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver when IsCallable fails');
+			st.end();
+		});
+
 		var sentinel = {};
 		var done = false;
 		var fakeIterator = {

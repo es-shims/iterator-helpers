@@ -3,9 +3,9 @@
 var $TypeError = require('es-errors/type');
 
 var Call = require('es-abstract/2025/Call');
-var CompletionRecord = require('es-abstract/2025/CompletionRecord');
 var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClosure');
 var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var IfAbruptCloseIterator = require('es-abstract/2025/IfAbruptCloseIterator');
 var IsCallable = require('es-abstract/2025/IsCallable');
 var IteratorClose = require('es-abstract/2025/IteratorClose');
 var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
@@ -13,9 +13,9 @@ var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 
 var isObject = require('es-abstract/helpers/isObject');
 
-var iterHelperProto = require('../IteratorHelperPrototype');
-
 var SLOT = require('internal-slot');
+
+var iterHelperProto = require('../IteratorHelperPrototype');
 
 module.exports = function map(mapper) {
 	if (this instanceof map) {
@@ -27,20 +27,20 @@ module.exports = function map(mapper) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
-	if (!IsCallable(mapper)) {
-		throw new $TypeError('`mapper` must be a function'); // step 3
+	var iterated = { // step 3
+		'[[Iterator]]': O,
+		'[[NextMethod]]': undefined,
+		'[[Done]]': false
+	};
+
+	if (!IsCallable(mapper)) { // step 4
+		return IteratorClose(iterated, ThrowCompletion(new $TypeError('`mapper` must be a function')));
 	}
 
-	var iterated = GetIteratorDirect(O); // step 4
+	iterated = GetIteratorDirect(O); // step 5
 
 	var closeIfAbrupt = function (abruptCompletion) {
-		if (!(abruptCompletion instanceof CompletionRecord)) {
-			throw new $TypeError('`abruptCompletion` must be a Completion Record');
-		}
-		IteratorClose(
-			iterated,
-			abruptCompletion
-		);
+		IfAbruptCloseIterator(abruptCompletion, iterated);
 	};
 
 	var sentinel = {};
@@ -55,14 +55,13 @@ module.exports = function map(mapper) {
 		var mapped;
 		try {
 			mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iii
-			// yield mapped // step 6.b.vi
+
+			counter += 1; // step 6.b.vii
+
+			// yield mapped // step 6.b.v
 			return mapped;
 		} catch (e) {
-			// close iterator // step 6.b.v, 6.b.vii
-			closeIfAbrupt(ThrowCompletion(e));
-			throw e;
-		} finally {
-			counter += 1; // step 6.b.viii
+			return IfAbruptCloseIterator(ThrowCompletion(e), iterated); // step 6.b.iv, 6.b.vi
 		}
 		// }
 	};
