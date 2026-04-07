@@ -23,36 +23,42 @@ module.exports = function some(predicate) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
-	if (!IsCallable(predicate)) {
-		throw new $TypeError('`predicate` must be a function'); // step 3
+	var iterated = { // step 3
+		'[[Iterator]]': O,
+		'[[NextMethod]]': undefined,
+		'[[Done]]': false
+	};
+
+	if (!IsCallable(predicate)) { // step 4
+		return IteratorClose(iterated, ThrowCompletion(new $TypeError('`predicate` must be a function')));
 	}
 
-	var iterated = GetIteratorDirect(O); // step 4
+	iterated = GetIteratorDirect(O); // step 5
 
-	var counter = 0; // step 5
+	var counter = 0; // step 6
 
-	while (true) { // step 6
-		var value = IteratorStepValue(iterated); // step 6.a
+	while (true) { // step 7
+		var value = IteratorStepValue(iterated); // step 7.a
 		if (iterated['[[Done]]']) {
-			return false; // step 6.b
+			return false; // step 7.b
 		}
 		var result;
 		try {
-			result = Call(predicate, void undefined, [value, counter]); // step 6.c
+			result = Call(predicate, void undefined, [value, counter]); // step 7.c
 		} catch (e) {
-			// close iterator // step 6.d
+			// close iterator // step 7.d
 			IteratorClose(
 				iterated,
 				ThrowCompletion(e)
 			);
 		} finally {
-			counter += 1; // step 6.f
+			counter += 1; // step 7.f
 		}
 		if (ToBoolean(result)) {
 			return IteratorClose(
 				iterated,
 				NormalCompletion(true)
-			); // step 6.e
+			); // step 7.e
 		}
 	}
 };
