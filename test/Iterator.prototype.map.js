@@ -356,6 +356,31 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: return on suspended helper returns done and closes underlying', function (s2t) {
+				var returnCalls = 0;
+
+				var testIter = {
+					next: function () {
+						return { done: false, value: 1 };
+					},
+					'return': function () {
+						returnCalls += 1;
+						return { done: true, value: undefined };
+					}
+				};
+
+				var iter = map(testIter, function (x) { return x * 2; });
+				var first = iter.next();
+				s2t.deepEqual(first, { value: 2, done: false }, 'first next returns mapped value');
+				s2t.equal(returnCalls, 0, 'return not yet called');
+
+				var returnResult = iter['return']();
+				s2t.deepEqual(returnResult, { value: undefined, done: true }, 'return() returns {value: undefined, done: true}');
+				s2t.equal(returnCalls, 1, 'underlying return called exactly once');
+
+				s2t.end();
+			});
+
 			st.test('262: return is not forwarded after exhaustion', function (s2t) {
 				var returnCalls = 0;
 
