@@ -52,6 +52,24 @@ module.exports = {
 			);
 		});
 
+		t.test('early-error calls return on receiver', function (st) {
+			var returnCalls = 0;
+			var obj = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+			st['throws'](
+				function () { filter(obj, 'not a function'); },
+				TypeError,
+				'throws TypeError for non-callable predicate'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver when IsCallable fails');
+			st.end();
+		});
+
 		t.test('observable lookups', { skip: !hasPropertyDescriptors }, function (st) {
 			var effects = [];
 
@@ -140,6 +158,59 @@ module.exports = {
 			testIterator(iter, ['a', 'b', 'c'], st, 'iteration');
 
 			st.equal(assertionCount, 3);
+
+			st.end();
+		});
+
+		t.test('counter increments correctly with mixed matches', { skip: !hasSymbols }, function (st) {
+			var counters = [];
+			var iter = filter(
+				[1, 2, 3, 4, 5][Symbol.iterator](),
+				function (value, count) {
+					counters.push(count);
+					return value % 2 === 1; // only odd values match
+				}
+			);
+
+			// 1 matches (count=0), 2 skipped (count=1), 3 matches (count=2)
+			st.deepEqual(iter.next(), { value: 1, done: false }, 'first match');
+			st.deepEqual(counters, [0], 'predicate called once so far');
+
+			st.deepEqual(iter.next(), { value: 3, done: false }, 'second match');
+			// predicate was called for 2 (count=1, no match) and 3 (count=2, match)
+			st.deepEqual(counters, [0, 1, 2], 'counter increments for every call');
+
+			st.deepEqual(iter.next(), { value: 5, done: false }, 'third match');
+			st.deepEqual(counters, [0, 1, 2, 3, 4], 'counter continues incrementing');
+
+			st.end();
+		});
+
+		t.test('counter not incremented after return while suspended', { skip: !hasSymbols }, function (st) {
+			var counters = [];
+			var returnCalled = false;
+			var underlying = {
+				next: function () {
+					return { value: 1, done: false };
+				},
+				'return': function () {
+					returnCalled = true;
+					return { done: true };
+				}
+			};
+			underlying[Symbol.iterator] = function () { return underlying; };
+
+			var iter = filter(underlying, function (value, count) {
+				counters.push(count);
+				return true;
+			});
+
+			iter.next(); // predicate called with count=0, matches, Yield suspends
+			st.deepEqual(counters, [0], 'predicate called with 0');
+
+			// call return while suspended - counter should NOT have incremented yet
+			iter['return']();
+			st.equal(returnCalled, true, 'underlying return called');
 
 			st.end();
 		});
