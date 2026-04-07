@@ -4,6 +4,7 @@ var $TypeError = require('es-errors/type');
 
 var Call = require('es-abstract/2025/Call');
 var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
+var IfAbruptCloseIterator = require('es-abstract/2025/IfAbruptCloseIterator');
 var IsCallable = require('es-abstract/2025/IsCallable');
 var IteratorClose = require('es-abstract/2025/IteratorClose');
 var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
@@ -23,36 +24,40 @@ module.exports = function every(predicate) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
-	if (!IsCallable(predicate)) {
-		throw new $TypeError('`predicate` must be a function'); // step 3
+	var iterated = { // step 3
+		'[[Iterator]]': O,
+		'[[NextMethod]]': undefined,
+		'[[Done]]': false
+	};
+
+	if (!IsCallable(predicate)) { // step 4
+		var error = ThrowCompletion(new $TypeError('`predicate` must be a function')); // step 4.a
+		return IteratorClose(iterated, error); // step 4.b
 	}
 
-	var iterated = GetIteratorDirect(O); // step 4
+	iterated = GetIteratorDirect(O); // step 5
 
-	var counter = 0; // step 5
+	var counter = 0; // step 6
 
-	while (true) { // step 6
-		var value = IteratorStepValue(iterated); // step 6.a
+	while (true) { // step 7
+		var value = IteratorStepValue(iterated); // step 7.a
 		if (iterated['[[Done]]']) {
-			return true; // step 6.b
+			return true; // step 7.b
 		}
 		var result;
 		try {
-			result = Call(predicate, void undefined, [value, counter]); // step 6.c
+			result = Call(predicate, void undefined, [value, counter]); // step 7.c
 		} catch (e) {
-			// close iterator // step 6.d
-			IteratorClose(
-				iterated,
-				ThrowCompletion(e)
-			);
-		} finally {
-			counter += 1; // step 6.f
+			return IfAbruptCloseIterator(ThrowCompletion(e), iterated); // step 7.d
 		}
+
 		if (!ToBoolean(result)) {
 			return IteratorClose(
 				iterated,
 				NormalCompletion(false)
-			); // step 6.e
+			); // step 7.e
 		}
+
+		counter += 1; // step 7.f
 	}
 };

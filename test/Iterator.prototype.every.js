@@ -52,6 +52,24 @@ module.exports = {
 			);
 		});
 
+		t.test('early-error calls return on receiver', function (st) {
+			var returnCalls = 0;
+			var obj = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+			st['throws'](
+				function () { every(obj, 'not a function'); },
+				TypeError,
+				'throws TypeError for non-callable predicate'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver when IsCallable fails');
+			st.end();
+		});
+
 		t.test('observable lookups', { skip: !hasPropertyDescriptors }, function (st) {
 			var effects = [];
 
