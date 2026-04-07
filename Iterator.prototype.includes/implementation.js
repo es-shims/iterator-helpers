@@ -13,6 +13,7 @@ var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 var isInteger = require('math-intrinsics/isInteger');
 
 var isFinite = require('es-abstract/helpers/isFinite');
+var isNaN = require('es-abstract/helpers/isNaN');
 var isObject = require('es-abstract/helpers/isObject');
 
 module.exports = function includes(searchElement) {
@@ -20,7 +21,7 @@ module.exports = function includes(searchElement) {
 		throw new $TypeError('`includes` is not a constructor');
 	}
 
-	var O = this; // step 1;
+	var O = this; // step 1
 
 	if (!isObject(O)) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
@@ -32,17 +33,17 @@ module.exports = function includes(searchElement) {
 		'[[Done]]': false
 	};
 
-	var skippedElements = arguments.length > 1 ? arguments[1] : undefined; // step 4
+	var skippedElements = arguments.length > 1 ? arguments[1] : undefined;
 
-	var toSkip = 0;
+	var toSkip = 0; // step 4
 	if (typeof skippedElements !== 'undefined') { // step 5
 		if (
 			typeof skippedElements !== 'number'
-			|| !isFinite(skippedElements)
-			|| !isInteger(skippedElements)
-		) { // step 4.a
-			var error = ThrowCompletion(new $TypeError('`skippedElements` must be a finite integral Number')); // step 4.a.1
-			return IteratorClose(iterated, error); // step 4.a.2
+			|| isNaN(skippedElements)
+			|| (isFinite(skippedElements) && !isInteger(skippedElements))
+		) { // step 5.a
+			var error = ThrowCompletion(new $TypeError('`skippedElements` must be an integral Number, +Infinity, or -Infinity')); // step 5.a.i
+			return IteratorClose(iterated, error); // step 5.a.ii
 		}
 
 		toSkip = skippedElements; // step 5.b
@@ -63,16 +64,13 @@ module.exports = function includes(searchElement) {
 		if (iterated['[[Done]]']) {
 			return false; // step 9.b
 		}
-		if (skipped < toSkip) { // step 4
-			skipped += 1; // step 4.a
-		} else {
-			// eslint-disable-next-line no-lonely-if
-			if (SameValueZero(value, searchElement)) { // step 9.d
-				return IteratorClose(
-					iterated,
-					NormalCompletion(true)
-				); // step 9.d.i
-			}
+		if (skipped < toSkip) { // step 9.c
+			skipped += 1; // step 9.c.i
+		} else if (SameValueZero(value, searchElement)) { // step 9.d
+			return IteratorClose(
+				iterated,
+				NormalCompletion(true)
+			); // step 9.d.i
 		}
 	}
 };

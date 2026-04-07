@@ -51,12 +51,22 @@ module.exports = {
 			);
 		});
 
-		forEach([-1, -2], function (negativeInteger) {
+		forEach([-1, -2, -Infinity], function (negativeInteger) {
 			t['throws'](
 				function () { includes({ next: function () {} }, undefined, negativeInteger); },
 				RangeError,
 				debug(negativeInteger) + ' is not a positive integer number'
 			);
+		});
+
+		t.test('Infinity skippedElements', { skip: !hasSymbols }, function (st) {
+			var arr = [1, 2, 3];
+			var iterator = callBind(arr[Symbol.iterator], arr);
+
+			st.equal(includes(iterator(), 1, Infinity), false, 'Infinity skips everything, returns false');
+			st.equal(includes(iterator(), 1, 0), true, '0 skips nothing, finds 1');
+
+			st.end();
 		});
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
