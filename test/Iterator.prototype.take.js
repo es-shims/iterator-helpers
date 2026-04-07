@@ -46,6 +46,42 @@ module.exports = {
 			}
 		});
 
+		t.test('early-error calls return on receiver', function (st) {
+			var returnCalls = 0;
+			var obj = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+
+			st['throws'](
+				function () { take(obj, NaN); },
+				RangeError,
+				'NaN throws RangeError'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver for NaN');
+
+			returnCalls = 0;
+			st['throws'](
+				function () { take(obj, -1); },
+				RangeError,
+				'-1 throws RangeError'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver for negative limit');
+
+			returnCalls = 0;
+			st['throws'](
+				function () { take(obj, { valueOf: function () { throw new SyntaxError('bad'); } }); },
+				SyntaxError,
+				'ToNumber throwing calls return'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver when ToNumber throws');
+
+			st.end();
+		});
+
 		var arr = [1, 2, 3];
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
