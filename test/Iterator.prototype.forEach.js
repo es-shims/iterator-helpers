@@ -51,6 +51,24 @@ module.exports = {
 			);
 		});
 
+		t.test('early-error calls return on receiver', function (st) {
+			var returnCalls = 0;
+			var obj = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+			st['throws'](
+				function () { forEach(obj, 'not a function'); },
+				TypeError,
+				'throws TypeError for non-callable fn'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver when IsCallable fails');
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);
