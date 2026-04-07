@@ -30,17 +30,29 @@ module.exports = function drop(limit) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
-	var numLimit = ToNumber(limit); // step 2
-	if (isNaN(numLimit)) {
-		throw new $RangeError('`limit` must be a non-NaN number'); // step 3
+	var iterated = { // step 3
+		'[[Iterator]]': O,
+		'[[NextMethod]]': undefined,
+		'[[Done]]': false
+	};
+
+	var numLimit;
+	try {
+		numLimit = ToNumber(limit); // step 4
+	} catch (e) {
+		return IteratorClose(iterated, ThrowCompletion(e)); // step 5
 	}
 
-	var iterated = GetIteratorDirect(O); // step 4
-
-	var integerLimit = ToIntegerOrInfinity(numLimit); // step 4
-	if (integerLimit < 0) {
-		throw new $RangeError('`limit` must be a >= 0'); // step 5
+	if (isNaN(numLimit)) { // step 6
+		return IteratorClose(iterated, ThrowCompletion(new $RangeError('`limit` must be a non-NaN number')));
 	}
+
+	var integerLimit = ToIntegerOrInfinity(numLimit); // step 7
+	if (integerLimit < 0) { // step 8
+		return IteratorClose(iterated, ThrowCompletion(new $RangeError('`limit` must be >= 0')));
+	}
+
+	iterated = GetIteratorDirect(O); // step 9
 
 	var closeIfAbrupt = function (abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
@@ -53,29 +65,29 @@ module.exports = function drop(limit) {
 	};
 
 	var sentinel = {};
-	var remaining = integerLimit; // step 6.a
-	var closure = function () { // step 6
+	var remaining = integerLimit; // step 10.a
+	var closure = function () { // step 10
 		var next;
-		while (remaining > 0) { // step 6.b
-			if (remaining !== Infinity) { // step 6.b.i
-				remaining -= 1; // step 6.b.i.1
+		while (remaining > 0) { // step 10.b
+			if (remaining !== Infinity) { // step 10.b.i
+				remaining -= 1; // step 10.b.i.1
 			}
 
-			next = IteratorStep(iterated); // step 6.b.ii
+			next = IteratorStep(iterated); // step 10.b.ii
 			if (!next) {
-				// return void undefined; // step 6.b.iii
+				// return void undefined; // step 10.b.iii
 				return sentinel;
 			}
 		}
-		// while (true) { // step 6.c
+		// while (true) { // step 10.c
 		try {
-			var value = IteratorStepValue(iterated); // step 6.b.i
+			var value = IteratorStepValue(iterated); // step 10.c.i
 			if (iterated['[[Done]]']) {
-				return sentinel; // step 6.b.ii
+				return sentinel; // step 10.c.ii
 			}
 			return value;
 		} catch (e) {
-			// close iterator // step 6.c.icv
+			// close iterator // step 10.c.iv
 			closeIfAbrupt(ThrowCompletion(e));
 			throw e;
 		}
@@ -85,9 +97,9 @@ module.exports = function drop(limit) {
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
-	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 4
+	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 11
 
-	SLOT.set(result, '[[UnderlyingIterators]]', [iterated]); // step 5
+	SLOT.set(result, '[[UnderlyingIterators]]', [iterated]); // step 12
 
-	return result; // step 6
+	return result; // step 13
 };
