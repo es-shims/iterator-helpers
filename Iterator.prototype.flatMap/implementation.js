@@ -28,11 +28,17 @@ module.exports = function flatMap(mapper) {
 		throw new $TypeError('`this` value must be an Object'); // step 2
 	}
 
-	if (!IsCallable(mapper)) {
-		throw new $TypeError('`mapper` must be a function'); // step 3
+	var iterated = { // step 3
+		'[[Iterator]]': O,
+		'[[NextMethod]]': undefined,
+		'[[Done]]': false
+	};
+
+	if (!IsCallable(mapper)) { // step 4
+		return IteratorClose(iterated, ThrowCompletion(new $TypeError('`mapper` must be a function')));
 	}
 
-	var iterated = GetIteratorDirect(O); // step 4
+	iterated = GetIteratorDirect(O); // step 5
 
 	var sentinel = { sentinel: true };
 	var innerIterator = sentinel;
@@ -41,68 +47,68 @@ module.exports = function flatMap(mapper) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
-		try {
-			if (innerIterator !== sentinel) {
-				IteratorClose(
-					innerIterator,
-					abruptCompletion
-				);
+		if (innerIterator !== sentinel) {
+			var backupCompletion;
+			try {
+				IteratorClose(innerIterator, abruptCompletion);
+			} catch (e) {
+				backupCompletion = ThrowCompletion(e);
 			}
-		} finally {
 			innerIterator = sentinel;
-
-			IteratorClose(
-				iterated,
-				abruptCompletion
-			);
+			if (backupCompletion) {
+				IteratorClose(iterated, backupCompletion);
+			}
+			IteratorClose(iterated, abruptCompletion);
+		} else {
+			IteratorClose(iterated, abruptCompletion);
 		}
 	};
 
-	var counter = 0; // step 5.a
+	var counter = 0; // step 6.a
 	var innerAlive = false;
 	var closure = function () {
-		// while (true) { // step 5.b
+		// while (true) { // step 6.b
 		if (innerIterator === sentinel) {
-			var value = IteratorStepValue(iterated); // step 5.b.i
+			var value = IteratorStepValue(iterated); // step 6.b.i
 			if (iterated['[[Done]]']) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				// return void undefined; // step 5.b.ii
+				// return void undefined; // step 6.b.ii
 				return sentinel;
 			}
 		}
 
 		if (innerIterator === sentinel) {
-			innerAlive = true; // step 5.b.viii
+			innerAlive = true; // step 6.b.vii
 			try {
-				var mapped = Call(mapper, void undefined, [value, counter]); // step 5.b.iv
-				// yield mapped // step 5.b.vi
-				innerIterator = GetIteratorFlattenable(mapped, 'REJECT-PRIMITIVES'); // step 5.b.vi
+				var mapped = Call(mapper, void undefined, [value, counter]); // step 6.b.iii
+				// yield mapped // step 6.b.v
+				innerIterator = GetIteratorFlattenable(mapped, 'REJECT-PRIMITIVES'); // step 6.b.v
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // steps 5.b.v, 5.b.vii
+				closeIfAbrupt(ThrowCompletion(e)); // steps 6.b.iv, 6.b.vi
 			} finally {
-				counter += 1; // step 5.b.x
+				counter += 1; // step 6.b.ix
 			}
 		}
-		// while (innerAlive) { // step 5.b.ix
+		// while (innerAlive) { // step 6.b.viii
 		if (innerAlive) {
-			// step 5.b.ix.4
+			// step 6.b.viii.4
 			var innerValue;
 			try {
-				innerValue = IteratorStepValue(innerIterator); // step 5.b.ix.4.a
+				innerValue = IteratorStepValue(innerIterator); // step 6.b.viii.1
 			} catch (e) {
 				innerAlive = false;
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // step 5.b.ix.4.b
+				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.viii.2
 			}
 			if (innerIterator['[[Done]]']) {
 				innerAlive = false;
 				innerIterator = sentinel;
 				return closure();
 			}
-			return innerValue; // step 5.b.ix.4.c
+			return innerValue; // step 6.b.viii.4.1
 		}
 		// }
 		// return void undefined;
