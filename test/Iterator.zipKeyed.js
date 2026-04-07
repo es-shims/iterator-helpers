@@ -57,6 +57,35 @@ module.exports = {
 			);
 		});
 
+		t.test('accessor getter error calls IfAbruptCloseIterators', { skip: !hasPropertyDescriptors || !hasSymbols }, function (st) {
+			var closedIters = [];
+			var iterA = {
+				next: function () { return { done: true }; },
+				'return': function () {
+					closedIters.push('a');
+					return { done: true };
+				}
+			};
+			iterA[Symbol.iterator] = function () { return iterA; };
+
+			var obj = { a: iterA };
+			Object.defineProperty(obj, 'b', {
+				enumerable: true,
+				get: function () {
+					throw new EvalError('getter threw');
+				}
+			});
+
+			st['throws'](
+				function () { zipKeyed(obj); },
+				EvalError,
+				'accessor getter error propagates'
+			);
+			st.deepEqual(closedIters, ['a'], 'previously opened iterator is closed');
+
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			forEach(v.nonFunctions, function (nonFunction) {
 				if (nonFunction != null) {

@@ -2,15 +2,9 @@
 
 var $TypeError = require('es-errors/type');
 
-var Call = require('es-abstract/2025/Call');
 var CreateDataPropertyOrThrow = require('es-abstract/2025/CreateDataPropertyOrThrow');
 var Get = require('es-abstract/2025/Get');
 var GetIteratorFlattenable = require('es-abstract/2025/GetIteratorFlattenable');
-var GetOptionsObject = require('../aos/GetOptionsObject');
-var IfAbruptCloseIterators = require('../aos/IfAbruptCloseIterators');
-var IsAccessorDescriptor = require('es-abstract/2025/IsAccessorDescriptor');
-var IsDataDescriptor = require('es-abstract/2025/IsDataDescriptor');
-var IteratorZip = require('../aos/IteratorZip');
 var OrdinaryObjectCreate = require('es-abstract/2025/OrdinaryObjectCreate');
 var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 var ToPropertyDescriptor = require('es-abstract/2025/ToPropertyDescriptor');
@@ -20,6 +14,9 @@ var isObject = require('es-abstract/helpers/isObject');
 var ownKeys = require('es-abstract/helpers/OwnPropertyKeys');
 
 var gOPD = require('gopd');
+var IteratorZip = require('../aos/IteratorZip');
+var IfAbruptCloseIterators = require('../aos/IfAbruptCloseIterators');
+var GetOptionsObject = require('../aos/GetOptionsObject');
 
 module.exports = function zipKeyed(iterables) {
 	if (this instanceof zipKeyed) {
@@ -59,43 +56,31 @@ module.exports = function zipKeyed(iterables) {
 
 	var keys = []; // step 11
 
+	// eslint-disable-next-line consistent-return
 	forEach(allKeys, function (key) { // step 12
 		var desc;
 		try {
 			desc = ToPropertyDescriptor(gOPD(iterables, key)); // step 12.a
 		} catch (e) {
-			IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.b
+			return IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.b
 		}
 
 		if (typeof desc !== 'undefined' && desc['[[Enumerable]]'] === true) { // step 12.c
-			var value; // step 12.c.i
-			if (IsDataDescriptor(desc)) { // step 12.c.ii
-				value = desc['[[Value]]']; // step 12.c.ii.1
-			} else {
-				if (!IsAccessorDescriptor(desc)) {
-					throw new $TypeError('Assertion failed: IsAccessorDescriptor(desc) is not true'); // step 12.c.ii.1
-				}
-				var getter = desc['[[Get]]']; // step 12.c.iii.2
-				if (typeof getter !== 'undefined') { // step 12.c.iii.3
-					var getterResult;
-					try {
-						getterResult = Call(getter, iterables); // step 12.c.iii.3.a
-					} catch (e) {
-						// step 12.c.iii.3.b
-						// 2. IfAbruptCloseIterators(e, iters).
-					}
-					value = getterResult; // step 12.c.iii.3.c
-				}
+			var value;
+			try {
+				value = Get(iterables, key); // step 12.c.i
+			} catch (e) {
+				return IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.c.ii
 			}
-			if (typeof value !== 'undefined') { // step 12.c.iv
-				keys[keys.length] = key; // step 12.c.iv.1
+			if (typeof value !== 'undefined') { // step 12.c.iii
+				keys[keys.length] = key; // step 12.c.iii.1
 				var iter;
 				try {
-					iter = GetIteratorFlattenable(value, 'REJECT-PRIMITIVES'); // step 12.c.iv.2
+					iter = GetIteratorFlattenable(value, 'REJECT-PRIMITIVES'); // step 12.c.iii.2
 				} catch (e) {
-					IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.c.iv.3
+					return IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 12.c.iii.3
 				}
-				iters[iters.length] = iter; // step 12.c.iv.4
+				iters[iters.length] = iter; // step 12.c.iii.4
 			}
 		}
 	});
@@ -108,12 +93,13 @@ module.exports = function zipKeyed(iterables) {
 				padding[padding.length] = void undefined; // step 14.a.i.1
 			}
 		} else { // step 14.b
+			// eslint-disable-next-line consistent-return
 			forEach(keys, function (key) { // step 14.b.i
 				var value;
 				try {
 					value = Get(paddingOption, key); // step 14.b.i.1
 				} catch (e) {
-					IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 14.b.i.2
+					return IfAbruptCloseIterators(ThrowCompletion(e), iters); // step 14.b.i.2
 				}
 				padding[padding.length] = value; // step 14.b.i.3
 			});
