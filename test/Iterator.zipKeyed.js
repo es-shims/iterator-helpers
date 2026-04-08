@@ -62,13 +62,18 @@ module.exports = {
 			var iterA = {
 				next: function () { return { done: true }; },
 				'return': function () {
-					closedIters.push('a');
+					closedIters.push('0');
 					return { done: true };
 				}
 			};
 			iterA[Symbol.iterator] = function () { return iterA; };
 
-			var obj = { a: iterA };
+			// Use an integer index for the data property so it is guaranteed to be
+			// enumerated before string keys per spec, working around a V8 4.2–4.6
+			// (io.js 2 / node 5) bug where ownKeys reorders string keys for objects
+			// with mixed data and accessor properties on repeated calls.
+			var obj = {};
+			obj[0] = iterA;
 			Object.defineProperty(obj, 'b', {
 				enumerable: true,
 				get: function () {
@@ -81,7 +86,7 @@ module.exports = {
 				EvalError,
 				'accessor getter error propagates'
 			);
-			st.deepEqual(closedIters, ['a'], 'previously opened iterator is closed');
+			st.deepEqual(closedIters, ['0'], 'previously opened iterator is closed');
 
 			st.end();
 		});
