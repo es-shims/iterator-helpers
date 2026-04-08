@@ -39,8 +39,8 @@ The main export of the package itself is simply an array of the available direct
 
 ## Environments where this is needed
 
- - node v22, Chrome >= v122: has a [bug](https://issues.chromium.org/issues/336839115)
  - node < v22, Chrome < v122, Safari <= v17.1, Firefox <= v125: not implemented
+ - node v22, Chrome v122 - v130: has a [bug](https://issues.chromium.org/issues/336839115) where `{ next: null }` is not properly rejected
  - all environments lack Iterator.concat, Iterator.zip, Iterator.zipKeyed
 
 ## Getting started
