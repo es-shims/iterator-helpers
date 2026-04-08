@@ -99,9 +99,11 @@ module.exports = function flatMap(mapper) {
 			try {
 				innerValue = IteratorStepValue(innerIterator); // step 6.b.viii.1
 			} catch (e) {
+				// inner iterator violated the protocol (IteratorStepValue threw), so don't close inner
+				// but DO close outer iterated per spec step 6.b.viii.2: IfAbruptCloseIterator(innerValue, iterated)
 				innerAlive = false;
 				innerIterator = sentinel;
-				closeIfAbrupt(ThrowCompletion(e)); // step 6.b.viii.2
+				IteratorClose(iterated, ThrowCompletion(e)); // step 6.b.viii.2 - close outer only
 			}
 			if (innerIterator['[[Done]]']) {
 				innerAlive = false;

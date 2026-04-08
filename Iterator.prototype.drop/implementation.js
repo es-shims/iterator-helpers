@@ -80,17 +80,11 @@ module.exports = function drop(limit) {
 			}
 		}
 		// while (true) { // step 10.c
-		try {
-			var value = IteratorStepValue(iterated); // step 10.c.i
-			if (iterated['[[Done]]']) {
-				return sentinel; // step 10.c.ii
-			}
-			return value;
-		} catch (e) {
-			// close iterator // step 10.c.iv
-			closeIfAbrupt(ThrowCompletion(e));
-			throw e;
+		var value = IteratorStepValue(iterated); // step 10.c.i - ? means throw on protocol violation, don't close
+		if (iterated['[[Done]]']) {
+			return sentinel; // step 10.c.ii
 		}
+		return value; // step 10.c.iii - Yield(value)
 		// }
 		// return void undefined;
 	};

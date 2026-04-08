@@ -108,6 +108,37 @@ module.exports = {
 			st.end();
 		});
 
+		t.test('IteratorStepValue throwing does not close iterator', { skip: !hasSymbols }, function (st) {
+			var returnCalls = 0;
+			var throwOnNext = false;
+			var iter = {
+				next: function () {
+					if (throwOnNext) {
+						throw new EvalError('next threw');
+					}
+					return { done: false, value: 1 };
+				},
+				'return': function () {
+					returnCalls += 1;
+					return { done: true };
+				}
+			};
+			iter[Symbol.iterator] = function () { return iter; };
+
+			var dropped = drop(iter, 0);
+			dropped.next(); // consume one value
+			throwOnNext = true;
+
+			st['throws'](
+				function () { dropped.next(); },
+				EvalError,
+				'next() throwing propagates'
+			);
+			st.equal(returnCalls, 0, 'return NOT called on protocol violation');
+
+			st.end();
+		});
+
 		var arr = [1, 2, 3];
 
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {

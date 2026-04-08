@@ -98,6 +98,51 @@ module.exports = {
 			st.end();
 		});
 
+		t.test('inner IteratorStepValue throwing closes outer but not inner', { skip: !hasSymbols }, function (st) {
+			var outerReturnCalls = 0;
+			var innerReturnCalls = 0;
+			var throwOnInnerNext = false;
+
+			var outerIter = {
+				next: function () {
+					return { done: false, value: 'x' };
+				},
+				'return': function () {
+					outerReturnCalls += 1;
+					return { done: true };
+				}
+			};
+			outerIter[Symbol.iterator] = function () { return outerIter; };
+
+			var innerIter = {
+				next: function () {
+					if (throwOnInnerNext) {
+						throw new EvalError('inner next threw');
+					}
+					return { done: false, value: 1 };
+				},
+				'return': function () {
+					innerReturnCalls += 1;
+					return { done: true };
+				}
+			};
+			innerIter[Symbol.iterator] = function () { return innerIter; };
+
+			var iter = flatMap(outerIter, function () { return innerIter; });
+			iter.next(); // get inner iterator going
+			throwOnInnerNext = true;
+
+			st['throws'](
+				function () { iter.next(); },
+				EvalError,
+				'inner next() throwing propagates'
+			);
+			st.equal(innerReturnCalls, 0, 'inner return NOT called (protocol violation)');
+			st.equal(outerReturnCalls, 1, 'outer return called (stopping early)');
+
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);
