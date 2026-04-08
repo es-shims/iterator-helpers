@@ -6,6 +6,7 @@ var shimIteratorConcat = require('./Iterator.concat/shim');
 var shimZip = require('./Iterator.zip/shim');
 var shimZipKeyed = require('./Iterator.zipKeyed/shim');
 var shimIteratorProto = require('./Iterator.prototype/shim');
+var shimChunks = require('./Iterator.prototype.chunks/shim');
 var shimIteratorCtor = require('./Iterator.prototype.constructor/shim');
 var shimIteratorDrop = require('./Iterator.prototype.drop/shim');
 var shimIteratorEvery = require('./Iterator.prototype.every/shim');
@@ -27,6 +28,7 @@ module.exports = function shimIteratorHelpers() {
 	shimIteratorConcat();
 	shimZip();
 	shimZipKeyed();
+	shimChunks();
 	shimIteratorCtor();
 	shimIteratorDrop();
 	shimIteratorEvery();
