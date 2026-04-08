@@ -458,6 +458,24 @@ module.exports = {
 		test('Iterator.prototype.' + fnName + ': index', function (t) {
 			module.exports.tests(index, 'Iterator.prototype.' + fnName, t);
 
+			t.test('polyfill has early-error IteratorClose', function (st) {
+				var returnCalls = 0;
+				var obj = {
+					next: function () { return { done: true }; },
+					'return': function () {
+						returnCalls += 1;
+						return { done: true };
+					}
+				};
+				st['throws'](
+					function () { index(obj, NaN); },
+					RangeError,
+					'polyfill throws RangeError for NaN limit'
+				);
+				st.equal(returnCalls, 1, 'polyfill calls return on early error');
+				st.end();
+			});
+
 			t.end();
 		});
 	},
