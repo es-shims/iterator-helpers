@@ -18,5 +18,6 @@
 	"Iterator.prototype.reduce",
 	"Iterator.prototype.some",
 	"Iterator.prototype.take",
-	"Iterator.prototype.toArray"
+	"Iterator.prototype.toArray",
+	"Iterator.prototype.windows"
 ]

@@ -20,6 +20,7 @@ var shimIteratorReduce = require('./Iterator.prototype.reduce/shim');
 var shimIteratorSome = require('./Iterator.prototype.some/shim');
 var shimIteratorTake = require('./Iterator.prototype.take/shim');
 var shimIteratorToArray = require('./Iterator.prototype.toArray/shim');
+var shimWindows = require('./Iterator.prototype.windows/shim');
 
 module.exports = function shimIteratorHelpers() {
 	shimIterator();
@@ -42,4 +43,5 @@ module.exports = function shimIteratorHelpers() {
 	shimIteratorSome();
 	shimIteratorTake();
 	shimIteratorToArray();
+	shimWindows();
 };

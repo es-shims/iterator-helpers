@@ -37,13 +37,14 @@ The main export of the package itself is simply an array of the available direct
  - [`Iterator.prototype.take`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.take)
  - [`Iterator.prototype.chunks`](https://tc39.es/proposal-iterator-chunking/#sec-iteratorprototype.chunks)
  - [`Iterator.prototype.toArray`](https://tc39.es/proposal-iterator-helpers/#sec-iteratorprototype.toarray)
+ - [`Iterator.prototype.windows`](https://tc39.es/proposal-iterator-chunking/#sec-iteratorprototype.windows)
 
 ## Environments where this is needed
 
  - node < v22, Chrome < v122, Safari <= v17.1, Firefox <= v125: not implemented
  - node v22, Chrome v122 - v130: has a [bug](https://issues.chromium.org/issues/336839115) where `{ next: null }` is not properly rejected
  - node v22 - v24, Chrome v122 - v134: missing early-error `IteratorClose` when argument validation fails (e.g., non-callable mapper does not call the iterator's `return` method)
- - all environments lack Iterator.concat, Iterator.zip, Iterator.zipKeyed, Iterator.prototype.chunks, Iterator.prototype.includes
+ - all environments lack Iterator.concat, Iterator.zip, Iterator.zipKeyed, Iterator.prototype.chunks, Iterator.prototype.windows, Iterator.prototype.includes
 
 ## Getting started
 

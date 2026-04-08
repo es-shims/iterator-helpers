@@ -107,6 +107,11 @@
 		"./Iterator.prototype.find/polyfill": "./Iterator.prototype.find/polyfill.js",
 		"./Iterator.prototype.find/implementation": "./Iterator.prototype.find/implementation.js",
 		"./Iterator.prototype.find/shim": "./Iterator.prototype.find/shim.js",
+		"./Iterator.prototype.windows": "./Iterator.prototype.windows/index.js",
+		"./Iterator.prototype.windows/auto": "./Iterator.prototype.windows/auto.js",
+		"./Iterator.prototype.windows/polyfill": "./Iterator.prototype.windows/polyfill.js",
+		"./Iterator.prototype.windows/implementation": "./Iterator.prototype.windows/implementation.js",
+		"./Iterator.prototype.windows/shim": "./Iterator.prototype.windows/shim.js",
 		"./package.json": "./package.json"
 	},
 	"scripts": {
