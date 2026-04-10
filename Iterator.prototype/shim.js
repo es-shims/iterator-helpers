@@ -2,6 +2,8 @@
 
 var getPolyfill = require('./polyfill');
 var define = require('define-properties');
+var hasSymbols = require('has-symbols')();
+var setToStringTag = require('es-set-tostringtag');
 
 var getIteratorPolyfill = require('../Iterator/polyfill');
 
@@ -14,7 +16,9 @@ module.exports = function shimIteratorFrom() {
 		{ prototype: function () { return $Iterator.prototype !== polyfill; } }
 	);
 
-	// TODO: install Symbol.toStringTag if needed, once https://bugs.chromium.org/p/chromium/issues/detail?id=1477372 is fixed?
+	if (hasSymbols && Symbol.toStringTag) {
+		setToStringTag(polyfill, 'Iterator');
+	}
 
 	return polyfill;
 };

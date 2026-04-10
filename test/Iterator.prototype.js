@@ -3,7 +3,7 @@
 var defineProperties = require('define-properties');
 var test = require('tape');
 var hasSymbols = require('has-symbols')();
-var hasToStringTag = require('has-tostringtag');
+var hasToStringTag = require('has-tostringtag')();
 var functionsHaveNames = require('functions-have-names')();
 var functionsHaveConfigurableNames = require('functions-have-names').functionsHaveConfigurableNames();
 
@@ -33,15 +33,11 @@ module.exports = {
 			st.end();
 		});
 
-		t.test(
-			'Symbol.toStringTag',
-			{ skip: !hasToStringTag || 'temporarily skipped pending https://bugs.chromium.org/p/chromium/issues/detail?id=1477372' },
-			function (st) {
-				st.equal(proto[Symbol.toStringTag], 'Iterator', 'has a `Symbol.toStringTag` property');
+		t.test('Symbol.toStringTag', { skip: !hasToStringTag }, function (st) {
+			st.equal(proto[Symbol.toStringTag], 'Iterator', 'has a `Symbol.toStringTag` property');
 
-				st.end();
-			}
-		);
+			st.end();
+		});
 	},
 	index: function () {
 		test('Iterator.prototype: index', function (t) {
