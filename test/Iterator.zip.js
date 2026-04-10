@@ -160,6 +160,29 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: strict mode throws when later iterator is not done', function (s2t) {
+				// 3 iterators: first two done, third still has values
+				var closeCalls = [];
+				var iterA = [1][Symbol.iterator]();
+				var iterB = [2][Symbol.iterator]();
+				var iterC = {
+					next: function () { return { done: false, value: 3 }; },
+					'return': function () { closeCalls.push('c'); return { done: true }; }
+				};
+				iterC[Symbol.iterator] = function () { return iterC; };
+
+				var strictIter = zip([iterA, iterB, iterC], { mode: 'strict' });
+				strictIter.next(); // [1, 2, 3]
+				s2t['throws'](
+					function () { strictIter.next(); },
+					TypeError,
+					'strict mode throws when later iterator still has values'
+				);
+				s2t.ok(closeCalls.length > 0, 'remaining iterators are closed');
+
+				s2t.end();
+			});
+
 			st.test('strict mode: errored iterator not double-closed', function (s2t) {
 				var closeCounts = { a: 0, b: 0 };
 				var iterA = {

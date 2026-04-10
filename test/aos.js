@@ -5,11 +5,91 @@ var forEach = require('for-each');
 var debug = require('object-inspect');
 var v = require('es-value-fixtures');
 
+var CompletionRecord = require('es-abstract/2025/CompletionRecord');
 var NormalCompletion = require('es-abstract/2025/NormalCompletion');
+var ReturnCompletion = require('es-abstract/2025/ReturnCompletion');
 var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
-var GetOptionsObject = require('../aos/GetOptionsObject');
-var IfAbruptCloseIterators = require('../aos/IfAbruptCloseIterators');
+
+var SLOT = require('internal-slot');
 var IteratorCloseAll = require('../aos/IteratorCloseAll');
+var IfAbruptCloseIterators = require('../aos/IfAbruptCloseIterators');
+var GetOptionsObject = require('../aos/GetOptionsObject');
+var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
+
+var makeGenerator = function (state) {
+	var gen = {};
+	SLOT.set(gen, '[[GeneratorState]]', state);
+	SLOT.set(gen, '[[GeneratorBrand]]', 'test');
+	SLOT.set(gen, '[[GeneratorContext]]', null);
+	SLOT.set(gen, '[[CloseIfAbrupt]]', null);
+	return gen;
+};
+
+test('GeneratorResumeAbrupt', function (t) {
+	t.test('ThrowCompletion on SUSPENDED-START state', function (st) {
+		var gen = makeGenerator('SUSPENDED-START');
+
+		st['throws'](
+			function () { GeneratorResumeAbrupt(gen, ThrowCompletion(new EvalError('test')), 'test'); },
+			EvalError,
+			'throw completion re-throws on SUSPENDED-START (transitions to COMPLETED first)'
+		);
+		st.equal(SLOT.get(gen, '[[GeneratorState]]'), 'COMPLETED', 'state is COMPLETED after throw');
+		st.end();
+	});
+
+	t.test('ThrowCompletion on COMPLETED state', function (st) {
+		var gen = makeGenerator('COMPLETED');
+
+		st['throws'](
+			function () { GeneratorResumeAbrupt(gen, ThrowCompletion(new EvalError('test')), 'test'); },
+			EvalError,
+			'throw completion re-throws on COMPLETED'
+		);
+		st.end();
+	});
+
+	t.test('ReturnCompletion on COMPLETED state', function (st) {
+		var gen = makeGenerator('COMPLETED');
+
+		var result = GeneratorResumeAbrupt(gen, ReturnCompletion(42), 'test');
+		st.deepEqual(result, { value: 42, done: true }, 'return completion returns {value, done: true}');
+		st.end();
+	});
+
+	t.test('ThrowCompletion on SUSPENDED-YIELD calls genContext', function (st) {
+		var gen = makeGenerator('SUSPENDED-YIELD');
+		var contextCalledWith = null;
+		SLOT.set(gen, '[[GeneratorContext]]', function (val) {
+			contextCalledWith = val;
+			return { value: undefined, done: true };
+		});
+
+		var result = GeneratorResumeAbrupt(gen, ThrowCompletion(new EvalError('injected')), 'test');
+		st.ok(contextCalledWith instanceof EvalError, 'genContext called with the error value');
+		st.deepEqual(result, { value: undefined, done: true }, 'returns genContext result');
+		st.end();
+	});
+
+	t.test('ReturnCompletion on SUSPENDED-YIELD calls closeIfAbrupt', function (st) {
+		var gen = makeGenerator('SUSPENDED-YIELD');
+		var closeCalledWith = null;
+		SLOT.set(gen, '[[GeneratorContext]]', function () { return { value: undefined, done: true }; });
+		SLOT.set(gen, '[[CloseIfAbrupt]]', function (completion) {
+			closeCalledWith = completion;
+		});
+
+		var result = GeneratorResumeAbrupt(gen, ReturnCompletion(99), 'test');
+		st.ok(closeCalledWith instanceof CompletionRecord, 'closeIfAbrupt called with CompletionRecord');
+		st.equal(closeCalledWith.type(), 'return', 'completion is a return');
+		st.equal(closeCalledWith.value(), 99, 'completion value is 99');
+		st.deepEqual(result, { value: 99, done: true }, 'returns {value: 99, done: true}');
+		st.equal(SLOT.get(gen, '[[GeneratorState]]'), 'COMPLETED', 'state is COMPLETED');
+		st.end();
+	});
+
+	t.end();
+});
 
 test('GetOptionsObject', function (t) {
 	t.test('undefined returns null-prototype object', function (st) {
