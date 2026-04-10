@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.2](https://github.com/es-shims/iterator-helpers/compare/v1.3.1...v1.3.2) - 2026-04-09
+
+### Commits
+
+- [Fix] detect missing early-error `IteratorClose` in native implementations [`7de2a9d`](https://github.com/es-shims/iterator-helpers/commit/7de2a9d71f763989aa3f165289975143958cb521)
+- [Fix] remove invalid expando properties on `index` files [`8416384`](https://github.com/es-shims/iterator-helpers/commit/8416384fd097646bdc26ae0e0bc5557588d6f4fa)
+- [Fix] `IteratorZip`: remove errored iterator from `openIters` in strict mode [`53f4b4a`](https://github.com/es-shims/iterator-helpers/commit/53f4b4a6e8e71301f7d466d257c5599a96cb2ee5)
+- [Fix] `filter`: add early-error `IteratorClose` pattern, fix counter increment ordering [`ef39451`](https://github.com/es-shims/iterator-helpers/commit/ef3945189b53067f2d9a7f10909d4d55817614da)
+- [Fix] `flatMap`: add early-error `IteratorClose` pattern, fix inner iterator close semantics [`dc122cc`](https://github.com/es-shims/iterator-helpers/commit/dc122cc5db159f3b40ebfa8419990d9bdc1d0fc1)
+- [Fix] `drop`, `flatMap`: do not close iterator on `IteratorStepValue` protocol violation [`8761fe6`](https://github.com/es-shims/iterator-helpers/commit/8761fe635d416f6b51cd8669d662cd12bb2cd357)
+- [Fix] `drop`: add early-error `IteratorClose` pattern, fix validation ordering [`f5cc006`](https://github.com/es-shims/iterator-helpers/commit/f5cc0068a14655a19ac25d68c1694c3d1bba990e)
+- [Fix] `take`: add early-error `IteratorClose` pattern, fix validation ordering [`fb5db74`](https://github.com/es-shims/iterator-helpers/commit/fb5db74726eafe6ac4bf0d4929377b0893ebbbef)
+- [Fix] `zipKeyed`: use `Get` for property access, fix missing `IfAbruptCloseIterators` [`aec8d80`](https://github.com/es-shims/iterator-helpers/commit/aec8d80002b0660490de914c392ca659dfab53c7)
+- [Fix] `map`: add early-error `IteratorClose` pattern per latest spec [`ce222a4`](https://github.com/es-shims/iterator-helpers/commit/ce222a498e31f066ce03095dfadd94f3ea173084)
+- [Fix] `find`: add early-error `IteratorClose` pattern per latest spec [`e7cb5e9`](https://github.com/es-shims/iterator-helpers/commit/e7cb5e98e2c7f88bd3f98d0aefce5dadb5e0cba0)
+- [Fix] `every`: add early-error `IteratorClose` pattern per latest spec [`64630cb`](https://github.com/es-shims/iterator-helpers/commit/64630cbede1ead844689560bf920fcebf8b38c96)
+- [Fix] `forEach`: add early-error `IteratorClose` pattern per latest spec [`beb0650`](https://github.com/es-shims/iterator-helpers/commit/beb065015f981fa3bba7691d3fd0f61f6315386c)
+- [Fix] `reduce`: add early-error `IteratorClose` pattern per latest spec [`14225ab`](https://github.com/es-shims/iterator-helpers/commit/14225ab8e08ed6371b2b293af2e936e6ef363245)
+- [Fix] `some`: add early-error `IteratorClose` pattern per latest spec [`3bf20c3`](https://github.com/es-shims/iterator-helpers/commit/3bf20c3e527b0168e4a7379883f0d71e8cfc16d5)
+- [Fix] `includes`: allow `Infinity`/`-Infinity` for `skippedElements` [`8eddc9e`](https://github.com/es-shims/iterator-helpers/commit/8eddc9e375c45e3449cbf6fcb6309b5a537c2422)
+- [Fix] `GeneratorResumeAbrupt`: pass `ReturnCompletion` to `closeIfAbrupt` [`55dc985`](https://github.com/es-shims/iterator-helpers/commit/55dc985c66f7054655ea1b3a34e318eade6e2e52)
+- [Tests] `zipKeyed`: work around V8 4.6 (node 5) `ownKeys` ordering bug in accessor test [`309cdc1`](https://github.com/es-shims/iterator-helpers/commit/309cdc1de94cea526b2284a529301edacf4c6bf8)
+- [Dev Deps] update `@es-shims/api`, `@ljharb/eslint-config` [`9694b21`](https://github.com/es-shims/iterator-helpers/commit/9694b214c6b81512656b34dae3f61b76072a80fa)
+- [Deps] remove unused dep [`1089a80`](https://github.com/es-shims/iterator-helpers/commit/1089a80cbe2a464f1fde99f46d42eb2f1176d5d8)
+- [readme] fix markdown formatting [`1545d84`](https://github.com/es-shims/iterator-helpers/commit/1545d846fb21d30d1b7fbf35b57e74f11f12160f)
+- [Deps] update `call-bind` [`45897c7`](https://github.com/es-shims/iterator-helpers/commit/45897c74551e5f4f493d5f07c3981a73e1c857c3)
+- [readme] document `{ next: null }` Chrome bug and affected versions [`eee929c`](https://github.com/es-shims/iterator-helpers/commit/eee929c14d59dc7c9b245baf819fa8020df48da5)
+- [Deps] update `es-abstract` [`7bed3ec`](https://github.com/es-shims/iterator-helpers/commit/7bed3ec4fe52bb73ea7c6f2d8dfb1a46b8d4cca2)
+
 ## [v1.3.1](https://github.com/es-shims/iterator-helpers/compare/v1.3.0...v1.3.1) - 2026-03-12
 
 ### Commits
