@@ -201,6 +201,71 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: longest mode with explicit padding object', function (s2t) {
+				// padding object provides custom padding values per key
+				var iter1 = zipKeyed({ a: [1, 2, 3], b: [4, 5] }, { mode: 'longest', padding: { a: 'pa', b: 'pb' } });
+				var result3 = [];
+				var r;
+				while (!(r = iter1.next()).done) {
+					result3.push(r.value);
+				}
+				s2t.equal(result3.length, 3, 'longest mode with padding produces 3 results');
+				s2t.deepEqual(result3[2], { __proto__: null, a: 3, b: 'pb' }, 'exhausted key uses padding value');
+
+				s2t.end();
+			});
+
+			st.test('262: longest mode padding object property access throws', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var paddingObj = {};
+				Object.defineProperty(paddingObj, 'a', {
+					enumerable: true,
+					get: function () { return 'pa'; }
+				});
+				Object.defineProperty(paddingObj, 'b', {
+					enumerable: true,
+					get: function () { throw new EvalError('padding Get threw'); }
+				});
+
+				var returnCalls = 0;
+				var iterA = {
+					next: function () { return { done: false, value: 1 }; },
+					'return': function () {
+						returnCalls += 1;
+						return { done: true };
+					}
+				};
+				iterA[Symbol.iterator] = function () { return iterA; };
+
+				var iterB = {
+					next: function () { return { done: false, value: 2 }; },
+					'return': function () { return { done: true }; }
+				};
+				iterB[Symbol.iterator] = function () { return iterB; };
+
+				s2t['throws'](
+					function () { zipKeyed({ a: iterA, b: iterB }, { mode: 'longest', padding: paddingObj }); },
+					EvalError,
+					'error from Get(padding, key) propagates'
+				);
+				s2t.ok(returnCalls >= 1, 'underlying iterators are closed when padding Get throws');
+
+				s2t.end();
+			});
+
+			st.test('262: longest mode padding with missing keys', function (s2t) {
+				// padding object only has key "a", key "b" is missing so Get returns undefined
+				var iter1 = zipKeyed({ a: [1, 2, 3], b: [4, 5] }, { mode: 'longest', padding: { a: 'pa' } });
+				var results = [];
+				var r;
+				while (!(r = iter1.next()).done) {
+					results.push(r.value);
+				}
+				s2t.equal(results.length, 3, 'longest mode with partial padding produces 3 results');
+				s2t.deepEqual(results[2], { __proto__: null, a: 3, b: undefined }, 'missing padding key falls back to undefined');
+
+				s2t.end();
+			});
+
 			st.test('262: basic strict mode', function (s2t) {
 				// strict mode throws when lengths differ
 				var strictIter = zipKeyed({ a: [1, 2, 3], b: [4, 5] }, { mode: 'strict' });
