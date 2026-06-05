@@ -170,9 +170,8 @@
 	},
 	"devDependencies": {
 		"@es-shims/api": "^4.0.0",
-		"@ljharb/eslint-config": "^22.2.2",
-		"auto-changelog": "^2.5.0",
-		"encoding": "^0.1.13",
+		"@ljharb/eslint-config": "^22.2.3",
+		"auto-changelog": "^2.6.0",
 		"es-value-fixtures": "^1.7.1",
 		"eslint": "^9.39.4",
 		"eslint-plugin-import": "^2.32.0",
