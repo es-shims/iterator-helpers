@@ -338,8 +338,41 @@ module.exports = {
 				s2t.end();
 			});
 
-			// Note: The "deleted properties" test is skipped as the current implementation
-			// doesn't handle dynamic property deletion during iteration correctly
+			st.test('262: deleted properties are skipped during iteration', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var log = [];
+				var iterables = {};
+				Object.defineProperty(iterables, 'a', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						log.push('get a');
+						delete iterables.b;
+						return [];
+					}
+				});
+				Object.defineProperty(iterables, 'b', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						throw new EvalError('unexpected get b');
+					}
+				});
+				Object.defineProperty(iterables, 'c', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						log.push('get c');
+						iterables.d = null;
+						return [];
+					}
+				});
+
+				zipKeyed(iterables);
+
+				s2t.deepEqual(log, ['get a', 'get c'], 'deleted key is skipped and later-added key is not iterated');
+
+				s2t.end();
+			});
 
 			st.test('262: result object has null prototype', function (s2t) {
 				var iter = zipKeyed({ a: [1], b: [2] });

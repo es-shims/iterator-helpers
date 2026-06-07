@@ -42,7 +42,6 @@ var EXPECTED_FAILURES = {
 	'test262/test/built-ins/Iterator/zip/result-is-iterator.js': 'engine: zip result inherits this package\'s %IteratorHelperPrototype%, which is not SameValue as the native intrinsic on a native-capable engine',
 	'test262/test/built-ins/Iterator/zipKeyed/result-is-iterator.js': 'engine: zipKeyed result inherits this package\'s %IteratorHelperPrototype%, which is not SameValue as the native intrinsic on a native-capable engine',
 	'test262/test/built-ins/Iterator/from/return-method-throws-for-invalid-this.js': 'polyfill: WrapForValidIteratorPrototype return/next use SLOT.assert, which makes observable property accesses on an invalid `this` before throwing',
-	'test262/test/built-ins/Iterator/zipKeyed/iterables-iteration-deleted.js': 'polyfill: Iterator.zipKeyed passes a deleted property\'s undefined descriptor to ToPropertyDescriptor instead of skipping it',
 	'test262/test/built-ins/Iterator/prototype/constructor/prop-desc.js': 'polyfill: Iterator.prototype.constructor is shimmed as a data property instead of the spec-mandated get/set accessor',
 	'test262/test/built-ins/Iterator/prototype/constructor/weird-setter.js': 'polyfill: Iterator.prototype.constructor is shimmed as a data property, so its setter is undefined',
 	'test262/test/built-ins/Iterator/proto-from-ctor-realm.js': 'engine: cross-realm construction (Reflect.construct with a NewTarget from another realm whose .prototype is a non-object) requires the internal GetFunctionRealm to obtain that realm\'s %Iterator.prototype%, which has no userland equivalent'
