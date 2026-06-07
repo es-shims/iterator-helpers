@@ -148,6 +148,7 @@ export default [
 					'OrdinaryObjectCreate',
 					'ReturnCompletion',
 					'SameValueZero',
+					'SetterThatIgnoresPrototypeProperties',
 					'StringToCodePoints',
 					'ThrowCompletion',
 					'ToBoolean',

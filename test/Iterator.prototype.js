@@ -62,6 +62,39 @@ module.exports = {
 
 			module.exports.tests(Iterator.prototype, 'Iterator.prototype', t);
 
+			t.test('262: Symbol.toStringTag accessor', { skip: !hasToStringTag || !defineProperties.supportsDescriptors }, function (st) {
+				var desc = Object.getOwnPropertyDescriptor(Iterator.prototype, Symbol.toStringTag);
+
+				st.equal(typeof desc.get, 'function', 'get is a function');
+				st.equal(typeof desc.set, 'function', 'set is a function');
+				st.equal(desc.configurable, true, 'is configurable');
+				st.equal(desc.enumerable, false, 'is not enumerable');
+				st.equal(desc.value, undefined, 'has no value');
+				st.equal(desc.writable, undefined, 'has no writable');
+
+				st.equal(desc.get.call(), 'Iterator', 'get returns "Iterator"');
+
+				st['throws'](
+					function () { desc.set.call(undefined, ''); },
+					TypeError,
+					'set throws when `this` is not an Object'
+				);
+				st['throws'](
+					function () { desc.set.call(Iterator.prototype, ''); },
+					TypeError,
+					'set throws when `this` is %Iterator.prototype%'
+				);
+				st.equal(Iterator.prototype[Symbol.toStringTag], 'Iterator', 'toStringTag is unchanged after failed sets');
+
+				var o = {};
+				o[Symbol.toStringTag] = 'original';
+				desc.set.call(o, 'sentinel');
+				st.equal(o[Symbol.toStringTag], 'sentinel', 'set overwrites an own data property');
+				st.equal(Iterator.prototype[Symbol.toStringTag], 'Iterator', '%Iterator.prototype% toStringTag is still "Iterator"');
+
+				st.end();
+			});
+
 			t.end();
 		});
 	}
