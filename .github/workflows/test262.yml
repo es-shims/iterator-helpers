@@ -25,3 +25,25 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run test262
+
+  pr-tests:
+    name: 'test262: ${{ matrix.suite }}'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        suite:
+          - includes # PR #5031, blocking (implemented; 88/88)
+          - helper-edge # PR #4496, blocking (implemented)
+          - chunking # PR #5011, informational (chunks/windows not implemented)
+          - join # PR #4768, informational (not implemented)
+          - take-drop-rangeerror # PR #5065, informational (ecma262 #3776 not implemented)
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: ljharb/actions/node/install@main
+        name: 'nvm install 20 && npm install'
+        with:
+          node-version: '20' # full polyfill, so the PR's tests exercise this package's own code rather than native helpers
+      - run: npm run test262 -- ${{ matrix.suite }}

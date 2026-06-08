@@ -14,6 +14,12 @@
 // Run across a Node version matrix: on a version without native helpers the shim
 // provides everything (exercising this package's own code); on current LTS the
 // ES2025 helpers are native passthrough and only zip/zipKeyed exercise our impl.
+//
+// `node test262.js [suite]` runs a suite (default `main`). `main` covers the
+// tests merged into the pinned submodule; the PR suites cover features whose
+// test262 tests are still in open PRs, by fetching the PR's test ref and running
+// just its files. A PR suite that *adds* files auto-skips once they exist in the
+// pinned submodule (merged + bumped); `main`'s `features` then covers them.
 
 var path = require('path');
 var fs = require('fs');
@@ -26,12 +32,6 @@ var root = __dirname;
 var autoPath = path.join(root, 'auto.js');
 var test262Dir = path.join(root, 'test262');
 var harnessBin = require.resolve('test262-harness/bin/run.js');
-
-var FEATURES = [
-	'iterator-helpers',
-	'iterator-sequencing',
-	'joint-iteration'
-];
 
 // Known failures, keyed by path. A new failure fails the run; a listed test
 // that starts passing is reported so it can be removed. Each reason is tagged
@@ -46,6 +46,92 @@ var EXPECTED_FAILURES = {
 	'test262/test/built-ins/Iterator/prototype/constructor/prop-desc.js': 'polyfill: Iterator.prototype.constructor is shimmed as a data property instead of the spec-mandated get/set accessor',
 	'test262/test/built-ins/Iterator/prototype/constructor/weird-setter.js': 'polyfill: Iterator.prototype.constructor is shimmed as a data property, so its setter is undefined',
 	'test262/test/built-ins/Iterator/proto-from-ctor-realm.js': 'engine: cross-realm construction (Reflect.construct with a NewTarget from another realm whose .prototype is a non-object) requires the internal GetFunctionRealm to obtain that realm\'s %Iterator.prototype%, which has no userland equivalent'
+};
+
+function prototypeTests(methods, names) {
+	var paths = [];
+	methods.forEach(function (method) {
+		names.forEach(function (name) {
+			paths.push('test/built-ins/Iterator/prototype/' + method + '/' + name + '.js');
+		});
+	});
+	return paths;
+}
+
+// `main` runs the merged Iterator tests. The PR suites run a not-yet-merged
+// feature's tests by fetching the PR ref; `main`'s `features` includes
+// `iterator-includes` so that once PR #5031 merges and the submodule is bumped,
+// `main` covers it and the `includes` suite auto-skips. Suites for features this
+// package does not implement (chunks/windows, join, the unmerged take/drop
+// RangeError) are informational (non-blocking).
+var SUITES = {
+	main: {
+		label: 'main',
+		features: ['iterator-helpers', 'iterator-sequencing', 'joint-iteration', 'iterator-includes'],
+		paths: ['test/built-ins/Iterator/**/*.js'],
+		expectedFailures: EXPECTED_FAILURES,
+		blocking: true
+	},
+	includes: {
+		label: 'Iterator.prototype.includes (test262 PR #5031)',
+		pr: 5031,
+		paths: ['test/built-ins/Iterator/prototype/includes'],
+		blocking: true
+	},
+	'helper-edge': {
+		label: 'helper iterator-close edge cases (test262 PR #4496)',
+		pr: 4496,
+		paths: prototypeTests(
+			['drop', 'filter', 'map', 'take'],
+			[
+				'next-method-called-with-zero-arguments',
+				'return-method-called-with-zero-arguments',
+				'suspended-start-iterator-close-calls-next',
+				'suspended-start-iterator-close-calls-return',
+				'suspended-yield-iterator-close-calls-next',
+				'suspended-yield-iterator-close-calls-return'
+			]
+		).concat(prototypeTests(
+			['flatMap'],
+			[
+				'next-method-called-with-zero-arguments',
+				'return-method-called-with-zero-arguments',
+				'return-method-can-be-absent-for-inner',
+				'return-method-can-be-absent-for-underlying',
+				'suspended-start-iterator-close-calls-next',
+				'suspended-start-iterator-close-calls-return',
+				'suspended-yield-iterator-close-calls-next',
+				'suspended-yield-iterator-close-calls-next-from-inner',
+				'suspended-yield-iterator-close-calls-return',
+				'suspended-yield-iterator-close-calls-return-from-inner'
+			]
+		)),
+		blocking: true
+	},
+	chunking: {
+		label: 'iterator-chunking (test262 PR #5011)',
+		pr: 5011,
+		paths: ['test/built-ins/Iterator/prototype/chunks', 'test/built-ins/Iterator/prototype/windows'],
+		blocking: false
+	},
+	join: {
+		label: 'Iterator.prototype.join (test262 PR #4768)',
+		pr: 4768,
+		paths: ['test/built-ins/Iterator/prototype/join'],
+		blocking: false
+	},
+	'take-drop-rangeerror': {
+		// #5065 *modifies* existing files for the unmerged ecma262 #3776 RangeError,
+		// which this package does not implement; it can't auto-skip and is informational.
+		label: 'take/drop RangeError (test262 PR #5065)',
+		pr: 5065,
+		modifies: true,
+		paths: prototypeTests(
+			['take', 'drop'],
+			['argument-effect-order', 'argument-validation-failure-closes-underlying', 'limit-rangeerror']
+		),
+		blocking: false
+	}
 };
 
 function bundle(callback) {
@@ -71,15 +157,42 @@ function bundle(callback) {
 	});
 }
 
-function run(preprocessorPath) {
-	if (!fs.existsSync(path.join(test262Dir, 'test'))) {
-		throw new Error('the `test262` submodule is not checked out; run `git submodule update --init --depth 1`');
+function git(args) {
+	return spawnSync('git', ['-C', test262Dir].concat(args), { encoding: 'utf8' });
+}
+
+function fetchPR(suite) {
+	var fetched = git(['fetch', '--depth', '1', 'origin', 'refs/pull/' + suite.pr + '/head']);
+	if (fetched.status !== 0) {
+		throw new Error('failed to fetch test262 PR #' + suite.pr + ': ' + (fetched.stderr || ''));
 	}
+	var checkedOut = git(['checkout', 'FETCH_HEAD', '--'].concat(suite.paths));
+	if (checkedOut.status !== 0) {
+		throw new Error('failed to check out PR #' + suite.pr + ' tests: ' + (checkedOut.stderr || ''));
+	}
+}
 
+function cleanupPR(suite) {
+	git(['reset', '--quiet', 'HEAD', '--'].concat(suite.paths));
+	if (suite.modifies) {
+		git(['checkout', '--quiet', 'HEAD', '--'].concat(suite.paths));
+	} else {
+		suite.paths.forEach(function (p) {
+			fs.rmSync(path.join(test262Dir, p), { recursive: true, force: true });
+		});
+	}
+}
+
+function globFor(p) {
+	var abs = path.join(test262Dir, p).replace(/\\/g, '/');
+	return (/\.js$/).test(p) ? abs : abs + '/**/*.js';
+}
+
+function runHarness(preprocessorPath, suite) {
 	var threads = Math.max(1, os.cpus().length - 1);
-	var glob = path.join(test262Dir, 'test/built-ins/Iterator/**/*.js').replace(/\\/g, '/');
+	var expectedFailures = suite.expectedFailures || {};
 
-	var result = spawnSync(process.execPath, [
+	var args = [
 		harnessBin,
 		'--host-type',
 		'node',
@@ -89,16 +202,19 @@ function run(preprocessorPath) {
 		preprocessorPath,
 		'--test262-dir',
 		test262Dir,
-		'--features-include',
-		FEATURES.join(','),
 		'--reporter',
 		'json',
 		'--reporter-keys',
 		'file,scenario,result',
 		'-t',
-		String(threads),
-		glob
-	], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+		String(threads)
+	];
+	if (suite.features) {
+		args.push('--features-include', suite.features.join(','));
+	}
+	args = args.concat(suite.paths.map(globFor));
+
+	var result = spawnSync(process.execPath, args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
 
 	if (!result.stdout) {
 		process.stderr.write(result.stderr || '');
@@ -124,7 +240,7 @@ function run(preprocessorPath) {
 			passed += 1;
 		} else {
 			failingFiles[record.file] = true;
-			if (!(record.file in EXPECTED_FAILURES)) {
+			if (!(record.file in expectedFailures)) {
 				unexpectedFailures.push(record.file + ' (' + record.scenario + '): ' + (record.result && record.result.message));
 			}
 		}
@@ -133,30 +249,70 @@ function run(preprocessorPath) {
 	// `engine:` failures are version-dependent: they pass where the shim provides
 	// every helper and fail where native helpers exist, so passing is not a signal
 	// to remove them. Only `polyfill:` (real-bug) entries are flagged when they pass.
-	var unexpectedPasses = Object.keys(EXPECTED_FAILURES).filter(function (file) {
-		return !(file in failingFiles) && EXPECTED_FAILURES[file].indexOf('engine:') !== 0;
+	var unexpectedPasses = Object.keys(expectedFailures).filter(function (file) {
+		return !(file in failingFiles) && expectedFailures[file].indexOf('engine:') !== 0;
 	});
 
-	console.log('test262: ran ' + records.length + ' (' + passed + ' passed, ' + (records.length - passed) + ' failed)');
-	console.log('test262: ' + Object.keys(EXPECTED_FAILURES).length + ' known failures allow-listed');
+	var prefix = 'test262 [' + suite.label + ']: ';
+	console.log(prefix + 'ran ' + records.length + ' (' + passed + ' passed, ' + (records.length - passed) + ' failed)');
+	if (Object.keys(expectedFailures).length > 0) {
+		console.log(prefix + Object.keys(expectedFailures).length + ' known failures allow-listed');
+	}
 
 	if (unexpectedPasses.length > 0) {
-		console.warn('\ntest262: ' + unexpectedPasses.length + ' allow-listed test(s) now PASS; remove them from EXPECTED_FAILURES in test262.js:');
+		console.warn('\n' + prefix + unexpectedPasses.length + ' allow-listed test(s) now PASS; remove them from EXPECTED_FAILURES in test262.js:');
 		unexpectedPasses.forEach(function (file) {
 			console.warn('  - ' + file);
 		});
 	}
 
 	if (unexpectedFailures.length > 0) {
-		console.error('\ntest262: ' + unexpectedFailures.length + ' UNEXPECTED failure(s):');
+		var log = suite.blocking ? console.error : console.warn;
+		log('\n' + prefix + unexpectedFailures.length + (suite.blocking ? ' UNEXPECTED failure(s):' : ' failure(s) (non-blocking; feature not implemented here):'));
 		unexpectedFailures.forEach(function (failure) {
-			console.error('  - ' + failure);
+			log('  - ' + failure);
 		});
-		process.exitCode = 1;
+		if (suite.blocking) {
+			process.exitCode = 1;
+		}
 		return;
 	}
 
-	console.log('\ntest262: no unexpected failures');
+	console.log('\n' + prefix + 'no unexpected failures');
+}
+
+function run(preprocessorPath) {
+	if (!fs.existsSync(path.join(test262Dir, 'test'))) {
+		throw new Error('the `test262` submodule is not checked out; run `git submodule update --init --depth 1`');
+	}
+
+	var suiteName = process.argv[2] || 'main';
+	var suite = SUITES[suiteName];
+	if (!suite) {
+		throw new Error('unknown suite `' + suiteName + '`; known suites: ' + Object.keys(SUITES).join(', '));
+	}
+
+	if (!suite.pr) {
+		runHarness(preprocessorPath, suite);
+		return;
+	}
+
+	if (!suite.modifies) {
+		var alreadyMerged = suite.paths.every(function (p) {
+			return fs.existsSync(path.join(test262Dir, p));
+		});
+		if (alreadyMerged) {
+			console.log('test262 [' + suite.label + ']: tests are present in the pinned submodule; the `main` run covers them -- skipping');
+			return;
+		}
+	}
+
+	fetchPR(suite);
+	try {
+		runHarness(preprocessorPath, suite);
+	} finally {
+		cleanupPR(suite);
+	}
 }
 
 bundle(function (err, preprocessorPath) {
