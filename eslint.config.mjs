@@ -2,6 +2,9 @@ import ljharbConfig from '@ljharb/eslint-config/flat';
 import importPlugin from 'eslint-plugin-import';
 
 export default [
+	{
+		ignores: ['test262/**'],
+	},
 	...ljharbConfig,
 	{
 		plugins: {
@@ -39,6 +42,7 @@ export default [
 				devDependencies: [
 					'eslint.config.mjs',
 					'test/**',
+					'test262.js',
 				],
 				optionalDependencies: false,
 			}],
@@ -163,6 +167,14 @@ export default [
 		rules: {
 			eqeqeq: ['error', 'allow-null'],
 			'func-style': 'off',
+		},
+	},
+	{
+		files: ['test262.js'],
+		rules: {
+			'func-style': 'off',
+			'no-console': 'off',
+			'no-magic-numbers': 'off',
 		},
 	},
 	{

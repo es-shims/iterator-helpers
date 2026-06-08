@@ -95,6 +95,10 @@ import 'es-iterator-helpers/Iterator.prototype.map/auto'; // shim the “map” 
 ## Tests
 Simply clone the repo, `npm install`, and run `npm test`
 
+Additionally, the official [test262](https://github.com/tc39/test262) Iterator suite is included as a git submodule and can be run against the shim with `npm run test262`
+(in CI this runs across a range of Node versions, from one with no native iterator helpers up to the current LTS).
+Initialize the submodule first with `git submodule update --init --depth 1` (or clone with `--recurse-submodules`).
+
 [package-url]: https://npmjs.org/package/es-iterator-helpers
 [npm-version-svg]: https://versionbadg.es/es-shims/iterator-helpers.svg
 [deps-svg]: https://david-dm.org/es-shims/iterator-helpers.svg

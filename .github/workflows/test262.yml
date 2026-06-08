@@ -1,0 +1,27 @@
+name: 'Tests: test262'
+
+on: [pull_request, push]
+
+permissions:
+  contents: read
+
+jobs:
+  test262:
+    name: 'test262 (node ${{ matrix.node-version }})'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - '20' # lacks any iterator helpers: the shim provides them all
+          - '22' # has the ES2025 helpers but not concat/zip: partial native + shim
+          - 'lts/*' # has all the native helpers it ships, spec-compliant: shim is a passthrough
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: ljharb/actions/node/install@main
+        name: 'nvm install ${{ matrix.node-version }} && npm install'
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm run test262

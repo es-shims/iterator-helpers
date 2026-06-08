@@ -8,6 +8,8 @@
 	"branches": 76.06,
 	"exclude": [
 		"coverage",
-		"test"
+		"test",
+		"test262",
+		"test262.js"
 	]
 }
