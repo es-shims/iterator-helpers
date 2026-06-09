@@ -341,35 +341,37 @@ module.exports = {
 			st.test('262: deleted properties are skipped during iteration', { skip: !hasPropertyDescriptors }, function (s2t) {
 				var log = [];
 				var iterables = {};
-				Object.defineProperty(iterables, 'a', {
+				// integer-index keys are enumerated in numeric order, working around a V8
+				// 4.2–4.6 (io.js 1 – node 5) bug that reorders string keys on accessor objects.
+				Object.defineProperty(iterables, '0', {
 					configurable: true,
 					enumerable: true,
 					get: function () {
-						log.push('get a');
-						delete iterables.b;
+						log.push('get 0');
+						delete iterables[1];
 						return [];
 					}
 				});
-				Object.defineProperty(iterables, 'b', {
+				Object.defineProperty(iterables, '1', {
 					configurable: true,
 					enumerable: true,
 					get: function () {
-						throw new EvalError('unexpected get b');
+						throw new EvalError('unexpected get 1');
 					}
 				});
-				Object.defineProperty(iterables, 'c', {
+				Object.defineProperty(iterables, '2', {
 					configurable: true,
 					enumerable: true,
 					get: function () {
-						log.push('get c');
-						iterables.d = null;
+						log.push('get 2');
+						iterables[3] = null;
 						return [];
 					}
 				});
 
 				zipKeyed(iterables);
 
-				s2t.deepEqual(log, ['get a', 'get c'], 'deleted key is skipped and later-added key is not iterated');
+				s2t.deepEqual(log, ['get 0', 'get 2'], 'deleted key is skipped and later-added key is not iterated');
 
 				s2t.end();
 			});
