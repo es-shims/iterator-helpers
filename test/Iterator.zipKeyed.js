@@ -19,6 +19,17 @@ var testIterator = require('./helpers/testIterator');
 
 var isEnumerable = Object.prototype.propertyIsEnumerable;
 
+// V8 4.x (io.js 1 – node 5) does not reflect a string-keyed property deleted by
+// one accessor getter when a sibling key is reached later in the same `gOPD`-then
+// -`Get` enumeration, so the deleted key still runs (integer-index keys are
+// unaffected). It's fixed from node 6 (V8 5). Gate on the version, not a runtime
+// feature-detect, so a regression on a newer engine fails the string-key test
+// below instead of silently skipping.
+var nodeMajor = typeof process !== 'undefined' && process.versions && process.versions.node
+	? parseInt(process.versions.node, 10)
+	: NaN;
+var hasV8AccessorDeleteBug = nodeMajor < 6;
+
 module.exports = {
 	tests: function (zipKeyed, name, t) {
 		t['throws'](
@@ -376,7 +387,7 @@ module.exports = {
 				s2t.end();
 			});
 
-			st.test('262: deleted properties are skipped during iteration (string keys, any order)', { skip: !hasPropertyDescriptors }, function (s2t) {
+			st.test('262: deleted properties are skipped during iteration (string keys, any order)', { skip: !hasPropertyDescriptors || hasV8AccessorDeleteBug }, function (s2t) {
 				var log = [];
 				var iterables = {};
 				Object.defineProperty(iterables, 'a', {
