@@ -5,6 +5,7 @@ var test = require('tape');
 var functionsHaveNames = require('functions-have-names')();
 var mockProperty = require('mock-property');
 var hasProto = require('has-proto')();
+var requireStash = require('require-stash');
 
 var index = require('../Iterator');
 var impl = require('../Iterator/implementation');
@@ -65,9 +66,8 @@ module.exports = {
 		test('Iterator: implementation polyfill path', { skip: typeof Iterator !== 'function' }, function (t) {
 			var restore = mockProperty(global, 'Iterator', { 'delete': true });
 
-			// clear module cache so implementation re-evaluates without native Iterator
-			var implPath = require.resolve('../Iterator/implementation');
-			delete require.cache[implPath];
+			// evict the module cache so implementation re-evaluates without native Iterator
+			var restoreImpl = requireStash(__dirname, '../Iterator/implementation');
 
 			var polyfillImpl = require('../Iterator/implementation'); // eslint-disable-line global-require
 
@@ -117,9 +117,8 @@ module.exports = {
 				st.end();
 			});
 
-			// restore module cache and native Iterator
-			delete require.cache[implPath];
-			require('../Iterator/implementation'); // eslint-disable-line global-require
+			// restore the module cache and native Iterator
+			restoreImpl();
 			restore();
 
 			t.end();
