@@ -376,6 +376,46 @@ module.exports = {
 				s2t.end();
 			});
 
+			st.test('262: deleted properties are skipped during iteration (string keys, any order)', { skip: !hasPropertyDescriptors }, function (s2t) {
+				var log = [];
+				var iterables = {};
+				Object.defineProperty(iterables, 'a', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						log.push('get a');
+						delete iterables.b;
+						return [];
+					}
+				});
+				Object.defineProperty(iterables, 'b', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						log.push('get b');
+						return [];
+					}
+				});
+				Object.defineProperty(iterables, 'c', {
+					configurable: true,
+					enumerable: true,
+					get: function () {
+						log.push('get c');
+						iterables.d = null;
+						return [];
+					}
+				});
+
+				zipKeyed(iterables);
+
+				// string-key enumeration order is not stable on old V8 (see the integer-key
+				// test above), so assert membership rather than sequence: exactly the
+				// surviving keys are visited -- never the deleted `b` or the later-added `d`.
+				s2t.deepEqual(log.slice().sort(), ['get a', 'get c'], 'exactly the surviving keys are accessed, in any order');
+
+				s2t.end();
+			});
+
 			st.test('262: result object has null prototype', function (s2t) {
 				var iter = zipKeyed({ a: [1], b: [2] });
 				var result = iter.next().value;
