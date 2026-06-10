@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.3](https://github.com/es-shims/iterator-helpers/compare/v1.3.2...v1.3.3) - 2026-06-09
+
+### Commits
+
+- [Tests] improve implementation coverage to 100% across all methods [`a5afa47`](https://github.com/es-shims/iterator-helpers/commit/a5afa47063adbd543ed7e1402a1bf2e99aff3283)
+- [Tests] test262: add per-PR suites for not-yet-merged tests [`a422740`](https://github.com/es-shims/iterator-helpers/commit/a4227408f8b03e0d7dd0286f1cc2c371e928885b)
+- [Tests] add `test262` as a submodule and run it against the shim in CI [`47f96fe`](https://github.com/es-shims/iterator-helpers/commit/47f96fe40ce1d6e9467adbf3287bf6efa0666f23)
+- [Tests] add AOS unit tests for GetOptionsObject, IfAbruptCloseIterators, IteratorCloseAll [`0baf1c5`](https://github.com/es-shims/iterator-helpers/commit/0baf1c58743016197fc7e25f5fbb03017bcee008)
+- [Fix] `Iterator.prototype.constructor`, `Iterator.prototype[Symbol.toStringTag]`: use SetterThatIgnoresPrototypeProperties [`2fd33a1`](https://github.com/es-shims/iterator-helpers/commit/2fd33a12188d08742835af2af4c36a86480fe17d)
+- [Tests] add GeneratorResumeAbrupt unit tests, strict mode IteratorZip coverage [`9748573`](https://github.com/es-shims/iterator-helpers/commit/9748573e26d0d1fd787de6f4ae3464b12313b63c)
+- [Tests] add `WrapForValidIteratorPrototype` tests: inheritance, helper method access via prototype [`45570dc`](https://github.com/es-shims/iterator-helpers/commit/45570dc02ed810d2cf42b6a21af9a0f7407ade47)
+- [Tests] add `IteratorHelperPrototype` tests: @@toStringTag, inheritance, return() in SUSPENDED-START [`f62b5fd`](https://github.com/es-shims/iterator-helpers/commit/f62b5fddb0d9efe6e3eaf79dcdd3d43a5ed1861f)
+- [Fix] `zipKeyed`: skip deleted keys instead of throwing on an absent descriptor [`5a96826`](https://github.com/es-shims/iterator-helpers/commit/5a96826fe9d303d204ea7c713601bd95fdc6e6c0)
+- [Tests] `zipKeyed`: add an order-independent string-key deletion test [`0a406b4`](https://github.com/es-shims/iterator-helpers/commit/0a406b4bd429af660b5d68ef424a91c49e91eed0)
+- [Fix] `includes`: throw RangeError when `skippedElements` exceeds 2 ** 53 - 1 [`c0dc5cf`](https://github.com/es-shims/iterator-helpers/commit/c0dc5cfef5be92f8588a4450338d3f2b458bb522)
+- [Tests] `zipKeyed`: use integer-index keys in the deletion test [`a22dd27`](https://github.com/es-shims/iterator-helpers/commit/a22dd27a307e6d485df6adf376941b797f77474f)
+- [Fix] `Iterator.prototype`: install `Symbol.toStringTag`, unskip test (Chrome bug is fixed) [`a40ded7`](https://github.com/es-shims/iterator-helpers/commit/a40ded7607e9551880cc08f5c35cfd64d938d4d0)
+- [Tests] `zipKeyed`: version-gate the string-key deletion test [`35453c5`](https://github.com/es-shims/iterator-helpers/commit/35453c54a7ca683a6df7d8082f27f4700b4e56c4)
+- [Tests] restore the implementation cache via `require-stash` [`2a40486`](https://github.com/es-shims/iterator-helpers/commit/2a4048619007d8be3ac7700cdc2e4795b7140819)
+- [Dev Deps] update `@ljharb/eslint-config`, `auto-changelog` [`4bbf647`](https://github.com/es-shims/iterator-helpers/commit/4bbf6477b55925032c9d47823504513f811d5288)
+- [Dev Deps] update `tape` [`67fe73e`](https://github.com/es-shims/iterator-helpers/commit/67fe73eea7b13c6118c7670b4e179fdc54d52fc8)
+- [actions] skip the `npm ls` check on old node [`13918b2`](https://github.com/es-shims/iterator-helpers/commit/13918b225de5c4b9232055966bfbfc4885cf9b6b)
+
 ## [v1.3.2](https://github.com/es-shims/iterator-helpers/compare/v1.3.1...v1.3.2) - 2026-04-09
 
 ### Commits
