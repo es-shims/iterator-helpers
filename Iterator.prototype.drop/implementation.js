@@ -15,6 +15,9 @@ var ToNumber = require('es-abstract/2025/ToNumber');
 
 var iterHelperProto = require('../IteratorHelperPrototype');
 
+var MAX_SAFE_INTEGER = require('math-intrinsics/constants/maxSafeInteger');
+
+var isFinite = require('es-abstract/helpers/isFinite');
 var isObject = require('es-abstract/helpers/isObject');
 var isNaN = require('es-abstract/helpers/isNaN');
 
@@ -47,12 +50,16 @@ module.exports = function drop(limit) {
 		return IteratorClose(iterated, ThrowCompletion(new $RangeError('`limit` must be a non-NaN number')));
 	}
 
-	var integerLimit = ToIntegerOrInfinity(numLimit); // step 7
-	if (integerLimit < 0) { // step 8
+	if (isFinite(numLimit) && numLimit > MAX_SAFE_INTEGER) { // step 7
+		return IteratorClose(iterated, ThrowCompletion(new $RangeError('`limit` must be <= 2 ** 53 - 1')));
+	}
+
+	var integerLimit = ToIntegerOrInfinity(numLimit); // step 8
+	if (integerLimit < 0) { // step 9
 		return IteratorClose(iterated, ThrowCompletion(new $RangeError('`limit` must be >= 0')));
 	}
 
-	iterated = GetIteratorDirect(O); // step 9
+	iterated = GetIteratorDirect(O); // step 10
 
 	var closeIfAbrupt = function (abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
@@ -65,35 +72,33 @@ module.exports = function drop(limit) {
 	};
 
 	var sentinel = {};
-	var remaining = integerLimit; // step 10.a
-	var closure = function () { // step 10
+	var remaining = integerLimit; // step 11.a
+	var closure = function () { // step 11
 		var next;
-		while (remaining > 0) { // step 10.b
-			if (remaining !== Infinity) { // step 10.b.i
-				remaining -= 1; // step 10.b.i.1
-			}
+		while (remaining > 0) { // step 11.b
+			remaining -= 1; // step 11.b.i
 
-			next = IteratorStep(iterated); // step 10.b.ii
+			next = IteratorStep(iterated); // step 11.b.ii
 			if (!next) {
-				// return void undefined; // step 10.b.iii
+				// return void undefined; // step 11.b.iii
 				return sentinel;
 			}
 		}
-		// while (true) { // step 10.c
-		var value = IteratorStepValue(iterated); // step 10.c.i - ? means throw on protocol violation, don't close
+		// while (true) { // step 11.c
+		var value = IteratorStepValue(iterated); // step 11.c.i - ? means throw on protocol violation, don't close
 		if (iterated['[[Done]]']) {
-			return sentinel; // step 10.c.ii
+			return sentinel; // step 11.c.ii
 		}
-		return value; // step 10.c.iii - Yield(value)
+		return value; // step 11.c.iii - Yield(value)
 		// }
 		// return void undefined;
 	};
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
-	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 11
+	var result = CreateIteratorFromClosure(closure, 'Iterator Helper', iterHelperProto, ['[[UnderlyingIterators]]']); // step 12
 
-	SLOT.set(result, '[[UnderlyingIterators]]', [iterated]); // step 12
+	SLOT.set(result, '[[UnderlyingIterators]]', [iterated]); // step 13
 
-	return result; // step 13
+	return result; // step 14
 };

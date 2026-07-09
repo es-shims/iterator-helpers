@@ -1,5 +1,7 @@
 'use strict';
 
+var MAX_SAFE_INTEGER = require('math-intrinsics/constants/maxSafeInteger');
+
 var implementation = require('./implementation');
 
 module.exports = function getPolyfill() {
@@ -18,7 +20,7 @@ module.exports = function getPolyfill() {
 							return {};
 						}
 					},
-					NaN
+					MAX_SAFE_INTEGER + 1
 				);
 			} catch (e2) { /**/ }
 			if (earlyCloseCount > 0) {

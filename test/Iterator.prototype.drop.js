@@ -11,6 +11,7 @@ var v = require('es-value-fixtures');
 var hasSymbols = require('has-symbols/shams')();
 var hasPropertyDescriptors = require('has-property-descriptors')();
 var iterate = require('iterate-iterator');
+var MAX_SAFE_INTEGER = require('math-intrinsics/constants/maxSafeInteger');
 
 var index = require('../Iterator.prototype.drop');
 var impl = require('../Iterator.prototype.drop/implementation');
@@ -91,6 +92,14 @@ module.exports = {
 
 			returnCalls = 0;
 			st['throws'](
+				function () { drop(obj, MAX_SAFE_INTEGER + 1); },
+				RangeError,
+				'> 2 ** 53 - 1 throws RangeError'
+			);
+			st.equal(returnCalls, 1, 'return called on receiver for too-large limit');
+
+			returnCalls = 0;
+			st['throws'](
 				function () { drop(obj, -1); },
 				RangeError,
 				'-1 throws RangeError'
@@ -104,6 +113,38 @@ module.exports = {
 				'ToNumber throwing calls return'
 			);
 			st.equal(returnCalls, 1, 'return called on receiver when ToNumber throws');
+
+			st.end();
+		});
+
+		t.test('262: argument-effect-order', { skip: !hasPropertyDescriptors }, function (st) {
+			var effects = [];
+
+			var obj = {};
+			Object.defineProperty(obj, 'next', {
+				configurable: true,
+				enumerable: true,
+				get: function next() {
+					effects.push('get next');
+					return function () {
+						return { done: true, value: undefined };
+					};
+				}
+			});
+
+			st['throws'](
+				function () {
+					drop(obj, {
+						valueOf: function valueOf() {
+							effects.push('ToNumber limit');
+							return MAX_SAFE_INTEGER + 1;
+						}
+					});
+				},
+				RangeError,
+				'too-large limit throws RangeError'
+			);
+			st.deepEqual(effects, ['ToNumber limit'], 'ToNumber runs but `next` is not accessed when limit is too large');
 
 			st.end();
 		});
@@ -199,6 +240,16 @@ module.exports = {
 				s2t['throws'](function () { drop(iterator(), -1); }, RangeError, '-1 throws RangeError');
 				s2t['throws'](function () { drop(iterator(), -Infinity); }, RangeError, '-Infinity throws RangeError');
 				s2t['throws'](function () { drop(iterator(), NaN); }, RangeError, 'NaN throws RangeError');
+
+				testIterator(drop(iterator(), MAX_SAFE_INTEGER), [], s2t, 'MAX_SAFE_INTEGER is allowed');
+
+				forEach([MAX_SAFE_INTEGER + 1, MAX_SAFE_INTEGER + 3], function (tooLarge) {
+					s2t['throws'](
+						function () { drop(iterator(), tooLarge); },
+						RangeError,
+						debug(tooLarge) + ' is greater than 2 ** 53 - 1'
+					);
+				});
 
 				s2t.end();
 			});

@@ -58,8 +58,8 @@ function prototypeTests(methods, names) {
 // feature's tests by fetching the PR ref; `main`'s `features` includes
 // `iterator-includes` so that once PR #5031 merges and the submodule is bumped,
 // `main` covers it and the `includes` suite auto-skips. Suites for features this
-// package does not implement (chunks/windows, join, the unmerged take/drop
-// RangeError) are informational (non-blocking).
+// package does not implement (chunks/windows, join) are informational
+// (non-blocking).
 var SUITES = {
 	main: {
 		label: 'main',
@@ -117,8 +117,9 @@ var SUITES = {
 		blocking: false
 	},
 	'take-drop-rangeerror': {
-		// #5065 *modifies* existing files for the unmerged ecma262 #3776 RangeError,
-		// which this package does not implement; it can't auto-skip and is informational.
+		// #5065 *modifies* existing files for the (still-unmerged) ecma262 #3776
+		// RangeError, which this package now implements; because it modifies rather
+		// than adds files, it can't auto-skip even once the submodule is bumped past it.
 		label: 'take/drop RangeError (test262 PR #5065)',
 		pr: 5065,
 		modifies: true,
@@ -126,7 +127,7 @@ var SUITES = {
 			['take', 'drop'],
 			['argument-effect-order', 'argument-validation-failure-closes-underlying', 'limit-rangeerror']
 		),
-		blocking: false
+		blocking: true
 	}
 };
 
