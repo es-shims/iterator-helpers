@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0](https://github.com/es-shims/iterator-helpers/compare/v1.3.3...v1.4.0) - 2026-07-10
+
+### Commits
+
+- [New] add `Iterator.prototype.windows` [`3d0f70f`](https://github.com/es-shims/iterator-helpers/commit/3d0f70fec83e176a2f8f83497f9a697dc3cbe7f5)
+- [New] add `Iterator.prototype.chunks` [`15bb82d`](https://github.com/es-shims/iterator-helpers/commit/15bb82d09843b429b4f72cf3f2cf3a3a78a5e394)
+- [New] add `Iterator.prototype.join` [`c525db8`](https://github.com/es-shims/iterator-helpers/commit/c525db8dc67c2b14ae4a37218bafbbaefc6b10cc)
+- [Fix] `Iterator.prototype.take`, `Iterator.prototype.drop`: throw a RangeError when `limit` is finite and &gt; 2 ** 53 - 1 [`36cd90a`](https://github.com/es-shims/iterator-helpers/commit/36cd90aba67679f33a90db3ae87a9a4a41f8cb0f)
+- [Dev Deps] update `mock-property`, `tape` [`9cc9f8c`](https://github.com/es-shims/iterator-helpers/commit/9cc9f8cee4aa9f576254092fcfd09363ee4c2017)
+- [Dev Deps] update `evalmd` [`52a89eb`](https://github.com/es-shims/iterator-helpers/commit/52a89ebd231f214eda79429e6423184271b1f004)
+
 ## [v1.3.3](https://github.com/es-shims/iterator-helpers/compare/v1.3.2...v1.3.3) - 2026-06-09
 
 ### Commits
