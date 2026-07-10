@@ -201,13 +201,13 @@
 		"iterate-iterator": "^1.0.2",
 		"jiti": "^0.0.0",
 		"make-generator-function": "^2.1.0",
-		"mock-property": "^1.1.0",
+		"mock-property": "^1.1.2",
 		"npmignore": "^0.3.5",
 		"nyc": "^10.3.2",
 		"object-inspect": "^1.13.4",
 		"require-stash": "^1.0.0",
 		"safe-publish-latest": "^2.0.0",
-		"tape": "^5.10.0",
+		"tape": "^5.10.2",
 		"test262-harness": "^10.0.0"
 	},
 	"auto-changelog": {
