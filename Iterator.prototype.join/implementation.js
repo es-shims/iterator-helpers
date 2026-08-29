@@ -39,27 +39,27 @@ module.exports = function join(separator) {
 
 	iterated = GetIteratorDirect(O); // step 6
 
-	var R = ''; // step 7
+	var result = ''; // step 7
 	var first = true; // step 8
 
 	while (true) { // step 9
 		var value = IteratorStepValue(iterated); // step 9.a
 		if (iterated['[[Done]]']) {
-			return R; // step 9.b
+			return result; // step 9.b
 		}
 		if (first) { // step 9.c
 			first = false; // step 9.c.i
 		} else { // step 9.d
-			R += sep; // step 9.d.i
+			result += sep; // step 9.d.i
 		}
 		if (value !== void undefined && value !== null) { // step 9.e
-			var S;
+			var valueString;
 			try {
-				S = ToString(value); // step 9.e.i
+				valueString = ToString(value); // step 9.e.i
 			} catch (e) {
 				return IteratorClose(iterated, ThrowCompletion(e)); // step 9.e.ii - IfAbruptCloseIterator
 			}
-			R += S; // step 9.e.iii
+			result += valueString; // step 9.e.iii
 		}
 	}
 };
