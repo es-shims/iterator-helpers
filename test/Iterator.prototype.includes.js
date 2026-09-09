@@ -68,6 +68,86 @@ module.exports = {
 			);
 		});
 
+		t.test('matches with SameValueZero', { skip: !hasSymbols }, function (st) {
+			function iteratorOf(arr) {
+				return callBind(arr[Symbol.iterator], arr)();
+			}
+
+			st.equal(includes(iteratorOf([1, NaN, 3]), NaN), true, 'NaN matches NaN');
+			st.equal(includes(iteratorOf([-0]), +0), true, '+0 matches -0');
+			st.equal(includes(iteratorOf([+0]), -0), true, '-0 matches +0');
+
+			st.end();
+		});
+
+		t.test('closing the underlying iterator', function (st) {
+			function spyIterator(values) {
+				var i = 0;
+				var closed = false;
+				return {
+					isClosed: function () { return closed; },
+					iterator: {
+						next: function () {
+							if (i >= values.length) {
+								return { done: true };
+							}
+							i += 1;
+							return { done: false, value: values[i - 1] };
+						},
+						'return': function () {
+							closed = true;
+							return {};
+						}
+					}
+				};
+			}
+
+			var onMatch = spyIterator([1, 2, 3]);
+			st.equal(includes(onMatch.iterator, 2), true, 'finds a match');
+			st.equal(onMatch.isClosed(), true, '`return` is called once a match is found');
+
+			var onExhaustion = spyIterator([1, 2, 3]);
+			st.equal(includes(onExhaustion.iterator, 4), false, 'reports a miss');
+			st.equal(onExhaustion.isClosed(), false, '`return` is not called when the iterator is exhausted');
+
+			var onBadSkipped = spyIterator([1]);
+			st['throws'](
+				function () { includes(onBadSkipped.iterator, 0, -1); },
+				RangeError,
+				'a negative `skippedElements` throws a RangeError'
+			);
+			st.equal(onBadSkipped.isClosed(), true, '`return` is called when argument validation fails');
+
+			st.end();
+		});
+
+		t.test('`next` is not read when argument validation fails', { skip: !defineProperties.supportsDescriptors }, function (st) {
+			var readNext = false;
+			var closed = false;
+			var iterator = {
+				'return': function () {
+					closed = true;
+					return {};
+				}
+			};
+			Object.defineProperty(iterator, 'next', {
+				get: function () {
+					readNext = true;
+					return function () { return { done: true }; };
+				}
+			});
+
+			st['throws'](
+				function () { includes(iterator, 0, NaN); },
+				TypeError,
+				'a non-integral `skippedElements` throws a TypeError'
+			);
+			st.equal(readNext, false, '`next` is never read');
+			st.equal(closed, true, '`return` is still called');
+
+			st.end();
+		});
+
 		t.test('Infinity skippedElements', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);
