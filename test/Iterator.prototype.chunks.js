@@ -49,6 +49,45 @@ module.exports = {
 			);
 		});
 
+		t.test('underlying iterator protocol', { skip: !defineProperties.supportsDescriptors }, function (st) {
+			var nextReads = 0;
+			var closed = false;
+			var i = 0;
+			var underlying = {
+				'return': function () {
+					closed = true;
+					return {};
+				}
+			};
+			Object.defineProperty(underlying, 'next', {
+				get: function () {
+					nextReads += 1;
+					return function () {
+						if (i >= 4) {
+							return { done: true };
+						}
+						i += 1;
+						return { done: false, value: i };
+					};
+				}
+			});
+
+			var iter = chunks(underlying, 2);
+			var yielded = [];
+			var step = iter.next();
+			while (!step.done) {
+				yielded.push(step.value);
+				step = iter.next();
+			}
+
+			st.deepEqual(yielded, [[1, 2], [3, 4]], 'chunks(2) of 1..4');
+			st.notEqual(yielded[0], yielded[1], 'each chunk is a distinct array');
+			st.equal(nextReads, 1, '`next` is read exactly once');
+			st.equal(closed, false, '`return` is not called when the underlying iterator is exhausted');
+
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3, 4, 5];
 			var iterator = callBind(arr[Symbol.iterator], arr);
