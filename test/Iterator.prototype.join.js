@@ -33,6 +33,100 @@ module.exports = {
 			);
 		});
 
+		t.test('does not close the underlying iterator', { skip: !defineProperties.supportsDescriptors }, function (st) {
+			var trackReturn = function (iterator, onGet) {
+				Object.defineProperty(iterator, 'return', { get: onGet });
+				return iterator;
+			};
+
+			st.test('on exhaustion', function (s2t) {
+				var nextCalls = 0;
+				var gotReturn = false;
+
+				s2t.equal(join(trackReturn({
+					next: function () {
+						nextCalls += 1;
+						return nextCalls > 2 ? { done: true } : { done: false, value: 'ES' };
+					}
+				}, function () { gotReturn = true; })), 'ES,ES', 'joins until exhaustion');
+				s2t.equal(nextCalls, 3, '`next` is called until it reports done');
+				s2t.equal(gotReturn, false, '`return` is never looked up');
+
+				s2t.end();
+			});
+
+			st.test('when `next` throws', function (s2t) {
+				var gotReturn = false;
+
+				s2t['throws'](
+					function () {
+						join(trackReturn({
+							next: function () { throw new EvalError('next threw'); }
+						}, function () { gotReturn = true; }));
+					},
+					EvalError,
+					'the error from `next` propagates'
+				);
+				s2t.equal(gotReturn, false, '`return` is never looked up');
+
+				s2t.end();
+			});
+
+			st.test('when the `next` getter throws', function (s2t) {
+				var gotReturn = false;
+				var iterator = {};
+				Object.defineProperty(iterator, 'next', {
+					get: function () { throw new EvalError('next getter threw'); }
+				});
+
+				s2t['throws'](
+					function () { join(trackReturn(iterator, function () { gotReturn = true; })); },
+					EvalError,
+					'the error from the `next` getter propagates'
+				);
+				s2t.equal(gotReturn, false, '`return` is never looked up');
+
+				s2t.end();
+			});
+
+			st.end();
+		});
+
+		t.test('`next` is looked up after ToString(separator)', { skip: !defineProperties.supportsDescriptors }, function (st) {
+			var effects = [];
+			var nextCalls = 0;
+
+			var separator = {
+				toString: function () {
+					effects.push('toString');
+					return '&&';
+				}
+			};
+
+			var iterator = {};
+			Object.defineProperty(iterator, 'next', {
+				get: function () {
+					effects.push('get next');
+					return function () {
+						nextCalls += 1;
+						if (nextCalls === 1) {
+							return { done: false, value: 'one' };
+						}
+						if (nextCalls === 2) {
+							return { done: false, value: 'two' };
+						}
+						return { done: true };
+					};
+				}
+			});
+
+			st.equal(join(iterator, separator), 'one&&two', 'the coerced separator is used');
+			st.equal(nextCalls, 3, '`next` is called until it reports done');
+			st.deepEqual(effects, ['toString', 'get next'], 'the separator is coerced before `next` is looked up');
+
+			st.end();
+		});
+
 		t.test('actual iteration', { skip: !hasSymbols }, function (st) {
 			var arr = [1, 2, 3];
 			var iterator = callBind(arr[Symbol.iterator], arr);
