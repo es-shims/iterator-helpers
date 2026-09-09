@@ -112,6 +112,7 @@ export default [
 		rules: {
 			'array-bracket-newline': 'off',
 			'func-name-matching': 'off',
+			'func-style': ['error', 'declaration'],
 			'id-length': 'off',
 			'max-lines-per-function': 'off',
 			'max-statements': 'off',

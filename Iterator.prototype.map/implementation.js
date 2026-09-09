@@ -39,13 +39,13 @@ module.exports = function map(mapper) {
 
 	iterated = GetIteratorDirect(O); // step 5
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		IfAbruptCloseIterator(abruptCompletion, iterated);
-	};
+	}
 
 	var sentinel = {};
 	var counter = 0; // step 6.a
-	var closure = function () {
+	function closure() {
 		// while (true) { // step 6.b
 		var value = IteratorStepValue(iterated); // step 6.b.i
 		if (iterated['[[Done]]']) {
@@ -64,7 +64,7 @@ module.exports = function map(mapper) {
 			return IfAbruptCloseIterator(ThrowCompletion(e), iterated); // step 6.b.iv, 6.b.vi
 		}
 		// }
-	};
+	}
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 

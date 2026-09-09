@@ -2,14 +2,14 @@
 
 var setToStringTag = require('es-set-tostringtag');
 var hasProto = require('has-proto')();
-var iterProto = require('../Iterator.prototype/implementation');
 var SLOT = require('internal-slot');
 
 var CreateIteratorResultObject = require('es-abstract/2025/CreateIteratorResultObject');
 var GeneratorResume = require('es-abstract/2025/GeneratorResume');
+var ReturnCompletion = require('es-abstract/2025/ReturnCompletion');
 var GeneratorResumeAbrupt = require('../aos/GeneratorResumeAbrupt');
 var IteratorCloseAll = require('../aos/IteratorCloseAll');
-var ReturnCompletion = require('es-abstract/2025/ReturnCompletion');
+var iterProto = require('../Iterator.prototype/implementation');
 
 var implementation;
 var o = { // in an object, for name inference
@@ -41,6 +41,7 @@ if (hasProto) {
 	};
 	setToStringTag(implementation, 'Iterator Helper');
 } else {
+	// eslint-disable-next-line func-style
 	var IteratorHelper = function IteratorHelper() {};
 	IteratorHelper.prototype = iterProto;
 	implementation = new IteratorHelper();

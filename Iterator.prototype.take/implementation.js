@@ -13,8 +13,6 @@ var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 var ToIntegerOrInfinity = require('es-abstract/2025/ToIntegerOrInfinity');
 var ToNumber = require('es-abstract/2025/ToNumber');
 
-var iterHelperProto = require('../IteratorHelperPrototype');
-
 var MAX_SAFE_INTEGER = require('math-intrinsics/constants/maxSafeInteger');
 
 var isFinite = require('es-abstract/helpers/isFinite');
@@ -22,6 +20,7 @@ var isObject = require('es-abstract/helpers/isObject');
 var isNaN = require('es-abstract/helpers/isNaN');
 
 var SLOT = require('internal-slot');
+var iterHelperProto = require('../IteratorHelperPrototype');
 
 module.exports = function take(limit) {
 	if (this instanceof take) {
@@ -61,7 +60,7 @@ module.exports = function take(limit) {
 
 	iterated = GetIteratorDirect(O); // step 10
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
@@ -69,11 +68,11 @@ module.exports = function take(limit) {
 			iterated,
 			abruptCompletion
 		);
-	};
+	}
 
 	var sentinel = {};
 	var remaining = integerLimit; // step 11.a
-	var closure = function () { // step 11
+	function closure() { // step 11
 		// while (true) { // step 11.b
 		if (remaining === 0) { // step 11.b.i
 			return IteratorClose( // step 11.b.i.1
@@ -90,7 +89,7 @@ module.exports = function take(limit) {
 
 		return value; // step 11.b.v
 		// }
-	};
+	}
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 

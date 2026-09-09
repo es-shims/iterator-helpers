@@ -9,16 +9,16 @@ var CreateIteratorFromClosure = require('es-abstract/2025/CreateIteratorFromClos
 var GetIteratorDirect = require('es-abstract/2025/GetIteratorDirect');
 var GetMethod = require('es-abstract/2025/GetMethod');
 var IsArray = require('es-abstract/2025/IsArray');
-var IteratorCloseAll = require('../aos/IteratorCloseAll');
 var IteratorStepValue = require('es-abstract/2025/IteratorStepValue');
 
 var forEach = require('es-abstract/helpers/forEach');
 var isObject = require('es-abstract/helpers/isObject');
 var getIteratorMethod = require('es-abstract/helpers/getIteratorMethod');
 
+var SLOT = require('internal-slot');
 var iterHelperProto = require('../IteratorHelperPrototype');
 
-var SLOT = require('internal-slot');
+var IteratorCloseAll = require('../aos/IteratorCloseAll');
 
 module.exports = function concat() {
 	if (this instanceof concat) {
@@ -51,7 +51,7 @@ module.exports = function concat() {
 	var iteratorRecord;
 	var innerAlive = false;
 	var openIters = []; // track the current open iterator for return() forwarding
-	var closure = function () { // step 3
+	function closure() { // step 3
 		if (iterablesIndex >= iterables.length) {
 			return sentinel;
 		}
@@ -79,9 +79,9 @@ module.exports = function concat() {
 
 		iterablesIndex += 1;
 		return closure();
-	};
+	}
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
@@ -92,7 +92,7 @@ module.exports = function concat() {
 			openIters.length = 0; // prevent double-closing
 			IteratorCloseAll(toClose, abruptCompletion);
 		}
-	};
+	}
 
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation

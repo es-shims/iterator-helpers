@@ -40,14 +40,14 @@ module.exports = function filter(predicate) {
 
 	iterated = GetIteratorDirect(O); // step 5
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		IfAbruptCloseIterator(abruptCompletion, iterated);
-	};
+	}
 
 	var sentinel = {};
 	var counter = 0; // step 6.a
 	var yielded = false;
-	var closure = function () {
+	function closure() {
 		while (true) { // step 6.b
 			if (yielded) {
 				counter += 1; // step 6.b.vi - deferred from after Yield
@@ -70,7 +70,7 @@ module.exports = function filter(predicate) {
 			}
 			counter += 1; // step 6.b.vi
 		}
-	};
+	}
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 

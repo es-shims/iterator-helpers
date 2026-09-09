@@ -13,9 +13,8 @@ var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 var isInteger = require('math-intrinsics/isInteger');
 var isObject = require('es-abstract/helpers/isObject');
 
-var iterHelperProto = require('../IteratorHelperPrototype');
-
 var SLOT = require('internal-slot');
+var iterHelperProto = require('../IteratorHelperPrototype');
 
 var MAX_WINDOW_SIZE = 0xFFFFFFFF; // 2^32 - 1
 
@@ -54,7 +53,7 @@ module.exports = function windows(windowSize) {
 
 	iterated = GetIteratorDirect(O); // step 8
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
@@ -62,11 +61,11 @@ module.exports = function windows(windowSize) {
 			iterated,
 			abruptCompletion
 		);
-	};
+	}
 
 	var sentinel = {};
 	var buffer = []; // step 9.a
-	var closure = function () { // step 9
+	function closure() { // step 9
 		while (true) { // step 9.b
 			var value = IteratorStepValue(iterated); // step 9.b.i
 			if (iterated['[[Done]]']) { // step 9.b.ii
@@ -93,7 +92,7 @@ module.exports = function windows(windowSize) {
 				// step 9.b.v.b - IfAbruptCloseIterator handled by CreateIteratorFromClosure
 			}
 		}
-	};
+	}
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 

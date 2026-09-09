@@ -14,9 +14,8 @@ var ThrowCompletion = require('es-abstract/2025/ThrowCompletion');
 
 var isObject = require('es-abstract/helpers/isObject');
 
-var iterHelperProto = require('../IteratorHelperPrototype');
-
 var SLOT = require('internal-slot');
+var iterHelperProto = require('../IteratorHelperPrototype');
 
 module.exports = function flatMap(mapper) {
 	if (this instanceof flatMap) {
@@ -43,7 +42,7 @@ module.exports = function flatMap(mapper) {
 	var sentinel = { sentinel: true };
 	var innerIterator = sentinel;
 
-	var closeIfAbrupt = function (abruptCompletion) {
+	function closeIfAbrupt(abruptCompletion) {
 		if (!(abruptCompletion instanceof CompletionRecord)) {
 			throw new $TypeError('`abruptCompletion` must be a Completion Record');
 		}
@@ -62,11 +61,11 @@ module.exports = function flatMap(mapper) {
 		} else {
 			IteratorClose(iterated, abruptCompletion);
 		}
-	};
+	}
 
 	var counter = 0; // step 6.a
 	var innerAlive = false;
-	var closure = function () {
+	function closure() {
 		// while (true) { // step 6.b
 		if (innerIterator === sentinel) {
 			var value = IteratorStepValue(iterated); // step 6.b.i
@@ -115,7 +114,7 @@ module.exports = function flatMap(mapper) {
 		// }
 		// return void undefined;
 		return sentinel;
-	};
+	}
 	SLOT.set(closure, '[[Sentinel]]', sentinel); // for the userland implementation
 	SLOT.set(closure, '[[CloseIfAbrupt]]', closeIfAbrupt); // for the userland implementation
 
