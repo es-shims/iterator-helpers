@@ -5,6 +5,8 @@ on: [pull_request, push]
 permissions:
   contents: read
 
+cache-mode: none
+
 jobs:
   test262:
     name: 'test262 (node ${{ matrix.node-version }})'
